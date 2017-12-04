@@ -3,7 +3,7 @@ image: Visual Studio 2017
 environment:
   matrix:
     - configuration: Release
-    platform: Win64
+    - platform: Win64
 install:
   - mkdir C:\projects\deps
   - cd C:\projects\deps
@@ -20,8 +20,6 @@ install:
   - cd vcpkg
   - powershell -exec bypass scripts\bootstrap.ps1
   - vcpkg integrate install
-  - vcpkg install tclap:x64-windows-static
-  - cd ..
   - cd C:\projects\Library
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 build script:
