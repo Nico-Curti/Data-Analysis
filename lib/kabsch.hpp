@@ -14,7 +14,7 @@
 #elif defined _MSC_VER
 #define restrict_macro __restrict
 #else
-#define restrict_macro 
+#define restrict_macro __restrict__
 #endif
 
 class kabsch

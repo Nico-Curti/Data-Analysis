@@ -1,7 +1,8 @@
 #pragma once
-#if defined(__linux__) || defined(__CYGWIN__)
+#if defined(__linux__) || defined(__CYGWIN__) || defined(__apple__)
 const char sep = '/';
 #define GetCurrentDir getcwd
+#define Popen popen
 #include <dirent.h>
 #include <sys/types.h>
 #include <errno.h>
@@ -10,6 +11,7 @@ const char sep = '/';
 #elif defined(_WIN32)
 const char sep = '\\';
 #define GetCurrentDir _getcwd
+#define Popen _popen
 #include <Windows.h>
 #include <direct.h>
 #endif
@@ -205,19 +207,16 @@ namespace os
 
 	inline std::string capture_output(const char* cmd)
 	{
-#if defined(__linux__) || defined(__CYGWIN__)
+		// Pay Attention : if you run this function in WIN32 cmd must be related to Command Prompt (NO POWERSHELL!)
 		std::array<char, FILENAME_MAX> buffer;
 	    std::string result;
-	    std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+	    std::shared_ptr<FILE> pipe(Popen(cmd, "r"), pclose);
 	    if (!pipe) throw std::runtime_error("popen() failed!");
 	    while (!feof(pipe.get())) {
 	        if (fgets(buffer.data(), FILENAME_MAX, pipe.get()) != nullptr)
 	            result += buffer.data();
 	    }
 	    return result;
-#elif defined(_MSC_VER) || defined(_WIN32)
-	    return "non funziono";
-#endif
 	}
 
 	inline std::string local_path()
@@ -279,7 +278,7 @@ namespace os
 			return true;   // this is a directory!
 
 		return false;    // this is not a directory!
-#elif defined (__linux__) || defined(__CYGWIN__)
+#elif defined (__linux__) || defined(__CYGWIN__) || defined(__apple__)
 		DIR* dir = opendir(dirName_in.c_str());
 		if( dir )
 		{
@@ -317,7 +316,7 @@ namespace os
 					files.push_back(fileData.cFileName);
 
 		FindClose(hFind);
-#elif defined (__linux__) || defined(__CYGWIN__)
+#elif defined (__linux__) || defined(__CYGWIN__) || defined(__apple__)
 		DIR *dp;
 	    struct dirent *dirp;
 	    if((dp  = opendir(directory.c_str())) == nullptr) 
@@ -376,7 +375,7 @@ namespace os
 	        FindClose(h);
 	    }
 	    return size;
-#elif defined (__linux__) || defined (__CYGWIN__)
+#elif defined (__linux__) || defined (__CYGWIN__) || defined(__apple__)
 	    std::string size = capture_output(("du -sb " + path).c_str());
 	    return std::stoi(size.substr(0, size.find_first_of("/")));
 #endif
@@ -408,7 +407,7 @@ namespace os
 			std::cerr << "mv: impossibile eseguire stat di " << filename << ": File o directory non esistente" << std::endl;
 			exit(1);
 		}
-#elif  defined (__linux__) || defined(__CYGWIN__)
+#elif  defined (__linux__) || defined(__CYGWIN__) || defined(__apple__)
 		if(file_exists(filename))
 			if( 0 != std::system(("mv " + filename + " /." + filename).c_str()) )
 				exit(1);
@@ -440,7 +439,7 @@ namespace os
 					directories.push_back(findfiledata.cFileName);
 			} while (FindNextFile(hFind, &findfiledata) != 0);
 		}
-#elif defined (__linux__) || defined (__CYGWIN__)
+#elif defined (__linux__) || defined (__CYGWIN__) || defined(__apple__)
 		DIR *dir = opendir(path.c_str());	
 		dirent *entry = readdir(dir);
 		while (entry != nullptr)

@@ -7,8 +7,14 @@ fmath = -ffast-math
 #fmath = -ffp-mode=fast
 OMP  = -fopenmp
 
-ifeq ifeq ($(shell uname -o),Cygwin)
+ifeq ($(shell uname -o),Cygwin)
     gnu = -std=gnu++11
+endif
+
+ifeq ($(OS), Windows_NT)
+	MKDIR_P = mkdir $(subst /,\,$(OUT)) > nul 2>&1 || (exit 0)
+else
+	MKDIR_P = mkdir -p $(OUT) 
 endif
 
 all: 	dir_tree \
@@ -18,8 +24,8 @@ all: 	dir_tree \
 		pca \
 		bayes_cls \
 		kabsch
-		#fbp \
-		#rsgd \
+#fbp \
+#rsgd \
 
 #fbp:		$(TST)/runtest_bcrfbp.cpp \
 #			$(HPP)/FocusingBeliefPropagation.hpp \
@@ -83,5 +89,5 @@ kabsch:		$(TST)/runtest_kabsch.cpp \
 		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_kabsch	$(TST)/runtest_kabsch.cpp
 
 dir_tree:
-		@mkdir -p bin
+		$(MKDIR_P)
 
