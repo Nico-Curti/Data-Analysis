@@ -1,0 +1,32 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+environment:
+  matrix:
+    - configuration: Release
+    platform: Win64
+install:
+  - mkdir C:\projects\deps
+  - cd C:\projects\deps
+  - set cmake_38_url="https://cmake.org/files/v3.8/cmake-3.8.0-win32-x86.zip"
+  - appveyor DownloadFile %cmake_38_url% -FileName cmake.zip
+  - 7z x cmake.zip -oC:\projects\deps > nul
+  - move C:\projects\deps\cmake-* C:\projects\deps\cmake
+  - set PATH=C:\projects\deps\cmake\bin;%PATH%
+  - cmake --version
+  - cd ..
+  - set WORKSPACE=C:\projects\deps 
+  # WORKSPACE = directory sopra vcpkg
+  - git clone https://github.com/Microsoft/vcpkg
+  - cd vcpkg
+  - powershell -exec bypass scripts\bootstrap.ps1
+  - vcpkg integrate install
+  - vcpkg install tclap:x64-windows-static
+  - cd ..
+  - cd C:\projects\Library
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+build script:
+  - mkdir build
+  - cd build
+  - cmake .. "-DCMAKE_TOOLCHAIN_FILE=${env:WORKSPACE}\vcpkg\scripts\buildsystems\vcpkg.cmake" -G "Visual Studio 15 2017 Win64"
+  - cmake --build . --config Release
+  
