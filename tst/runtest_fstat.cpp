@@ -10,17 +10,17 @@ std::uniform_real_distribution<float> r_dist{0.0f, 1.0f};
 
 int main(int argc, char *argv[])
 {
-	int N = 10000,
+	int N = 100000,
 		*idx_sort_serial = nullptr, *idx_sort_par = nullptr;
 	float 	*x = new float[N], *y = new float[N],
-			min_par, min_serial, 
+			min_par, min_serial,
 			max_par, max_serial,
 			idx_min_par, idx_min_serial,
 			idx_max_par, idx_max_serial,
 			var_x, var_y,
 			med_x, med_y,
 			*auto_corr1 = nullptr, *auto_corr2 = nullptr;
-			
+
 	std::generate(x, x + N, []{return r_dist(engine);});
 	std::memcpy(y, x, N*sizeof(float));
 
@@ -66,5 +66,3 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
-
-

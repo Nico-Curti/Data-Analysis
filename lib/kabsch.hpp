@@ -9,9 +9,7 @@
 #define _sstar 0.3826834323 // sin(p/8)
 #define EPSILON 1e-6
 
-#if defined(__linux__) || defined(__CYGWIN__)
-#define restrict_macro __restrict__
-#elif defined _MSC_VER
+#if defined _MSC_VER
 #define restrict_macro __restrict
 #else
 #define restrict_macro __restrict__
@@ -109,7 +107,7 @@ class kabsch
 	inline void ata3(float * restrict_macro , const float * restrict_macro );
 	inline void aat3(float * restrict_macro , const float * restrict_macro );
     inline void trans3(float * restrict_macro );
-	void solvecubic(float * restrict_macro ); 
+	void solvecubic(float * restrict_macro );
 	void ldu3(float * restrict_macro , int * restrict_macro );
 	void svd3(float * restrict_macro , float * restrict_macro , float * restrict_macro , const float * restrict_macro );
 
@@ -122,32 +120,32 @@ public:
 };
 
 
-inline void kabsch::cross(float * restrict_macro z, const float * restrict_macro x, const float * restrict_macro y) 
+inline void kabsch::cross(float * restrict_macro z, const float * restrict_macro x, const float * restrict_macro y)
 {
     z[0] = x[1]*y[2]-x[2]*y[1];
     z[1] = -(x[0]*y[2]-x[2]*y[0]);
     z[2] = x[0]*y[1]-x[1]*y[0];
 }
-inline void kabsch::sort3(float * restrict_macro x) 
+inline void kabsch::sort3(float * restrict_macro x)
 {
     float tmp;
- 
-    if (x[0] < x[1]) 
+
+    if (x[0] < x[1])
     {
         tmp = x[0];
         x[0] = x[1];
         x[1] = tmp;
     }
-    if (x[1] < x[2]) 
+    if (x[1] < x[2])
     {
-        if (x[0] < x[2]) 
+        if (x[0] < x[2])
         {
             tmp = x[2];
             x[2] = x[1];
             x[1] = x[0];
             x[0] = tmp;
         }
-        else 
+        else
         {
             tmp = x[1];
             x[1] = x[2];
@@ -155,20 +153,20 @@ inline void kabsch::sort3(float * restrict_macro x)
         }
     }
 }
-inline void kabsch::unit3(float * restrict_macro x) 
+inline void kabsch::unit3(float * restrict_macro x)
 {
     float tmp = std::sqrt(x[0]*x[0] + x[1]*x[1] + x[2]*x[2]);
     x[0] /= tmp;
     x[1] /= tmp;
     x[2] /= tmp;
 }
-inline void kabsch::ldubsolve3(float * restrict_macro x, const float * restrict_macro y, const float * restrict_macro LDU, const int * restrict_macro P) 
+inline void kabsch::ldubsolve3(float * restrict_macro x, const float * restrict_macro y, const float * restrict_macro LDU, const int * restrict_macro P)
 {
     x[P[2]] = y[2];
     x[P[1]] = y[1] - LDU[3*P[2]+1]*x[P[2]];
     x[P[0]] = y[0] - LDU[3*P[2]+0]*x[P[2]] - LDU[3*P[1]+0]*x[P[1]];
 }
-inline void kabsch::matmul3(float * restrict_macro C, const float * restrict_macro A, const float * restrict_macro B) 
+inline void kabsch::matmul3(float * restrict_macro C, const float * restrict_macro A, const float * restrict_macro B)
 {
     C[3*0+0] = A[3*0+0]*B[3*0+0] + A[3*1+0]*B[3*0+1] + A[3*2+0]*B[3*0+2];
     C[3*1+0] = A[3*0+0]*B[3*1+0] + A[3*1+0]*B[3*1+1] + A[3*2+0]*B[3*1+2];
@@ -182,13 +180,13 @@ inline void kabsch::matmul3(float * restrict_macro C, const float * restrict_mac
     C[3*1+2] = A[3*0+2]*B[3*1+0] + A[3*1+2]*B[3*1+1] + A[3*2+2]*B[3*1+2];
     C[3*2+2] = A[3*0+2]*B[3*2+0] + A[3*1+2]*B[3*2+1] + A[3*2+2]*B[3*2+2];
 }
-inline void kabsch::matvec3(float * restrict_macro y, const float * restrict_macro A, const float * restrict_macro x) 
+inline void kabsch::matvec3(float * restrict_macro y, const float * restrict_macro A, const float * restrict_macro x)
 {
     y[0] = A[3*0+0]*x[0] + A[3*1+0]*x[1] + A[3*2+0]*x[2];
     y[1] = A[3*0+1]*x[0] + A[3*1+1]*x[1] + A[3*2+1]*x[2];
     y[2] = A[3*0+2]*x[0] + A[3*1+2]*x[1] + A[3*2+2]*x[2];
 }
-inline void kabsch::ata3(float * restrict_macro AA, const float * restrict_macro A) 
+inline void kabsch::ata3(float * restrict_macro AA, const float * restrict_macro A)
 {
     AA[3*0+0] = A[3*0+0]*A[3*0+0] + A[3*0+1]*A[3*0+1] + A[3*0+2]*A[3*0+2];
     AA[3*1+0] = A[3*0+0]*A[3*1+0] + A[3*0+1]*A[3*1+1] + A[3*0+2]*A[3*1+2];
@@ -202,7 +200,7 @@ inline void kabsch::ata3(float * restrict_macro AA, const float * restrict_macro
     AA[3*1+2] = AA[3*2+1];
     AA[3*2+2] = A[3*2+0]*A[3*2+0] + A[3*2+1]*A[3*2+1] + A[3*2+2]*A[3*2+2];
 }
-inline void kabsch::aat3(float * restrict_macro AA, const float * restrict_macro A) 
+inline void kabsch::aat3(float * restrict_macro AA, const float * restrict_macro A)
 {
     AA[3*0+0] = A[3*0+0]*A[3*0+0] + A[3*1+0]*A[3*1+0] + A[3*2+0]*A[3*2+0];
     AA[3*1+0] = A[3*0+0]*A[3*0+1] + A[3*1+0]*A[3*1+1] + A[3*2+0]*A[3*2+1];
@@ -216,7 +214,7 @@ inline void kabsch::aat3(float * restrict_macro AA, const float * restrict_macro
     AA[3*1+2] = AA[3*2+1];
     AA[3*2+2] = A[3*0+2]*A[3*0+2] + A[3*1+2]*A[3*1+2] + A[3*2+2]*A[3*2+2];
 }
-inline void kabsch::trans3(float * restrict_macro A) 
+inline void kabsch::trans3(float * restrict_macro A)
 {
     float tmp;
 
@@ -232,14 +230,14 @@ inline void kabsch::trans3(float * restrict_macro A)
     A[3*2+1] = A[3*1+2];
     A[3*1+2] = tmp;
 }
-void kabsch::solvecubic(float * restrict_macro c) 
+void kabsch::solvecubic(float * restrict_macro c)
 {
     const float sq3d2 = 0.86602540378443864676f, c2d3 = c[2]/3,
             c2sq = c[2]*c[2], Q = (3*c[1]-c2sq)/9,
             R = (c[2]*(9*c[1]-2*c2sq)-27*c[0])/54;
     float tmp, t, sint, cost;
- 
-    if (Q < 0) 
+
+    if (Q < 0)
     {
         /*
          * Instead of computing
@@ -266,17 +264,17 @@ void kabsch::solvecubic(float * restrict_macro c)
         c[1] = cost - sint;
         c[2] = cost + sint;
     }
-    else 
+    else
     {
         tmp = cbrt(R);
         c[0] = -c2d3 + 2*tmp;
         c[1] = c[2] = -c2d3 - tmp;
     }
 }
-void kabsch::ldu3(float * restrict_macro A, int * restrict_macro P) 
+void kabsch::ldu3(float * restrict_macro A, int * restrict_macro P)
 {
     int tmp;
- 
+
     P[1] = 1;
     P[2] = 2;
 
@@ -285,14 +283,14 @@ void kabsch::ldu3(float * restrict_macro A, int * restrict_macro P)
             (std::fabs(A[3*2+0]) > std::fabs(A[3*0+0]) ? 2 : 0);
     P[P[0]] = 0;
 
-    if (std::fabs(A[3*P[2]+2]) > std::fabs(A[3*P[1]+1])) 
+    if (std::fabs(A[3*P[2]+2]) > std::fabs(A[3*P[1]+1]))
     {
         tmp = P[1];
         P[1] = P[2];
         P[2] = tmp;
     }
- 
-    if (A[3*P[0]+0] != 0.f) 
+
+    if (A[3*P[0]+0] != 0.f)
     {
         A[3*P[1]+0] = A[3*P[1]+0]/A[3*P[0]+0];
         A[3*P[2]+0] = A[3*P[2]+0]/A[3*P[0]+0];
@@ -302,7 +300,7 @@ void kabsch::ldu3(float * restrict_macro A, int * restrict_macro P)
 
     A[3*P[1]+1] = A[3*P[1]+1] - A[3*P[0]+1]*A[3*P[1]+0]*A[3*P[0]+0];
 
-    if (A[3*P[1]+1] != 0.f) 
+    if (A[3*P[1]+1] != 0.f)
     {
         A[3*P[2]+1] = (A[3*P[2]+1] - A[3*P[0]+1]*A[3*P[2]+0]*A[3*P[0]+0])/A[3*P[1]+1];
         A[3*P[1]+2] = (A[3*P[1]+2] - A[3*P[0]+2]*A[3*P[1]+0]*A[3*P[0]+0])/A[3*P[1]+1];
@@ -310,7 +308,7 @@ void kabsch::ldu3(float * restrict_macro A, int * restrict_macro P)
 
     A[3*P[2]+2] = A[3*P[2]+2] - A[3*P[0]+2]*A[3*P[2]+0]*A[3*P[0]+0] - A[3*P[1]+2]*A[3*P[2]+1]*A[3*P[1]+1];
 }
-void kabsch::svd3(float * restrict_macro U, float * restrict_macro S, float * restrict_macro V, const float * restrict_macro A) 
+void kabsch::svd3(float * restrict_macro U, float * restrict_macro S, float * restrict_macro V, const float * restrict_macro A)
 {
     const float thr = 1e-10f;
     int P[3], k;
@@ -410,8 +408,8 @@ void kabsch::svd3(float * restrict_macro U, float * restrict_macro S, float * re
 
     /* Count the rank */
     k = (S[0] > thr) + (S[1] > thr) + (S[2] > thr);
- 
-    switch (k) 
+
+    switch (k)
     {
         case 0:
             /*
@@ -554,7 +552,7 @@ inline void kabsch::QRDecomposition(// matrix that we want to decompose
 {
 	float ch1,sh1,ch2,sh2,ch3,sh3;
     float a,b;
-    
+
     // first givens rotation (ch,0,0,sh)
     QRGivensQuaternion(b11,b21,ch1,sh1);
     a = 1-2*sh1*sh1;
@@ -563,7 +561,7 @@ inline void kabsch::QRDecomposition(// matrix that we want to decompose
     r11 = a*b11+b*b21;  r12 = a*b12+b*b22;  r13 = a*b13+b*b23;
     r21 = -b*b11+a*b21; r22 = -b*b12+a*b22; r23 = -b*b13+a*b23;
     r31 = b31;          r32 = b32;          r33 = b33;
-  
+
     // second givens rotation (ch,0,-sh,0)
     QRGivensQuaternion(r11,r31,ch2,sh2);
     a = 1-2*sh2*sh2;
@@ -590,16 +588,16 @@ inline void kabsch::QRDecomposition(// matrix that we want to decompose
     float sh22 = sh2*sh2;
     float sh32 = sh3*sh3;
 
-    q11 = (-1+2*sh12)*(-1+2*sh22); 
-    q12 = 4*ch2*ch3*(-1+2*sh12)*sh2*sh3+2*ch1*sh1*(-1+2*sh32); 
+    q11 = (-1+2*sh12)*(-1+2*sh22);
+    q12 = 4*ch2*ch3*(-1+2*sh12)*sh2*sh3+2*ch1*sh1*(-1+2*sh32);
     q13 = 4*ch1*ch3*sh1*sh3-2*ch2*(-1+2*sh12)*sh2*(-1+2*sh32);
 
-    q21 = 2*ch1*sh1*(1-2*sh22); 
-    q22 = -8*ch1*ch2*ch3*sh1*sh2*sh3+(-1+2*sh12)*(-1+2*sh32); 
+    q21 = 2*ch1*sh1*(1-2*sh22);
+    q22 = -8*ch1*ch2*ch3*sh1*sh2*sh3+(-1+2*sh12)*(-1+2*sh32);
     q23 = -2*ch3*sh3+4*sh1*(ch3*sh1*sh3+ch1*ch2*sh2*(-1+2*sh32));
-    
-    q31 = 2*ch2*sh2; 
-    q32 = 2*ch3*(1-2*sh22)*sh3; 
+
+    q31 = 2*ch2*sh2;
+    q32 = 2*ch3*(1-2*sh22)*sh3;
     q33 = (-1+2*sh22)*(-1+2*sh32);
 }
 
@@ -812,7 +810,7 @@ inline void kabsch::condSwap(const bool &c, float &X, float &Y)
 	// used in step 2
     float Z = X;
     X = c ? Y : X;
-    Y = c ? Z : Y;	
+    Y = c ? Z : Y;
 }
 
 inline float kabsch::accurateSqrt(float x)
@@ -912,7 +910,7 @@ kabsch::kabsch(const Point &p, const Point &q)
 	d = ( 	(V11*V22*V33 + V12*V23*V31 + V13*V21*V32 - V13*V22*V31 - V11*V23*V32 - V12*V21*V33) *
 	 		(U11*U22*U33 + U12*U23*U31 + U13*U21*U32 - U13*U22*U31 - U11*U23*U32 - U12*U21*U33)
 	 	 < 0.f);
-	
+
 	if(d)
 	{
 		//S[2] = -S[2];
@@ -947,4 +945,3 @@ kabsch::kabsch(const Point &p, const Point &q)
 	}
 	this->rmsd = std::sqrt(this->rmsd / p.n);
 }
-

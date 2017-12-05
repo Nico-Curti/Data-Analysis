@@ -1,5 +1,12 @@
 #pragma once
-#if defined(__linux__) || defined(__CYGWIN__) || defined(__apple__)
+
+#if defined (_WIN32)
+const char sep = '\\';
+#define GetCurrentDir _getcwd
+#define Popen _popen
+#include <Windows.h>
+#include <direct.h>
+#else
 const char sep = '/';
 #define GetCurrentDir getcwd
 #define Popen popen
@@ -8,12 +15,6 @@ const char sep = '/';
 #include <errno.h>
 #include <unistd.h>
 #include <stdio.h>
-#elif defined(_WIN32)
-const char sep = '\\';
-#define GetCurrentDir _getcwd
-#define Popen _popen
-#include <Windows.h>
-#include <direct.h>
 #endif
 
 #include <iostream>
@@ -62,15 +63,15 @@ namespace os
 
 /**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-***_**
 -**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**--**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**_**
-*_**																																														    *_**	
-*_**    :::::::::::  ::::    ::::   :::::::::   :::         ::::::::::  ::::    ::::   ::::::::::  ::::    :::  :::::::::::      :::      :::::::::::  :::::::::::   ::::::::   ::::    :::		*_**	 
-*_**        :+:      +:+:+: :+:+:+  :+:    :+:  :+:         :+:         +:+:+: :+:+:+  :+:         :+:+:   :+:      :+:        :+: :+:        :+:          :+:      :+:    :+:  :+:+:   :+:		*_**	 
-*_**        +:+      +:+ +:+:+ +:+  +:+    +:+  +:+         +:+         +:+ +:+:+ +:+  +:+         :+:+:+  +:+      +:+       +:+   +:+       +:+          +:+      +:+    +:+  :+:+:+  +:+		*_**	 
-*_**        +#+      +#+  +:+  +#+  +#++:++#+   +#+         +#++:++#    +#+  +:+  +#+  +#++:++#    +#+ +:+ +#+      +#+      +#++:++#++:      +#+          +#+      +#+    +:+  +#+ +:+ +#+		*_**	 
-*_**        +#+      +#+       +#+  +#+         +#+         +#+         +#+       +#+  +#+         +#+  +#+#+#      +#+      +#+     +#+      +#+          +#+      +#+    +#+  +#+  +#+#+#		*_**	 
-*_**        #+#      #+#       #+#  #+#         #+#         #+#         #+#       #+#  #+#         #+#   #+#+#      #+#      #+#     #+#      #+#          #+#      #+#    #+#  #+#   #+#+#		*_**	 
-*_**    ###########  ###       ###  ###         ##########  ##########  ###       ###  ##########  ###    ####      ###      ###     ###      ###      ###########   ########   ###    ####		*_**	 
-*_**																																															*_**			
+*_**																																														    *_**
+*_**    :::::::::::  ::::    ::::   :::::::::   :::         ::::::::::  ::::    ::::   ::::::::::  ::::    :::  :::::::::::      :::      :::::::::::  :::::::::::   ::::::::   ::::    :::		*_**
+*_**        :+:      +:+:+: :+:+:+  :+:    :+:  :+:         :+:         +:+:+: :+:+:+  :+:         :+:+:   :+:      :+:        :+: :+:        :+:          :+:      :+:    :+:  :+:+:   :+:		*_**
+*_**        +:+      +:+ +:+:+ +:+  +:+    +:+  +:+         +:+         +:+ +:+:+ +:+  +:+         :+:+:+  +:+      +:+       +:+   +:+       +:+          +:+      +:+    +:+  :+:+:+  +:+		*_**
+*_**        +#+      +#+  +:+  +#+  +#++:++#+   +#+         +#++:++#    +#+  +:+  +#+  +#++:++#    +#+ +:+ +#+      +#+      +#++:++#++:      +#+          +#+      +#+    +:+  +#+ +:+ +#+		*_**
+*_**        +#+      +#+       +#+  +#+         +#+         +#+         +#+       +#+  +#+         +#+  +#+#+#      +#+      +#+     +#+      +#+          +#+      +#+    +#+  +#+  +#+#+#		*_**
+*_**        #+#      #+#       #+#  #+#         #+#         #+#         #+#       #+#  #+#         #+#   #+#+#      #+#      #+#     #+#      #+#          #+#      #+#    #+#  #+#   #+#+#		*_**
+*_**    ###########  ###       ###  ###         ##########  ##########  ###       ###  ##########  ###    ####      ###      ###     ###      ###      ###########   ########   ###    ####		*_**
+*_**																																															*_**
 -**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**--**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**_**
 -**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**--**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**_**/
 
@@ -209,14 +210,19 @@ namespace os
 	{
 		// Pay Attention : if you run this function in WIN32 cmd must be related to Command Prompt (NO POWERSHELL!)
 		std::array<char, FILENAME_MAX> buffer;
-	    std::string result;
-	    std::shared_ptr<FILE> pipe(Popen(cmd, "r"), pclose);
-	    if (!pipe) throw std::runtime_error("popen() failed!");
+    std::string result;
+#if !defined (__clang__)
+		std::shared_ptr<FILE> pipe(Popen(cmd, "r"), pclose);
+            if (!pipe) throw std::runtime_error("popen() failed!");
 	    while (!feof(pipe.get())) {
 	        if (fgets(buffer.data(), FILENAME_MAX, pipe.get()) != nullptr)
 	            result += buffer.data();
-	    }
-	    return result;
+			}
+#else
+		std::cerr << "Unsupported architecture!" << std::endl;
+		exit(1);
+#endif
+		return result;
 	}
 
 	inline std::string local_path()
@@ -247,7 +253,7 @@ namespace os
 				if(output != "")
 				{
 					os << token[i1] << " ";
-					w_idx(os, token, args...);	
+					w_idx(os, token, args...);
 				}
 				else
 				{
@@ -269,7 +275,7 @@ namespace os
 
 	inline bool dir_exists(const std::string& dirName_in)
 	{
-#if defined _WIN32
+#if defined (_WIN32)
 		DWORD ftyp = GetFileAttributesA(dirName_in.c_str());
 		if (ftyp == INVALID_FILE_ATTRIBUTES)
 			return false;  //something is wrong with your path!
@@ -278,7 +284,7 @@ namespace os
 			return true;   // this is a directory!
 
 		return false;    // this is not a directory!
-#elif defined (__linux__) || defined(__CYGWIN__) || defined(__apple__)
+#else
 		DIR* dir = opendir(dirName_in.c_str());
 		if( dir )
 		{
@@ -290,9 +296,6 @@ namespace os
 			return false;
 		}
 		return false;
-#else
-		std::cerr << "Unsupported system!!" << std::endl; 
-		exit(1);
 #endif
 	}
 
@@ -307,7 +310,7 @@ namespace os
 	inline std::vector<std::string> files_in_directory(const std::string &directory)
 	{
 		std::vector<std::string> files;
-#if defined _WIN32
+#if defined (_WIN32)
 		WIN32_FIND_DATA fileData;
 		HANDLE hFind;
 		if (!((hFind = FindFirstFile((directory + "*").c_str(), &fileData)) == INVALID_HANDLE_VALUE))
@@ -316,21 +319,18 @@ namespace os
 					files.push_back(fileData.cFileName);
 
 		FindClose(hFind);
-#elif defined (__linux__) || defined(__CYGWIN__) || defined(__apple__)
+#else
 		DIR *dp;
 	    struct dirent *dirp;
-	    if((dp  = opendir(directory.c_str())) == nullptr) 
+	    if((dp  = opendir(directory.c_str())) == nullptr)
 	    {
 	        std::cerr << "Error(" << errno << ") opening " << directory << std::endl;
 	        exit(1);
 	    }
-	    while ((dirp = readdir(dp)) != nullptr) 
+	    while ((dirp = readdir(dp)) != nullptr)
 	    	if(directory + std::string(dirp->d_name) != "." && directory + std::string(dirp->d_name) != ".." && !dir_exists(dirp->d_name))
 	        	files.push_back(std::string(dirp->d_name));
 	    closedir(dp);
-#else
-		std::cerr << "Unsupported system!!" << std::endl; 
-		exit(1);
 #endif
 		//std::cout << files.size() << " files found in " << directory << std::endl;
 		return files;
@@ -349,7 +349,7 @@ namespace os
 	            if( (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) )
 	            {
 	                // make sure we skip "." and "..".  Have to use strcmp here because
-	                // some file names can start with a dot, so just testing for the 
+	                // some file names can start with a dot, so just testing for the
 	                // first dot is not suffient.
 	                if( strcmp(data.cFileName,".") != 0 &&strcmp(data.cFileName,"..") != 0)
 	                {
@@ -375,7 +375,7 @@ namespace os
 	        FindClose(h);
 	    }
 	    return size;
-#elif defined (__linux__) || defined (__CYGWIN__) || defined(__apple__)
+#else
 	    std::string size = capture_output(("du -sb " + path).c_str());
 	    return std::stoi(size.substr(0, size.find_first_of("/")));
 #endif
@@ -407,7 +407,7 @@ namespace os
 			std::cerr << "mv: impossibile eseguire stat di " << filename << ": File o directory non esistente" << std::endl;
 			exit(1);
 		}
-#elif  defined (__linux__) || defined(__CYGWIN__) || defined(__apple__)
+#else
 		if(file_exists(filename))
 			if( 0 != std::system(("mv " + filename + " /." + filename).c_str()) )
 				exit(1);
@@ -439,8 +439,8 @@ namespace os
 					directories.push_back(findfiledata.cFileName);
 			} while (FindNextFile(hFind, &findfiledata) != 0);
 		}
-#elif defined (__linux__) || defined (__CYGWIN__) || defined(__apple__)
-		DIR *dir = opendir(path.c_str());	
+#else
+		DIR *dir = opendir(path.c_str());
 		dirent *entry = readdir(dir);
 		while (entry != nullptr)
 		{
@@ -483,5 +483,3 @@ namespace os
 		return;
 	}
 }
-
-
