@@ -1,4 +1,4 @@
-image: Visual Studio 2017
+image: Visual Studio 2015
 clone_folder: c:\projects\data_analysis
 configuration: Release
 
@@ -19,7 +19,7 @@ environment:
 install:
   - if [%COMPILER%]==[vs] cinst cmake
   - if [%COMPILER%]==[vs] SET "PATH=C:\Program Files\CMake\bin;%PATH%"
-  - if [%COMPILER%]==[vs] call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86
+  - if [%COMPILER%]==[vs] call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
   - if [%COMPILER%]==[cygwin] SET "PATH=C:\cygwin64\bin;C:\cygwin64\usr\bin;%PATH%"
   - if [%COMPILER%]==[cygwin] SET PATH=%PATH:C:\Program Files\Git\usr\bin;=%
   - git submodule -q update --init --recursive
@@ -40,6 +40,6 @@ install:
 build_script:
   - if [%COMPILER%]==[cygwin] %CYGSH% 'cmake .. -G "Unix Makefiles"
   - if [%COMPILER%]==[cygwin] %CYGSH% 'cmake --build .'
-  - if [%COMPILER%]==[vs] if [%LINKING%]==[dynamic] cmake .. -G "Visual Studio 15 2017" "-DCMAKE_TOOLCHAIN_FILE=C:\projects\vcpkg\scripts\buildsystems\vcpkg.cmake" "-DCMAKE_BUILD_TYPE=Release"
-  - if [%COMPILER%]==[vs] if [%LINKING%]==[static]  cmake .. -G "Visual Studio 15 2017" "-DCMAKE_TOOLCHAIN_FILE=C:\projects\vcpkg\scripts\buildsystems\vcpkg.cmake" "-DVCPKG_TARGET_TRIPLET=x86-windows-static" "-DCMAKE_BUILD_TYPE=Release"
+  - if [%COMPILER%]==[vs] if [%LINKING%]==[dynamic] cmake .. -G "Visual Studio 14 2015" -T"LLVM-vs2014" "-DCMAKE_TOOLCHAIN_FILE=C:\projects\vcpkg\scripts\buildsystems\vcpkg.cmake" "-DCMAKE_BUILD_TYPE=Release"
+  - if [%COMPILER%]==[vs] if [%LINKING%]==[static]  cmake .. -G "Visual Studio 14 2015" -T"LLVM-vs2014" "-DCMAKE_TOOLCHAIN_FILE=C:\projects\vcpkg\scripts\buildsystems\vcpkg.cmake" "-DVCPKG_TARGET_TRIPLET=x86-windows-static" "-DCMAKE_BUILD_TYPE=Release"
   - if [%COMPILER%]==[vs] cmake --build . --config Release
