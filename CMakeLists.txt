@@ -1,14 +1,10 @@
 cmake_minimum_required (VERSION 3.0)
 
-if(NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE RELEASE)
-endif()
-
-project (runtest_library)
+project (Data-Analysis)
 enable_language (CXX)
 set (CMAKE_CXX_STANDARD 11)
 
-######################################## macro for Visual Studio warnings ===========================
+######################################## macro for Visual Studio  ===========================
 macro(configure_link_flags)
   set(MSVC_C_CXX_FLAGS
     CMAKE_C_FLAGS_DEBUG
@@ -46,31 +42,12 @@ macro(configure_link_flags)
 endmacro()
 
 
-macro(print_link_flags)
-  set(MSVC_C_CXX_FLAGS
-    CMAKE_C_FLAGS_DEBUG
-    CMAKE_C_FLAGS_MINSIZEREL
-    CMAKE_C_FLAGS_RELEASE
-    CMAKE_C_FLAGS_RELWITHDEBINFO
-    CMAKE_CXX_FLAGS_DEBUG
-    CMAKE_CXX_FLAGS_MINSIZEREL
-    CMAKE_CXX_FLAGS_RELEASE
-    CMAKE_CXX_FLAGS_RELWITHDEBINFO
-  )
-  message(STATUS "Build flags:")
-  foreach(flag ${MSVC_C_CXX_FLAGS})
-    message(STATUS " ${flag}: ${${flag}}")
-  endforeach()
-  message(STATUS "")
-endmacro()
-
 if(MSVC)
   add_definitions(-D_SCL_SECURE_NO_WARNINGS)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   add_definitions(-DBOOST_NO_RVALUE_REFERENCES)
-  configure_link_flags()
   add_definitions(-DNOMINMAX)
-  #print_link_flags()
+  configure_link_flags()
 endif()
 
 if (APPLE)
@@ -119,37 +96,37 @@ endif()
 # ============ .EXE ===============
 
 add_executable(	runtest_fstat
-				${TST_DIR}/runtest_fstat.cpp											
-				${HPP_DIR}/timing_func.hpp 
+				${TST_DIR}/runtest_fstat.cpp
+				${HPP_DIR}/timing_func.hpp
 				${HPP_DIR}/fstat.hpp
 			  )
 #add_executable( runtest_fbp
-#				${TST_DIR}/runtest_bcrfbp.cpp											
-#				${HPP_DIR}/FocusingBeliefPropagation.hpp 
-#				${HPP_DIR}/os.hpp 
-#				${HPP_DIR}/parse_args.hpp 
-#				${HPP_DIR}/fmath.hpp 
-#				${HPP_DIR}/patterns.hpp 
+#				${TST_DIR}/runtest_bcrfbp.cpp
+#				${HPP_DIR}/FocusingBeliefPropagation.hpp
+#				${HPP_DIR}/os.hpp
+#				${HPP_DIR}/parse_args.hpp
+#				${HPP_DIR}/fmath.hpp
+#				${HPP_DIR}/patterns.hpp
 #				${HPP_DIR}/score_coef.hpp
 #			  )
-#add_executable(	runtest_rsgd 
+#add_executable(	runtest_rsgd
 #				${CMAKE_SOURCE_DIR}/tst/runtest_bcrsgd.cpp
-#				${HPP_DIR}/ReplicatedSGD.hpp 
-#				${HPP_DIR}/os.hpp 
-#				${HPP_DIR}/parse_args.hpp 
-#				${HPP_DIR}/fmath.hpp 
-#				${HPP_DIR}/patterns.hpp 
-#				${HPP_DIR}/score_coef.hpp 										
+#				${HPP_DIR}/ReplicatedSGD.hpp
+#				${HPP_DIR}/os.hpp
+#				${HPP_DIR}/parse_args.hpp
+#				${HPP_DIR}/fmath.hpp
+#				${HPP_DIR}/patterns.hpp
+#				${HPP_DIR}/score_coef.hpp
 #			  )
-add_executable(	runtest_cv	 
+add_executable(	runtest_cv
 				${CMAKE_SOURCE_DIR}/tst/runtest_cv.cpp
-				${HPP_DIR}/cross_validation.hpp 
+				${HPP_DIR}/cross_validation.hpp
 			  )
 add_executable(	runtest_nn
 				${CMAKE_SOURCE_DIR}/tst/runtest_nn.cpp
-				${HPP_DIR}/classifier.hpp 
-				${HPP_DIR}/neural_network.hpp 
-				${HPP_DIR}/fmath.hpp 
+				${HPP_DIR}/classifier.hpp
+				${HPP_DIR}/neural_network.hpp
+				${HPP_DIR}/fmath.hpp
 				${HPP_DIR}/patterns.hpp
 			  )
 add_executable( runtest_pca
@@ -159,16 +136,15 @@ add_executable( runtest_pca
 				${HPP_DIR}/fmath.hpp
         ${HPP_DIR}/patterns.hpp
 			  )
-add_executable(	runtest_bayes_cls 
+add_executable(	runtest_bayes_cls
 				${CMAKE_SOURCE_DIR}/tst/runtest_bayes_cls.cpp
 				${HPP_DIR}/classifier.hpp
 				${HPP_DIR}/diagQDA.hpp
         ${HPP_DIR}/QDA.hpp
 			  )
-add_executable(	runtest_kabsch 	
+add_executable(	runtest_kabsch
 				${CMAKE_SOURCE_DIR}/tst/runtest_kabsch.cpp
 				${HPP_DIR}/kabsch.hpp
 				${HPP_DIR}/fmath.hpp
 				${HPP_DIR}/points.hpp
 			  )
-
