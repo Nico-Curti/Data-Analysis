@@ -1,4 +1,4 @@
-image: Visual Studio 2015
+image: Visual Studio 2017
 clone_folder: c:\projects\data_analysis
 configuration: Release
 
@@ -8,18 +8,20 @@ environment:
       COMPILER: cygwin
       CYGWIN_NOWINPATH: yes
       CYGSH: C:\cygwin64\bin\bash -c
-    - platform: Win32
+      USE_CLANG: OFF
+      INSTALL_NEW_CLANG: OFF
+    - platform: clang-cl
       COMPILER: clang
-      LINKING: static
-    - platform: Win32
-      COMPILER: clang
-      LINKING: dynamic
+      MSVC_SETUP_PATH: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+      MSVC_SETUP_ARG: x64
+      USE_CLANG: ON
+      INSTALL_NEW_CLANG: ON
+      CLANG_URL: http://releases.llvm.org/5.0.0/LLVM-5.0.0-win64.exe
 
 
 install:
-  - if [%COMPILER%]==[clang] cinst cmake
+  - if [%COMPILER%]==[clang] cinst cmake ninja
   - if [%COMPILER%]==[clang] SET "PATH=C:\Program Files\CMake\bin;%PATH%"
-#  - if [%COMPILER%]==[clang] call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
   - if [%COMPILER%]==[cygwin] SET "PATH=C:\cygwin64\bin;C:\cygwin64\usr\bin;%PATH%"
   - if [%COMPILER%]==[cygwin] SET PATH=%PATH:C:\Program Files\Git\usr\bin;=%
   - git submodule -q update --init --recursive
@@ -27,19 +29,29 @@ install:
   - mkdir cygwin-downloads
   - ps: if($env:COMPILER -eq "cygwin") { Invoke-WebRequest https://cygwin.com/setup-x86_64.exe -OutFile C:\projects\cygwin-setup.exe }
   - if [%COMPILER%]==[cygwin] C:\projects\cygwin-setup.exe --quiet-mode --no-shortcuts --no-startmenu --no-desktop --upgrade-also --root C:\cygwin64 --local-package-dir C:\projects\cygwin-downloads --packages gcc-g++,cmake
-  - git clone https://github.com/Microsoft/vcpkg
-  - cd C:\projects\vcpkg\
-  - if [%COMPILER%]==[clang] powershell -exec bypass scripts\bootstrap.ps1
-  - if [%COMPILER%]==[clang] vcpkg integrate install
-#  - if [%COMPILER%]==[clang] if [%LINKING%]==[dynamic] vcpkg install tclap
-#  - if [%COMPILER%]==[clang] if [%LINKING%]==[static] vcpkg install tclap:x86-windows-static
-  - cd C:\projects\data_analysis\
-  - mkdir build
-  - cd build
+  - mkdir C:\projects\deps
+  - cd C:\projects\deps
+  - if [%COMPILER%]==[clang] IF DEFINED INSTALL_NEW_CLANG appveyor DownloadFile %CLANG_URL% -FileName llvm-installer.exe
+  - if [%COMPILER%]==[clang] IF DEFINED INSTALL_NEW_CLANG START /WAIT llvm-installer.exe /S /D=C:\"Program Files\LLVM"
+
+before_build:
+  - if [%COMPILER%]==[clang] set LLVM_ROOT=%APPVEYOR_BUILD_FOLDER%
+  - if [%COMPILER%]==[clang] set LLVM_GIT=http://llvm.org/git
+  - if [%COMPILER%]==[clang] git clone --depth=1 %LLVM_GIT%/clang.git %LLVM_ROOT%\tools\clang
+  - if [%COMPILER%]==[clang] git clone --depth=1 %LLVM_GIT%/clang-tools-extra.git %LLVM_ROOT%\tools\clang\tools\extra
+  - if [%COMPILER%]==[clang] git clone --depth=1 %LLVM_GIT%/lld.git %LLVM_ROOT%\tools\lld
+  - if [%COMPILER%]==[clang] call "%MSVC_SETUP_PATH%" %MSVC_SETUP_ARG%
+  - cd %APPVEYOR_BUILD_FOLDER%
 
 build_script:
+  - md C:\projects\build-llvm
+  - cd C:\projects\build-llvm
+  - echo %configuration%
+  - if [%COMPILER%]==[clang] IF DEFINED USE_CLANG set PATH="C:\Program Files\LLVM\bin";%PATH%
+  - if [%COMPILER%]==[clang] IF DEFINED USE_CLANG clang-cl -v
+  - if [%COMPILER%]==[clang] IF DEFINED USE_CLANG set CMAKE_EXTRA_OPTIONS=-DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
+
   - if [%COMPILER%]==[cygwin] %CYGSH% 'cmake .. -G "Unix Makefiles"
   - if [%COMPILER%]==[cygwin] %CYGSH% 'cmake --build .'
-  - if [%COMPILER%]==[clang] if [%LINKING%]==[dynamic] cmake .. -G "Visual Studio 14 2015" -T"LLVM-vs2014"  "-DCMAKE_CXX_COMPILER=clang++.exe" "-DCMAKE_C_COMPILER=clang.exe" "-DCMAKE_TOOLCHAIN_FILE=C:\projects\vcpkg\scripts\buildsystems\vcpkg.cmake" "-DCMAKE_BUILD_TYPE=Release"
-  - if [%COMPILER%]==[clang] if [%LINKING%]==[static]  cmake .. -G "Visual Studio 14 2015" -T"LLVM-vs2014"  "-DCMAKE_CXX_COMPILER=clang++.exe" "-DCMAKE_C_COMPILER=clang.exe" "-DCMAKE_TOOLCHAIN_FILE=C:\projects\vcpkg\scripts\buildsystems\vcpkg.cmake" "-DVCPKG_TARGET_TRIPLET=x86-windows-static" "-DCMAKE_BUILD_TYPE=Release"
-  - if [%COMPILER%]==[clang] cmake --build . --config Release
+  - if [%COMPILER%]==[clang] cmake -G "Ninja" "-DCMAKE_INSTALL_PREFIX=C:\Libraries" "-DCMAKE_BUILD_TYPE=%configuration%" "-DLLVM_ENABLE_ASSERTIONS=ON" "-DLLVM_INSTALL_UTILS=ON" %CMAKE_EXTRA_OPTIONS% %APPVEYOR_BUILD_FOLDER%
+  - if [%COMPILER%]==[clang] cmake --build .

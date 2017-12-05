@@ -6,7 +6,6 @@ os:
 
 compiler:
   - gcc
-  - clang
 
 addons:
   apt:
@@ -16,19 +15,9 @@ addons:
       - gcc-6
       - g++-6
       - cmake
-#      - libtclap-dev
-
-matrix:
-    exclude:
-    - os: osx
-      compiler: gcc
-    - os: linux
-      compiler: clang
 
 before_install:
-  # OSX Setup
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew update                                                                               ;fi
-#  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install tclap                                                                        ;fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew cask uninstall oclint                                                                ;fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install gcc                                                                          ;fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew link --overwrite gcc                                                                 ;fi
@@ -44,6 +33,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then export CMAKE_C_COMPILER=${CC}                                                             ;fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then export CMAKE_CXX_COMPILER=${CXX}                                                          ;fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then export CMAKE_LINKER=clang++                                                               ;fi
+
   - mkdir build && cd build
 
 script:
