@@ -16,8 +16,6 @@ environment:
       CC: clang-cl.exe
       CXX: clang-cl.exe
 
-
-
 install:
   - if [%COMPILER%]==[clang] cinst cmake ninja
   - if [%COMPILER%]==[clang] SET "PATH=C:\Program Files\CMake\bin;%PATH%"
@@ -30,6 +28,8 @@ install:
   - mkdir cygwin-downloads
   - ps: if($env:COMPILER -eq "cygwin") { Invoke-WebRequest https://cygwin.com/setup-x86_64.exe -OutFile C:\projects\cygwin-setup.exe }
   - if [%COMPILER%]==[cygwin] C:\projects\cygwin-setup.exe --quiet-mode --no-shortcuts --no-startmenu --no-desktop --upgrade-also --root C:\cygwin64 --local-package-dir C:\projects\cygwin-downloads --packages gcc-g++,cmake
+  - if [%COMPILER%]==[clang] appveyor DownloadFile %CLANG_URL% -FileName llvm-installer.exe
+  - if [%COMPILER%]==[clang] START /WAIT llvm-installer.exe /S /D=C:\"Program Files\LLVM"
 
 before_build:
   - cd C:\projects\data_analysis
