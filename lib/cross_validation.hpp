@@ -48,8 +48,12 @@ template<class In> void CrossValidation<In>::LeaveOneOut(const In &beg, const In
 {
 	this->beg = beg; this->end = end;
 	this->whichFoldToGo = new int[end - beg];
-	int foldNo = 0;
-	for(In i = beg; i != end; ++i) whichFoldToGo[foldNo] = (++foldNo);
+	int foldNo = 0, cnt = 0;
+	for(In i = beg; i != end; ++i)
+	{
+		whichFoldToGo[cnt] = (++foldNo);
+		++cnt;
+	}
 	if(shuff)
 	{
 		std::random_device rd;

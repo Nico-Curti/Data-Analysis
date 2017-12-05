@@ -8,6 +8,12 @@ int main(int argc, char *argv[])
 	Patterns<float> data(patternsfile);
 
 	float **components = pca(data.input, data.Ncol, data.Nrow, Ncomp);
+	for(int i = 0; i < Ncomp; ++i)
+	{
+		for(int j = 0; j < data.Nrow; ++j)
+			std::cout << components[i][j] << " ";
+		std::cout << std::endl;
+	}
 
 	return 0;
 }

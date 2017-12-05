@@ -209,9 +209,9 @@ namespace os
 	inline std::string capture_output(const char* cmd)
 	{
 		// Pay Attention : if you run this function in WIN32 cmd must be related to Command Prompt (NO POWERSHELL!)
-		std::array<char, FILENAME_MAX> buffer;
-    std::string result;
+    	std::string result;
 #if !defined (__clang__)
+		std::array<char, FILENAME_MAX> buffer;
 		std::shared_ptr<FILE> pipe(Popen(cmd, "r"), pclose);
             if (!pipe) throw std::runtime_error("popen() failed!");
 	    while (!feof(pipe.get())) {
@@ -384,8 +384,10 @@ namespace os
 	inline void copy(const std::string &source, const std::string &dest)
 	{
 		if(file_exists(source))
+		{
 			if( 0 != std::system(("cp " + source + " " + dest).c_str()) )
 				exit(1);
+		}
 		else
 		{
 			std::cerr << "cp: impossibile eseguire stat di " << source << ": File o directory non esistente" << std::endl;
@@ -409,8 +411,10 @@ namespace os
 		}
 #else
 		if(file_exists(filename))
+		{
 			if( 0 != std::system(("mv " + filename + " /." + filename).c_str()) )
 				exit(1);
+		}
 		else
 		{
 			std::cerr << "mv: impossibile eseguire stat di " << filename << ": File o directory non esistente" << std::endl;
