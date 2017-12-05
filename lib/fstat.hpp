@@ -690,7 +690,6 @@ template<typename T> T* median(T **data, const int &Nrows, const int &Ncols)
 template<bool par, typename T, parallel<par, T>> T* autocorrelation(T *signal, const int &n_sample)
 {
 	T *auto_corr = new T[n_sample], maxC = std::numeric_limits<T>::min();
-	std::memset(auto_corr, 0, sizeof(T)*n_sample);
 #pragma omp parallel for reduction(max : maxC)
 	for(int m = 0; m < n_sample - 1; ++m)
 	{
