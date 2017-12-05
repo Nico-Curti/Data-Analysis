@@ -1,4 +1,5 @@
 #pragma once
+
 #if defined (_WIN32)
 const char sep = '\\';
 #define GetCurrentDir _getcwd
@@ -209,14 +210,19 @@ namespace os
 	{
 		// Pay Attention : if you run this function in WIN32 cmd must be related to Command Prompt (NO POWERSHELL!)
 		std::array<char, FILENAME_MAX> buffer;
-	    std::string result;
-	    std::shared_ptr<FILE> pipe(Popen(cmd, "r"), pclose);
-	    if (!pipe) throw std::runtime_error("popen() failed!");
+    std::string result;
+#if !defined (__clang__)
+		std::shared_ptr<FILE> pipe(Popen(cmd, "r"), pclose);
+            if (!pipe) throw std::runtime_error("popen() failed!");
 	    while (!feof(pipe.get())) {
 	        if (fgets(buffer.data(), FILENAME_MAX, pipe.get()) != nullptr)
 	            result += buffer.data();
-	    }
-	    return result;
+			}
+#else
+		std::cerr << "Unsupported architecture!" << std::endl;
+		exit(1);
+#endif
+		return result;
 	}
 
 	inline std::string local_path()

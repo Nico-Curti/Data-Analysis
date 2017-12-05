@@ -1,8 +1,15 @@
-rem cd %HOME%\Dropbox\Codes\Library
+rem cd %WORKSPACE%\Data-Analysis
+
+set CC="clang-cl.exe"
+set CXX="clang-cl.exe"
+rem set CC="clang.exe"
+rem set CXX="clang++.exe"
+
 rmdir /S /Q build
 mkdir build
 cd build
-rem cmake .. -G "Ninja" "-DCMAKE_CXX_COMPILER=C:/Program Files/LLVM/bin/clang-cl.exe" "-DCMAKE_C_COMPILER=C:/Program Files/LLVM/bin/clang-cl.exe" "-DCMAKE_TOOLCHAIN_FILE=%WORKSPACE%\vcpkg\scripts\buildsystems\vcpkg.cmake" "-DCMAKE_BUILD_TYPE=Release"
-cmake .. -G "Ninja" "-DCMAKE_CXX_COMPILER=C:/Program Files (x86)/LLVM/bin/clang-cl.exe" "-DCMAKE_C_COMPILER=C:/Program Files (x86)/LLVM/bin/clang-cl.exe" "-DCMAKE_TOOLCHAIN_FILE=%WORKSPACE%\vcpkg\scripts\buildsystems\vcpkg.cmake" "-DCMAKE_BUILD_TYPE=Release"
-cmake --build .
+
+rem cmake -T"LLVM-vs2015" -G "Visual Studio 15" "-DCMAKE_BUILD_TYPE=Release" ..
+cmake -G "Ninja" "-DCMAKE_BUILD_TYPE=Release" ..
+cmake --build . rem --config Release
 cd ..

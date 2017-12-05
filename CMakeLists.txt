@@ -50,6 +50,10 @@ if (APPLE)
 	add_definitions(-Wno-deprecated-declarations)
 endif()
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_definitions(-D_POSIX_C_SOURCE)
+endif()
+
 
 # make sure that the default is a RELEASE
 if(NOT CMAKE_BUILD_TYPE)
@@ -72,7 +76,8 @@ set (HPP_DIR ${CMAKE_SOURCE_DIR}/lib) # directory of hpp
 set (TST_DIR ${CMAKE_SOURCE_DIR}/tst) # runtest directory
 include_directories(${HPP_DIR})
 
-find_package(OpenMP REQUIRED)
+#find_package(OpenMP REQUIRED)
+find_package(OpenMP)
 if (OpenMP_CXX_VERSION_MAJOR LESS 4.0)
 	message(FATAL_ERROR " Your OpenMP is too old. Required OpenMP 4.0. Please upgrade.")
 endif()
@@ -87,7 +92,6 @@ if (NOT MSVC)
   set (CMAKE_CXX_FLAGS "-ffast-math ${CMAKE_CXX_FLAGS}") # perform more aggressive floating-point optimizations
   set (CMAKE_C_FLAGS "-ffast-math ${CMAKE_C_FLAGS}")
 endif()
-
 
 # ============ .EXE ===============
 
