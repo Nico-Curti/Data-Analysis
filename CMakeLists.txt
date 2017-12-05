@@ -18,26 +18,22 @@ macro(configure_link_flags)
   )
   if(${VCPKG_TARGET_TRIPLET} MATCHES "static")
     message(STATUS
-      "VCPKG: static link"
+      "MSVC: static link"
     )
     foreach(flag ${MSVC_C_CXX_FLAGS})
       if(${flag} MATCHES "/MD")
         string(REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}")
       endif()
     endforeach()
-    set(VCPKG_CRT_LINKAGE "static")
-    set(VCPKG_LIBRARY_LINKAGE "static")
   else()
     message(STATUS
-      "VCPKG: dynamic link"
+      "MSVC: dynamic link"
     )
     foreach(flag ${MSVC_C_CXX_FLAGS})
       if(${flag} MATCHES "/MT")
         string(REGEX REPLACE "/MT" "/MD" ${flag} "${${flag}}")
       endif()
     endforeach()
-    set(VCPKG_CRT_LINKAGE "dynamic")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
   endif()
 endmacro()
 

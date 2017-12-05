@@ -9,17 +9,17 @@ environment:
       CYGWIN_NOWINPATH: yes
       CYGSH: C:\cygwin64\bin\bash -c
     - platform: Win32
-      COMPILER: vs
+      COMPILER: clang
       LINKING: static
     - platform: Win32
-      COMPILER: vs
+      COMPILER: clang
       LINKING: dynamic
 
 
 install:
-  - if [%COMPILER%]==[vs] cinst cmake
-  - if [%COMPILER%]==[vs] SET "PATH=C:\Program Files\CMake\bin;%PATH%"
-#  - if [%COMPILER%]==[vs] call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+  - if [%COMPILER%]==[clang] cinst cmake
+  - if [%COMPILER%]==[clang] SET "PATH=C:\Program Files\CMake\bin;%PATH%"
+#  - if [%COMPILER%]==[clang] call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
   - if [%COMPILER%]==[cygwin] SET "PATH=C:\cygwin64\bin;C:\cygwin64\usr\bin;%PATH%"
   - if [%COMPILER%]==[cygwin] SET PATH=%PATH:C:\Program Files\Git\usr\bin;=%
   - git submodule -q update --init --recursive
@@ -29,10 +29,10 @@ install:
   - if [%COMPILER%]==[cygwin] C:\projects\cygwin-setup.exe --quiet-mode --no-shortcuts --no-startmenu --no-desktop --upgrade-also --root C:\cygwin64 --local-package-dir C:\projects\cygwin-downloads --packages gcc-g++,cmake
   - git clone https://github.com/Microsoft/vcpkg
   - cd C:\projects\vcpkg\
-  - if [%COMPILER%]==[vs] powershell -exec bypass scripts\bootstrap.ps1
-  - if [%COMPILER%]==[vs] vcpkg integrate install
-#  - if [%COMPILER%]==[vs] if [%LINKING%]==[dynamic] vcpkg install tclap
-#  - if [%COMPILER%]==[vs] if [%LINKING%]==[static] vcpkg install tclap:x86-windows-static
+  - if [%COMPILER%]==[clang] powershell -exec bypass scripts\bootstrap.ps1
+  - if [%COMPILER%]==[clang] vcpkg integrate install
+#  - if [%COMPILER%]==[clang] if [%LINKING%]==[dynamic] vcpkg install tclap
+#  - if [%COMPILER%]==[clang] if [%LINKING%]==[static] vcpkg install tclap:x86-windows-static
   - cd C:\projects\data_analysis\
   - mkdir build
   - cd build
@@ -40,6 +40,6 @@ install:
 build_script:
   - if [%COMPILER%]==[cygwin] %CYGSH% 'cmake .. -G "Unix Makefiles"
   - if [%COMPILER%]==[cygwin] %CYGSH% 'cmake --build .'
-  - if [%COMPILER%]==[vs] if [%LINKING%]==[dynamic] cmake .. -G "Visual Studio 14 2015" -T"LLVM-vs2014"  "-DCMAKE_CXX_COMPILER=clang++.exe" "-DCMAKE_C_COMPILER=clang.exe" "-DCMAKE_TOOLCHAIN_FILE=C:\projects\vcpkg\scripts\buildsystems\vcpkg.cmake" "-DCMAKE_BUILD_TYPE=Release"
-  - if [%COMPILER%]==[vs] if [%LINKING%]==[static]  cmake .. -G "Visual Studio 14 2015" -T"LLVM-vs2014"  "-DCMAKE_CXX_COMPILER=clang++.exe" "-DCMAKE_C_COMPILER=clang.exe" "-DCMAKE_TOOLCHAIN_FILE=C:\projects\vcpkg\scripts\buildsystems\vcpkg.cmake" "-DVCPKG_TARGET_TRIPLET=x86-windows-static" "-DCMAKE_BUILD_TYPE=Release"
-  - if [%COMPILER%]==[vs] cmake --build . --config Release
+  - if [%COMPILER%]==[clang] if [%LINKING%]==[dynamic] cmake .. -G "Visual Studio 14 2015" -T"LLVM-vs2014"  "-DCMAKE_CXX_COMPILER=clang++.exe" "-DCMAKE_C_COMPILER=clang.exe" "-DCMAKE_TOOLCHAIN_FILE=C:\projects\vcpkg\scripts\buildsystems\vcpkg.cmake" "-DCMAKE_BUILD_TYPE=Release"
+  - if [%COMPILER%]==[clang] if [%LINKING%]==[static]  cmake .. -G "Visual Studio 14 2015" -T"LLVM-vs2014"  "-DCMAKE_CXX_COMPILER=clang++.exe" "-DCMAKE_C_COMPILER=clang.exe" "-DCMAKE_TOOLCHAIN_FILE=C:\projects\vcpkg\scripts\buildsystems\vcpkg.cmake" "-DVCPKG_TARGET_TRIPLET=x86-windows-static" "-DCMAKE_BUILD_TYPE=Release"
+  - if [%COMPILER%]==[clang] cmake --build . --config Release
