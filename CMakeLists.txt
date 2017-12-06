@@ -57,7 +57,7 @@ endif()
 
 # make sure that the default is a RELEASE
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE RELEASE)
+  set(CMAKE_BUILD_TYPE "Release")
 endif()
 
 
@@ -76,8 +76,7 @@ set (HPP_DIR ${CMAKE_SOURCE_DIR}/lib) # directory of hpp
 set (TST_DIR ${CMAKE_SOURCE_DIR}/tst) # runtest directory
 include_directories(${HPP_DIR})
 
-#find_package(OpenMP REQUIRED)
-find_package(OpenMP)
+find_package(OpenMP REQUIRED)
 if (OpenMP_CXX_VERSION_MAJOR LESS 4.0)
 	message(FATAL_ERROR " Your OpenMP is too old. Required OpenMP 4.0. Please upgrade.")
 endif()
