@@ -88,7 +88,7 @@ template<typename T> void ArgumentParser::add_argument(const std::string &name, 
 {
 	T def;
 	std::string type = type_name<decltype(def)>();
-	if(type != "int" && type != "float" && type != "double" && type != "string"){ std::cerr << "Error parsing! Wrong type variable: given, '" << type << "'; possible type are 'int', 'float', 'double', 'string'" << std::endl; print_help(); }
+	if(type != "int" && type != "float" && type != "double" && type != "string" && type != "bool"){ std::cerr << "Error parsing! Wrong type variable: given, '" << type << "'; possible type are 'int', 'float', 'double', 'string', 'bool'" << std::endl; print_help(); }
 	args.push_back(argument(name, shr_flag, lng_flag, help, req, "", type));
 	return;
 }
