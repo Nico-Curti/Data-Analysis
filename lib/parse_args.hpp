@@ -88,7 +88,7 @@ template<typename T> void ArgumentParser::add_argument(const std::string &name, 
 {
 	T def;
 	std::string type = type_name<decltype(def)>();
-	if(type != "int" && type != "float" && type != "double" && type != "string" && type != "bool"){ std::cerr << "Error parsing! Wrong type variable: given, '" << type << "'; possible type are 'int', 'float', 'double', 'string', 'bool'" << std::endl; print_help(); }
+	if(type != "int" && type != "float" && type != "double" && type != "string" && type != "char" && type != "bool"){ std::cerr << "Error parsing! Wrong type variable: given, '" << type << "'; possible type are 'int', 'float', 'double', 'string', 'char', 'bool'" << std::endl; print_help(); }
 	args.push_back(argument(name, shr_flag, lng_flag, help, req, "", type));
 	return;
 }
@@ -103,14 +103,14 @@ template<> void ArgumentParser::add_argument<std::string>(const std::string &nam
 template<typename T> void ArgumentParser::add_argument(const std::string &name, const std::string &shr_flag, const std::string &lng_flag, const std::string &help, const bool &req, T def, std::string type)
 {
 	if(type == "") type = type_name<decltype(def)>();
-	if(type != "int" && type != "float" && type != "double" && type != "string" && type != "char"){ std::cerr << "Error parsing! Wrong type variable: given, '" << type << "'; possible type are 'int', 'float', 'double', 'string', 'char'" << std::endl; print_help(); }
+	if(type != "int" && type != "float" && type != "double" && type != "string" && type != "char" && type != "bool"){ std::cerr << "Error parsing! Wrong type variable: given, '" << type << "'; possible type are 'int', 'float', 'double', 'string', 'char', 'bool'" << std::endl; print_help(); }
 	args.push_back(argument(name, shr_flag, lng_flag, help, req, std::to_string(def), type));
 	return;
 }
 template<> void ArgumentParser::add_argument<std::string>(const std::string &name, const std::string &shr_flag, const std::string &lng_flag, const std::string &help, const bool &req, std::string def, std::string type)
 {
 	if(type == "") type = "string";
-	if(type != "int" && type != "float" && type != "double" && type != "string" && type != "char"){ std::cerr << "Error parsing! Wrong type variable: given, '" << type << "'; possible type are 'int', 'float', 'double', 'string', 'char'" << std::endl; print_help(); }
+	if(type != "int" && type != "float" && type != "double" && type != "string" && type != "char" && type != "bool"){ std::cerr << "Error parsing! Wrong type variable: given, '" << type << "'; possible type are 'int', 'float', 'double', 'string', 'char', 'bool'" << std::endl; print_help(); }
 	args.push_back(argument(name, shr_flag, lng_flag, help, req, def, type));
 	return;
 }
