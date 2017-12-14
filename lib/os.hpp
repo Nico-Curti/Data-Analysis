@@ -119,7 +119,7 @@ template<typename... Args, typename T> inline void w_idx(T &os, std::vector<std:
 void parse_yml(const std::string &filename, std::map<std::string, std::map<std::string, std::string>> &yml)
 {
 	std::ifstream is(filename);
-	if(!is){std::cerr << "File not found! Given: " << filename << std::endl; exit(1);}
+	if(!is){std::cerr << "Parse Yml error! File not found. Given: " << filename << std::endl; exit(1);}
 	std::string row, tag1, tag2, key;
 	std::size_t pos;
 
@@ -170,7 +170,7 @@ inline char str2num(const std::string &str)
 std::map<std::string, std::string> parse_fasta(const std::string &filename)
 {
 	std::ifstream is(filename);
-	if(!is){std::cerr << "Fasta file not found! Given " << filename << std::endl; exit(1);}
+	if(!is){std::cerr << "Parse fasta error! Fasta file not found. Given " << filename << std::endl; exit(1);}
 	std::string row, name, content;
 	std::map<std::string, std::string> fasta;
 	while(std::getline(is, row).good())
@@ -460,7 +460,7 @@ namespace os
 	void ascii2bin(const std::string &input, const std::string &output, const char &sep)
 	{
 		std::ifstream is(input);
-		if(!is){std::cerr << "File not found! Given : " << input << std::endl; exit(1);}
+		if(!is){std::cerr << "Ascii2bin error! File not found. Given : " << input << std::endl; exit(1);}
 		std::ofstream os;
 		os.open(output, std::ios::out | std::ios::binary);
 		std::vector<std::string> token;

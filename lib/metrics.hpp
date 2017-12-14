@@ -159,4 +159,4 @@ void metrics::median_point(const Point &point, Point &centroid, const int &n_poi
 }
 
 inline float metrics::minkowsy(const float &x1, const float &x2, const float &y1, const float &y2, float z1, float z2)
-{	return pow(std::abs(x1 - x2), pow) + pow(std::abs(y1 - y2), pow) + pow(std::abs(z1 - z2), pow); }
+{	return pow(std::abs(x1 - x2), this->pow) + pow(std::abs(y1 - y2), this->pow) + pow(std::abs(z1 - z2), this->pow); }

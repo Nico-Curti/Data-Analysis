@@ -10,20 +10,31 @@
 
 class Point
 {
+	void error(const std::string &, const int &);
 public:
 	float *x, *y, *z;
 	int n, dim;
 	Point();
-	Point(const int &n, int dim = 2);
-	Point(const std::string &filename, std::string sep = "\t");
-	Point& operator=(const Point &t);
-	Point(const Point &t);
+	Point(const int &, int dim = 2);
+	Point(const std::string &, std::string sep = "\t");
+	Point& operator=(const Point &);
+	Point(const Point &);
 
-	void random_gen(const int &n_point, int dim = 2);
-	void polar_gen(const int &n_point, const float &radius);
-	void spherical_gen(const int &n_point, const float &radius);
-	void binormal_gen(const int &n_point, float *mean_x, float *var_x, const int &N, float *mean_y = nullptr, float *var_y = nullptr);
+	void random_gen(const int &, int dim = 2);
+	void polar_gen(const int &, const float &);
+	void spherical_gen(const int &, const float &);
+	void binormal_gen(const int &, float *, float *, const int &, float *mean_y = nullptr, float *var_y = nullptr);
 };
+
+void Point::error(const std::string &message, const int &n)
+{
+	if(n)
+	{
+		std::cerr << "Point error! " << message << std::endl;
+		exit(n);
+	}
+	else exit(n);
+}
 
 Point::Point()
 {
@@ -44,7 +55,7 @@ Point::Point(const int &n, int dim)
 Point::Point(const std::string &filename, std::string sep)
 {
 	std::ifstream file(filename);
-	if(!file){std::cerr << "File not found! Given : " << filename << std::endl; exit(1);}
+	if( !file ) error("File not found. Given : " + std::to_string(filename), 1);
 	std::string row; 
 	std::vector<std::string> token;
 	this->n = 1;

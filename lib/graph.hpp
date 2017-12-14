@@ -74,16 +74,14 @@ namespace graph
 	{
 		T *degree = new T[A.Ncols];
 		std::memset(degree, 0, A.Ncols*sizeof(T));
-		for(int i = 0; i < A.index->size(); ++i) 
-			++degree[A.index->at(i) % A.Ncols];
+		for(int i = 0; i < A.index->size(); ++i) ++degree[A.index->at(i) % A.Ncols];
 		return degree;
 	}
 	template<typename T, typename Sparse, bool w, COO_w<T, Sparse, w>> inline T* out_degree(const Sparse &A)
 	{
 		T *degree = new T[A.Ncols];
 		std::memset(degree, 0, A.Ncols*sizeof(T));
-		for(int i = 0; i < A.index->size(); ++i) 
-			degree[A.index->at(i) % A.Ncols] += A.values->at(i);
+		for(int i = 0; i < A.index->size(); ++i) degree[A.index->at(i) % A.Ncols] += A.values->at(i);
 		return degree;
 	}
 	template<typename T, typename Sparse, bool w, SBCSR<T, Sparse, w>> inline T* out_degree(const Sparse &A)
@@ -110,24 +108,21 @@ namespace graph
 	template<typename T, typename Sparse, bool w, CSR_w<T, Sparse, w>> inline T* in_degree(const Sparse &A)
 	{
 		T *degree = new T[A.Nrows];
-		for(int i = 0; i < A.Nrows; ++i)
-			degree[i] = std::accumulate(A.values->begin() + A.rows->at(i), A.values->begin() + A.rows->at(i+1), (T)0.);
+		for(int i = 0; i < A.Nrows; ++i) degree[i] = std::accumulate(A.values->begin() + A.rows->at(i), A.values->begin() + A.rows->at(i+1), (T)0.);
 		return degree;
 	}
 	template<typename T, typename Sparse, bool w, COO<T, Sparse, w>> inline T* in_degree(const Sparse &A)
 	{
 		T *degree = new T[A.Nrows];
 		std::memset(degree, 0, A.Ncols*sizeof(T));
-		for(int i = 0; i < A.index->size(); ++i) 
-			++degree[A.index->at(i) / A.Ncols];
+		for(int i = 0; i < A.index->size(); ++i) ++degree[A.index->at(i) / A.Ncols];
 		return degree;
 	}
 	template<typename T, typename Sparse, bool w, COO_w<T, Sparse, w>> inline T* in_degree(const Sparse &A)
 	{
 		T *degree = new T[A.Nrows];
 		std::memset(degree, 0, A.Ncols*sizeof(T));
-		for(int i = 0; i < A.index->size(); ++i) 
-			degree[A.index->at(i) / A.Ncols] += A.values->at(i);
+		for(int i = 0; i < A.index->size(); ++i) degree[A.index->at(i) / A.Ncols] += A.values->at(i);
 		return degree;
 	}
 	template<typename T, typename Sparse, bool w, SBCSR<T, Sparse, w>> inline T* in_degree(const Sparse &A)

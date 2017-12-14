@@ -475,21 +475,18 @@ template<typename T> void NeuralNetwork<T>::save(const std::string &filename, co
 		os.open(filename);
 		//save training dimensions and network dimensions
 		os << training.Nrow << "\t" << training.Ncol << "\t" << num_layers << std::endl;
-		for (int i = 0; i < num_layers - 1; ++i)
-			os << sizes[i] << "\t";
+		std::copy(sizes, sizes + num_layers - 1, std::ostream_iterator<int>(os, "\t"));
 		os << sizes[num_layers - 1] << std::endl;
 		//save weights matrix
 		for (int i = 0; i < num_layers - 1; ++i)
 		{
-			for (int j = 0; j < sizes[i] * sizes[i + 1] - 1; ++j)
-				os << weights[i][j] << "\t";
+			std::copy(weights, weights + sizes[i] * sizes[i + 1] - 1, std::ostream_iterator<T>(os, "\t"));
 			os << weights[i][sizes[i] * sizes[i + 1] - 1] << std::endl;
 		}
 		//save biases matrix
 		for (int i = 0; i < num_layers - 1; ++i)
 		{
-			for (int j = 0; j < sizes[i + 1] - 1; ++j)
-				os << biases[i][j] << "\t";
+			std::copy(biases, biases + sizes[i + 1] - 1, std::ostream_iterator<T>(os, "\t"));
 			os << biases[i][sizes[i + 1] - 1] << std::endl;
 		}
 	}	

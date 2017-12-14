@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <omp.h>
 #include <numeric>
+#include <iterator>
 
 template<bool c, typename T> using parallel = typename std::enable_if<c>::type*;
 template<bool c, typename T> using serial = typename std::enable_if<!c>::type*;

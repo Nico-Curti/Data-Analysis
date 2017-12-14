@@ -7,6 +7,7 @@
 
 template<typename T> class Patterns
 {
+	static void error(const std::string &, const int &);
 	int *lbl2num(const std::vector<std::string> &);
 public:
 	int Nrow, 			// number of input vectors (rows of X)
@@ -38,13 +39,23 @@ template<typename T> inline void check_binary(const Patterns<T> &);
 
 template<typename T> inline void check_binary(const Patterns<T> &pattern)
 {
-	if(pattern.Nout != pattern.Nrow){std::cerr << "Error check dimensions! Incompatible lenghts of inputs and outputs: " << pattern.Nrow << " vs " << pattern.Nout << std::endl; exit(1);}
+	if(pattern.Nout != pattern.Nrow) Patterns<T>::error("Error check dimensions. Incompatible lenghts of inputs and outputs: " + std::to_string(pattern.Nrow) + " vs " + std::to_string(pattern.Nout), 1);
 	int count = 0;
 	for(int i = 0; i < pattern.Nrow; ++i)	count += std::count_if(pattern.input[i], pattern.input[i] + pattern.Ncol, [](const T &val){return std::abs(val) == 1;});
-	if(count != pattern.Nrow * pattern.Ncol){std::cerr << "Error check values! Inputs must be in {-1, 1}" << std::endl; exit(1);}
+	if(count != pattern.Nrow * pattern.Ncol) Patterns<T>::error("Error check values. Inputs must be in {-1, 1}", 1);
 	count = std::count_if(pattern.output, pattern.output + pattern.Nout, [](const int &val){return std::abs(val) != 1;});
-	if(count) {std::cerr << "Error check values! Outputs must be in {-1, 1}" << std::endl; exit(1);}
+	if(count) Patterns<T>::error("Error check values. Outputs must be in {-1, 1}", 1);
 	return;
+}
+
+template<typename T> void Patterns<T>::error(const std::string &message, const int &n)
+{
+	if(n)
+	{
+		std::cerr << "Patterns error! " << message << std::endl;
+		exit(n);
+	}
+	else std::cerr << message << std::endl;
 }
 
 template<typename T> int* Patterns<T>::lbl2num(const std::vector<std::string> &lbl)
@@ -65,7 +76,7 @@ template<typename T> Patterns<T>::Patterns(const std::string &patternsfile, bool
 	if(bin)
 	{
 		is.open(patternsfile, std::ios::binary);
-		if(!is){std::cerr << "File not found! Given : " << patternsfile << std::endl; exit(1);}
+		if( !is ) this->error("File not found. Given " + patternsfile, 1);
 		is.read((char*)&this->Nrow, sizeof(int));
 		is.read((char*)&this->Ncol, sizeof(int));
 		this->Nout = this->Nrow;
@@ -84,7 +95,7 @@ template<typename T> Patterns<T>::Patterns(const std::string &patternsfile, bool
 		std::string row;
 		std::vector<std::string> token;
 		is.open(patternsfile);
-		if(!is){std::cerr << "File not found! Given : " << patternsfile << std::endl; exit(1);}
+		if( !is ) this->error("File not found. Given " + patternsfile, 1);
 		std::getline(is, row);
 		token = split(row, "\t");
 		this->Nout = (int)token.size();
@@ -102,10 +113,10 @@ template<typename T> Patterns<T>::Patterns(const std::string &patternsfile, bool
 		while(std::getline(is, row))
 		{ 
 			token = split(row, "\t");
-			if(this->Ncol != (int)token.size()) { std::cerr << "Error dimensions! PatternsFile must be a matrix or a vector" << std::endl; exit(1);}
+			if(this->Ncol != (int)token.size()) this->error("Error dimensions. PatternsFile must be a matrix or a vector", 1);
 			++this->Nrow;
 		}
-		if(this->Nrow != this->Nout) {std::cerr << "Error dimensions! Input and output must have the same dimension" << std::endl; exit(1);}
+		if(this->Nrow != this->Nout) this->error("Error dimensions. Input and output must have the same dimension", 1);
 		this->input = new T*[this->Nrow];
 		
 		is.clear();

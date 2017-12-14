@@ -3,6 +3,7 @@
 #include "points.hpp"
 #include "metrics.hpp"
 #include <numeric>
+#include <iterator>
 #include <omp.h>
 
 class kmean : public Point, metrics

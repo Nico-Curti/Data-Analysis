@@ -116,8 +116,7 @@ void kmean::random_init(int *cluster, const int &n_point)
 	auto seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::mt19937 engine{seed};
 	std::uniform_int_distribution<int> i_dist{0, 1};
-	for(int i = 0; i < n_point; ++i)
-		cluster[i] = i_dist(engine);
+	std::generate(cluster, cluster + n_point, [&engine, &i_dist]{return i_dist(engine);});
 	return;
 }
 

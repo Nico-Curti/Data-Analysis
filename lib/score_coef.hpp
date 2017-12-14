@@ -5,6 +5,7 @@
 
 template<typename T> class ScoreCoefficient
 {
+	void error(const std::string &, const int &);
 	int Nlabel;
 	std::set<int> unique;
 public:
