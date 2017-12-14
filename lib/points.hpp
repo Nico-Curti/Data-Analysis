@@ -55,7 +55,7 @@ Point::Point(const int &n, int dim)
 Point::Point(const std::string &filename, std::string sep)
 {
 	std::ifstream file(filename);
-	if( !file ) error("File not found. Given : " + std::to_string(filename), 1);
+	if( !file ) error("File not found. Given : " + filename, 1);
 	std::string row; 
 	std::vector<std::string> token;
 	this->n = 1;
