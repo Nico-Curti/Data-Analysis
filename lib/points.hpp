@@ -20,10 +20,10 @@ public:
 	Point& operator=(const Point &);
 	Point(const Point &);
 
-	void random_gen(const int &, int dim = 2);
-	void polar_gen(const int &, const float &);
-	void spherical_gen(const int &, const float &);
-	void binormal_gen(const int &, float *, float *, const int &, float *mean_y = nullptr, float *var_y = nullptr);
+	void random_gen(const int &, int dim = 2, unsigned int seed = 0);
+	void polar_gen(const int &, const float &, unsigned int seed = 0);
+	void spherical_gen(const int &, const float &, unsigned int seed = 0);
+	void binormal_gen(const int &, float *, float *, const int &, float *mean_y = nullptr, float *var_y = nullptr, unsigned int seed = 0);
 };
 
 void Point::error(const std::string &message, const int &n)
@@ -107,11 +107,10 @@ Point::Point(const Point &t)
 
 
 
-void Point::polar_gen(const int &n_point, const float &radius)
+void Point::polar_gen(const int &n_point, const float &radius, unsigned int seed)
 {
 	float theta, r;
-	auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-	std::mt19937 engine{(unsigned int)(seed)};
+	std::mt19937 engine{seed};
 	std::uniform_real_distribution<float> r_dist{0.0f, 1.0f};
 	if(this->n != 0)
 	{
@@ -133,11 +132,10 @@ void Point::polar_gen(const int &n_point, const float &radius)
 	return;
 }
 
-void Point::spherical_gen(const int &n_point, const float &radius)
+void Point::spherical_gen(const int &n_point, const float &radius, unsigned int seed)
 {
 	float phi, theta, r;
-	auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-	std::mt19937 engine{(unsigned int)(seed)};
+	std::mt19937 engine{seed};
 	std::uniform_real_distribution<float> r_dist{0.0f, 1.0f};
 	
 	if(this->n != 0)
@@ -163,10 +161,9 @@ void Point::spherical_gen(const int &n_point, const float &radius)
 	return;
 }
 
-void Point::random_gen(const int &n_point, int dim)
+void Point::random_gen(const int &n_point, int dim, unsigned int seed)
 {
-	auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-	std::mt19937 engine{(unsigned int)seed};
+	std::mt19937 engine{seed};
 	std::uniform_real_distribution<float> r_dist{0.0f, 1.0f};
 	if(this->n != 0)
 	{
@@ -191,11 +188,10 @@ void Point::random_gen(const int &n_point, int dim)
 	return;
 }
 
-void Point::binormal_gen(const int &n_point, float *mean_x, float *var_x, const int &N, float *mean_y, float *var_y)
+void Point::binormal_gen(const int &n_point, float *mean_x, float *var_x, const int &N, float *mean_y, float *var_y, unsigned int seed)
 {
 	int index;
-	auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-	std::mt19937 engine{(unsigned int)seed};
+	std::mt19937 engine{seed};
 	std::normal_distribution<float> *gauss_x = new std::normal_distribution<float>[N], 
 									*gauss_y = new std::normal_distribution<float>[N];
 

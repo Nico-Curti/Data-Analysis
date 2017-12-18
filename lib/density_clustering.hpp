@@ -15,6 +15,7 @@ densityclustering::~densityclustering()
 	this->dist = nullptr;
 }
 
+// TO FIX
 int* densityclustering::DC(Point &centroid, float control, float ray, bool time)
 {
 	auto start = std::chrono::steady_clock::now();
@@ -28,7 +29,6 @@ int* densityclustering::DC(Point &centroid, float control, float ray, bool time)
 	std::memset(density, 0, sizeof(int)*this->n_point);
 	std::iota(cluster, cluster + this->n_point, 0);
 	
-#pragma omp parallel for
 	for(int i = 0; i < this->n_point; ++i)
 		for(int j = i+1; j < this->n_point; ++j)
 		{

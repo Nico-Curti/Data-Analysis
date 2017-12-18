@@ -32,8 +32,7 @@ all: 	dir_tree \
 #			$(HPP)/os.hpp \
 #			$(HPP)/parse_args.hpp \
 #			$(HPP)/fmath.hpp \
-#			$(HPP)/patterns.hpp \
-#			$(HPP)/score_coef.hpp 
+#			$(HPP)/patterns.hpp 
 #
 #		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_fbp 		$(TST)/runtest_bcrfbp.cpp
 #
@@ -42,8 +41,7 @@ all: 	dir_tree \
 #			$(HPP)/os.hpp \
 #			$(HPP)/parse_args.hpp \
 #			$(HPP)/fmath.hpp \
-#			$(HPP)/patterns.hpp \
-#			$(HPP)/score_coef.hpp 
+#			$(HPP)/patterns.hpp 
 #
 #		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_rsgd 		$(TST)/runtest_bcrsgd.cpp
 

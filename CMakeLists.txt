@@ -113,7 +113,6 @@ add_executable(	runtest_fstat
 #				${HPP_DIR}/parse_args.hpp
 #				${HPP_DIR}/fmath.hpp
 #				${HPP_DIR}/patterns.hpp
-#				${HPP_DIR}/score_coef.hpp
 #			  )
 #add_executable(	runtest_rsgd
 #				${CMAKE_SOURCE_DIR}/tst/runtest_bcrsgd.cpp
@@ -122,7 +121,6 @@ add_executable(	runtest_fstat
 #				${HPP_DIR}/parse_args.hpp
 #				${HPP_DIR}/fmath.hpp
 #				${HPP_DIR}/patterns.hpp
-#				${HPP_DIR}/score_coef.hpp
 #			  )
 add_executable(	runtest_cv
 				${CMAKE_SOURCE_DIR}/tst/runtest_cv.cpp

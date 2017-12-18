@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 	std::vector<int> test, train;
 
 	std::cout << "========== Leave One Out Cross Validation ============" << std::endl;
-	cv.LeaveOneOut(0, N, false);
+	cv.LeaveOneOut(0, N);
 	for(int i = 0; i < N; ++i)
 	{
 		cv.getFold(i, train, test);

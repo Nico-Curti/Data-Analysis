@@ -15,13 +15,14 @@ class CrossValidation
 		*whichFoldToGo;
 	void error(const std::string &, const int &n = 0);
 public:
+	int n_fold;
 	CrossValidation();
 	~CrossValidation();
 	CrossValidation& operator=(const CrossValidation &);
 	CrossValidation(const CrossValidation &);
-	void KFold(const int &, const int &, const int &, bool shuff = true);
-	void StratifiedKFold(int *, const int &, const int &, const int &, bool shuff = true);
-	void LeaveOneOut(const int &, const int &, bool shuff = true);
+	void KFold(const int &, const int &, const int &, bool shuff = true, unsigned int seed = 0);
+	void StratifiedKFold(int *, const int &, const int &, const int &, bool shuff = true, unsigned int seed = 0);
+	void LeaveOneOut(const int &, const int &);
 	void getFold(const int &, std::vector<int> &, std::vector<int> &);
 	void getTest(const int &, std::vector<int> &);
 };
@@ -41,6 +42,7 @@ CrossValidation::CrossValidation()
 {
 	this->beg = 0;
 	this->end = 0;
+	this->n_fold = 0;
 	this->whichFoldToGo = nullptr;
 }
 
@@ -51,6 +53,7 @@ CrossValidation& CrossValidation::operator=(const CrossValidation &cv)
 {
 	this->beg = cv.beg;
 	this->end = cv.end;
+	this->n_fold = cv.n_fold;
 	if(this->whichFoldToGo != nullptr)	this->whichFoldToGo = new int[this->end - this->beg];
 	std::memcpy(this->whichFoldToGo, cv.whichFoldToGo, sizeof(int)*(this->end - this->beg));
 	return *this;
@@ -60,13 +63,15 @@ CrossValidation::CrossValidation(const CrossValidation &cv)
 {
 	this->beg = cv.beg;
 	this->end = cv.end;
+	this->n_fold = cv.n_fold;
 	if(this->whichFoldToGo != nullptr)	this->whichFoldToGo = new int[this->end - this->beg];
 	std::memcpy(this->whichFoldToGo, cv.whichFoldToGo, sizeof(int)*(this->end - this->beg));
 }
 
-void CrossValidation::KFold(const int &K, const int &beg, const int &end, bool shuff)
+void CrossValidation::KFold(const int &K, const int &beg, const int &end, bool shuff, unsigned int seed)
 {
 	this->beg = beg; this->end = end;
+	this->n_fold = K;
 	if(K <= 0) error("K-Fold error! K must be positive and not null", 1);
 	this->whichFoldToGo = new int[this->end - this->beg];
 	int foldNo = -1;
@@ -79,8 +84,7 @@ void CrossValidation::KFold(const int &K, const int &beg, const int &end, bool s
 	if(K % (end - beg)) error("K-Fold warning! With this value of K = " + std::to_string(K) + " equal division of the data is not possible (n_sample = " + std::to_string(end - beg) + ")", 0);
 	if(shuff)
 	{
-		std::random_device rd;
-		std::mt19937 g(rd());
+		std::mt19937 g(seed);
 		std::shuffle(whichFoldToGo, whichFoldToGo + (this->end - this->beg), g);
 	}
 	else
@@ -88,9 +92,10 @@ void CrossValidation::KFold(const int &K, const int &beg, const int &end, bool s
 	return;
 }
 
-void CrossValidation::StratifiedKFold(int *labels, const int &K, const int &beg, const int &end, bool shuff)
+void CrossValidation::StratifiedKFold(int *labels, const int &K, const int &beg, const int &end, bool shuff, unsigned int seed)
 {
 	this->beg = beg;	this->end = end;
+	this->n_fold = K;
 	this->whichFoldToGo = new int[end - beg];
 	std::set<int> unique(labels + beg, labels + end);
 	std::vector<int> train, test;
@@ -115,7 +120,7 @@ void CrossValidation::StratifiedKFold(int *labels, const int &K, const int &beg,
 	for(int n = 0; n < n_labels; ++n)
 	{
 		n_folds = std::max(K, class_element[n]);
-		cv[n].KFold(K, before, before + n_folds, shuff);
+		cv[n].KFold(K, before, before + n_folds, shuff, seed);
 		before += class_element[n];
 	}
 
@@ -133,19 +138,12 @@ void CrossValidation::StratifiedKFold(int *labels, const int &K, const int &beg,
 }
 
 
-void CrossValidation::LeaveOneOut(const int &beg, const int &end, bool shuff)
+void CrossValidation::LeaveOneOut(const int &beg, const int &end)
 {
 	this->beg = beg; this->end = end;
+	this->n_fold = (end - beg);
 	this->whichFoldToGo = new int[end - beg];
 	std::iota(this->whichFoldToGo, this->whichFoldToGo + (end - beg), beg);
-	if(shuff)
-	{
-		std::random_device rd;
-		std::mt19937 g(rd());
-		std::shuffle(whichFoldToGo, whichFoldToGo + (end - beg), g);
-	}
-	else
-		std::random_shuffle(whichFoldToGo, whichFoldToGo + (end - beg));
 	return;
 }
 
