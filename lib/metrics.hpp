@@ -4,6 +4,8 @@
 #include <map>
 #include <vector>
 
+//=============== Distance functions ============================================
+
 struct
 {
 	template<typename T> inline T operator()(const T &x1, const T &x2, const T &y1, const T &y2, T z1 = (T)0., T z2 = (T)0.)
@@ -27,6 +29,9 @@ struct
 		return pow(std::abs(x1 - x2), POW) + pow(std::abs(y1 - y2), POW) + pow(std::abs(z1 - z2), POW);
 	}
 } minkowsy;
+
+
+//================ points metrics =================================================
 
 struct
 {
@@ -69,7 +74,7 @@ struct
 				if(point.dim == 3)
 					sum_z[idx] += point.z[k];
 				++sum_point[idx];
-				sum_weight[idx] += w[k];
+				sum_weight[idx] += weight[k];
 			}
 	#pragma omp for
 			for(int i = 0; i < n_cluster; ++i)
@@ -94,7 +99,7 @@ struct
 			if(point.dim == 3) 
 				centroid.z[i] += point.z[k];
 			++point_per_cluster[i];
-			sum_w[i] += w[k];
+			sum_w[i] += weight[k];
 		}
 	#endif
 
@@ -120,7 +125,7 @@ struct
 		for(int i = 0; i < n_point; ++i)
 		{
 			int idx_cl = cluster[i];
-			for(int j = 0; j < w[i]; ++j)
+			for(int j = 0; j < weight[i]; ++j)
 			{
 				table_x[idx_cl].push_back(point.x[i]);
 				table_y[idx_cl].push_back(point.y[i]);

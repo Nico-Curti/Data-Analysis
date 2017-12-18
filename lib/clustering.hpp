@@ -6,28 +6,32 @@
 #include <iterator>
 #include <omp.h>
 
-template<typename Dist, typename Cl_Center> class kmean : public Point, metrics
+class kmean : public Point
 {
 	int n_point, n_cluster, n_iteration;
 	int *cluster, *point_per_cluster;
 	float *w;
 	Point point, centroid;
-	inline int nearest(const int &, const Point &, const int &, float *, const float &, const float &, float pt_z = 0.f );
-	void kpp(const Point &, Point &, const int &, const int &, int *, unsigned int seed = 0);
+	template<typename Dist> inline int nearest(const int &, const Point &, const int &, float *, Dist, const float &, const float &, float pt_z = 0.f );
+	template<typename Dist> void kpp(const Point &, Point &, const int &, const int &, int *, Dist, unsigned int seed = 0);
 	void random_init(int *, const int &, unsigned int seed = 0);
 public:
 	kmean(const Point &, const int &, const int &, const int &, float *point_weight = nullptr);
 	~kmean();
-	void init_centroid(std::string mode = "k++", bool time = false);
-	int* Kmean(Point &, bool time = false);
-}
+	template<typename Dist> void init_centroid(Dist, std::string mode = "k++", bool time = false);
+	template<typename Dist, typename Cl_Center> int* Kmean(Point &, Dist dist, Cl_Center cl, bool time = false);
+};
 
-template<typename Dist> class densityclustering : public Point, metrics
+#include "kmeans.hpp"
+
+class densityclustering : public Point
 {
 	int n_point, *density;
 	Point point;
 public:
-	densityclustering(const Point &point_, int pow_ = 2);
+	densityclustering(const Point &);
 	~densityclustering();
-	int* DC(Point &centroid, float control = 0.f, float ray = 0.f, bool time = false);
+	template<typename Dist> int* DensityClustering(Point &, Dist, float control = 1e-4f, float ray = 1e-1f, bool time = false);
 };	
+
+#include "density_clustering.hpp"

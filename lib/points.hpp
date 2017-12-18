@@ -116,7 +116,6 @@ void Point::polar_gen(const int &n_point, const float &radius, unsigned int seed
 	{
 		delete[] this->x;
 		delete[] this->y;
-		delete[] this->z;
 	}
 	this->n = n_point;
 	this->x = new float[n_point];
@@ -169,7 +168,8 @@ void Point::random_gen(const int &n_point, int dim, unsigned int seed)
 	{
 		delete[] this->x;
 		delete[] this->y;
-		delete[] this->z;
+		if(this->dim == 3)
+			delete[] this->z;
 	}
 	this->n = n_point;
 	this->dim = dim;

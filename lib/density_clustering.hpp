@@ -1,26 +1,23 @@
-#include "clustering.hpp"
 
-template<typename Dist> densityclustering<Dist>::densityclustering(const Point &point)
+densityclustering::densityclustering(const Point &point)
 {
 	this->n_point = point.n;
 	this->point = point;
 	this->density = new int[n_point];
 }
-template<typename Dist> densityclustering<Dist>::~densityclustering()
+densityclustering::~densityclustering()
 {
 	delete[] this->density;
 }
 
 // TO FIX
-template<typename Dist> int* densityclustering<Dist>::DC(Point &centroid, float control, float ray, bool time)
+template<typename Dist> int* densityclustering::DensityClustering(Point &centroid, Dist dist, float control, float ray, bool time)
 {
 	auto start = std::chrono::steady_clock::now();
 	bool bool_new;
-	int *cluster = new int[this->n_point], idx_i, idx_j, best_centroid;
+	int *cluster = new int[this->n_point], idx_i, idx_j, best_centroid, n_cluster;
 	float *delta = new float[this->n_point], distance, best_distance;
 	std::vector<int> idx_cluster_center;
-	control = (control == 0.f) ? 1e-4f : control;
-	ray = (ray == 0.f) ? 1e-1f : ray;
 
 	std::memset(density, 0, sizeof(int)*this->n_point);
 	std::iota(cluster, cluster + this->n_point, 0);
@@ -28,7 +25,7 @@ template<typename Dist> int* densityclustering<Dist>::DC(Point &centroid, float 
 	for(int i = 0; i < this->n_point; ++i)
 		for(int j = i+1; j < this->n_point; ++j)
 		{
-			distance = (this->point.dim == 3) ? Dist(this->point.x[i], this->point.x[j], this->point.y[i], this->point.y[j], this->point.z[i], this->point.z[j]) : (met.*dist)(this->point.x[i], this->point.x[j], this->point.y[i], this->point.y[j]);
+			distance = (this->point.dim == 3) ? dist(this->point.x[i], this->point.x[j], this->point.y[i], this->point.y[j], this->point.z[i], this->point.z[j]) : dist(this->point.x[i], this->point.x[j], this->point.y[i], this->point.y[j]);
 			if(distance < control)
 			{
 				this->density[j] += 1;
@@ -48,14 +45,14 @@ template<typename Dist> int* densityclustering<Dist>::DC(Point &centroid, float 
 		for(int j = i+1; j < n_point; ++j)
 		{
 			idx_j = cluster[j];
-			distance = (this->point.dim == 3) ? Dist(this->point.x[idx_i], this->point.x[idx_j], this->point.y[idx_i], this->point.y[idx_j], this->point.z[idx_i], this->point.z[idx_j]) : (met.*dist)(this->point.x[idx_i], this->point.x[idx_j], this->point.y[idx_i], this->point.y[idx_j]);
+			distance = (this->point.dim == 3) ? dist(this->point.x[idx_i], this->point.x[idx_j], this->point.y[idx_i], this->point.y[idx_j], this->point.z[idx_i], this->point.z[idx_j]) : dist(this->point.x[idx_i], this->point.x[idx_j], this->point.y[idx_i], this->point.y[idx_j]);
 			delta[idx_i] = (distance < delta[idx_i]) ? distance : delta[idx_i];
 		}
 		delta[idx_i] = -delta[idx_i]; //- for right indices to sort
 		delta[idx_i] = (i == n_point) ? INT_MIN : delta[idx_i];
 	}
 
-	cluster = argsort<false>(delta, this->n_point);
+	cluster = argsort<false>(delta, 0, this->n_point);
 
 	delete[] delta;
 	idx_cluster_center.push_back(cluster[0]);
@@ -63,11 +60,12 @@ template<typename Dist> int* densityclustering<Dist>::DC(Point &centroid, float 
 	for(int i = 1; i < n_point; ++i)
 	{
 		bool_new = true;
-		idx_i = cluster[i], n_cluster = (int)idx_cluster_center.size();
+		idx_i = cluster[i];
+		n_cluster = (int)idx_cluster_center.size();
 		for(int j = 0; j < n_cluster; ++j)
 		{
 			idx_j = idx_cluster_center[j];
-			distance = (this->point.dim == 3) ? Dist(this->point.x[idx_i], this->point.x[idx_j], this->point.y[idx_i], this->point.y[idx_j], this->point.z[idx_i], this->point.z[idx_j]) : (met.*dist)(this->point.x[idx_i], this->point.x[idx_j], this->point.y[idx_i], this->point.y[idx_j]);
+			distance = (this->point.dim == 3) ? dist(this->point.x[idx_i], this->point.x[idx_j], this->point.y[idx_i], this->point.y[idx_j], this->point.z[idx_i], this->point.z[idx_j]) : dist(this->point.x[idx_i], this->point.x[idx_j], this->point.y[idx_i], this->point.y[idx_j]);
 			bool_new *= distance > ray;  
 		}
 		if(bool_new)
@@ -94,7 +92,7 @@ template<typename Dist> int* densityclustering<Dist>::DC(Point &centroid, float 
 			//float x = this->point.x[k] - centroid.x[i];
 			//float y = this->point.y[k] - centroid.y[i];
 			//float z = this->point.z[k] - centroid.z[i];
-			distance = (point.dim == 3) ? Dist(this->point.x[k], centroid.x[i], this->point.y[k], centroid.y[i], this->point.z[k], centroid.z[i]) : (met.*dist)(this->point.x[k], centroid.x[i], this->point.y[k], centroid.y[i]);
+			distance = (point.dim == 3) ? dist(this->point.x[k], centroid.x[i], this->point.y[k], centroid.y[i], this->point.z[k], centroid.z[i]) : dist(this->point.x[k], centroid.x[i], this->point.y[k], centroid.y[i]);
 			if(distance < best_distance)
 			{
 				best_distance = distance;

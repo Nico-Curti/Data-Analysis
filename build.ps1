@@ -1,7 +1,7 @@
 #!/usr/bin/env powershell
 
-$env:CC = "clang-cl.exe"
-$env:CXX = "clang-cl.exe"
+#$env:CC = "clang-cl.exe"
+#$env:CXX = "clang-cl.exe"
 #$env:CC = "clang.exe"
 #$env:CXX = "clang++.exe"
 

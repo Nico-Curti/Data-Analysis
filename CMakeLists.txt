@@ -92,7 +92,7 @@ if (OpenMP_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 endif()
 if (CYGWIN)
-	set (CMAKE_CXX_FLAGS "-std=gnu++11 ${CMAKE_CXX_FLAGS}")
+	set (CMAKE_CXX_FLAGS "-std=gnu++14 ${CMAKE_CXX_FLAGS}")
 endif()
 if (NOT MSVC)
   set (CMAKE_CXX_FLAGS "-ffast-math ${CMAKE_CXX_FLAGS}") # perform more aggressive floating-point optimizations
@@ -146,6 +146,16 @@ add_executable(	runtest_bayes_cls
 				${HPP_DIR}/diagQDA.hpp
         ${HPP_DIR}/QDA.hpp
 			  )
+add_executable( runtest_clustering
+        ${CMAKE_SOURCE_DIR}/tst/runtest_clustering.cpp
+        ${HPP_DIR}/clustering.hpp
+        ${HPP_DIR}/kmeans.hpp
+        ${HPP_DIR}/density_clustering.hpp
+        ${HPP_DIR}/points.hpp
+        ${HPP_DIR}/metrics.hpp
+        ${HPP_DIR}/fstat.hpp
+        ${HPP_DIR}/fmath.hpp
+        )
 add_executable(	runtest_kabsch
 				${CMAKE_SOURCE_DIR}/tst/runtest_kabsch.cpp
 				${HPP_DIR}/kabsch.hpp

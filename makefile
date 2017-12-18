@@ -8,7 +8,7 @@ fmath = -ffast-math
 OMP  = -fopenmp
 
 ifeq ($(shell uname -o),Cygwin)
-    gnu = -std=gnu++11
+    gnu = -std=gnu++14
 endif
 
 ifeq ($(OS), Windows_NT)
@@ -23,6 +23,7 @@ all: 	dir_tree \
 		neural_net \
 		pca \
 		bayes_cls \
+		clustering \
 		kabsch
 #fbp \
 #rsgd \
@@ -78,6 +79,17 @@ bayes_cls:	$(TST)/runtest_bayes_cls.cpp \
 			$(HPP)/QDA.hpp
 
 		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_bayes_cls	$(TST)/runtest_bayes_cls.cpp
+
+clustering:	$(TST)/runtest_clustering.cpp \
+			$(HPP)/clustering.hpp \
+			$(HPP)/kmeans.hpp \
+			$(HPP)/density_clustering.hpp \
+			$(HPP)/points.hpp \
+			$(HPP)/metrics.hpp \
+			$(HPP)/fstat.hpp \
+			$(HPP)/fmath.hpp 
+
+		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_clustering $(TST)/runtest_clustering.cpp
 
 kabsch:		$(TST)/runtest_kabsch.cpp \
 			$(HPP)/kabsch.hpp \

@@ -1,7 +1,7 @@
 rem cd %WORKSPACE%\Data-Analysis
 
-set CC="clang-cl.exe"
-set CXX="clang-cl.exe"
+rem CC="clang-cl.exe"
+rem CXX="clang-cl.exe"
 rem set CC="clang.exe"
 rem set CXX="clang++.exe"
 

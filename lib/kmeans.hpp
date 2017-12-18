@@ -1,7 +1,5 @@
-#pragma once
-#include "clustering.hpp"
 
-template<typename Dist, typename Cl_Center> kmean<Dist, Cl_Center>::kmean(const Point &point, const int &n_point, const int n_cluster&, const int n_iteration&, float *point_weight)
+kmean::kmean(const Point &point, const int &n_point, const int &n_cluster, const int &n_iteration, float *point_weight)
 {
 	this->n_point = n_point;
 	this->n_cluster = n_cluster;
@@ -13,12 +11,12 @@ template<typename Dist, typename Cl_Center> kmean<Dist, Cl_Center>::kmean(const 
 	this->point_per_cluster = new int[n_cluster];
 	this->w = new float[n_point];
 	if(point_weight != nullptr)
-		std::memcpy(this->w, this->point_weight, sizeof(float)*this->n_point);
+		std::memcpy(this->w, point_weight, sizeof(float)*this->n_point);
 	else
 		std::memset(w, 1, sizeof(float)*this->n_point);
 }
 
-template<typename Dist, typename Cl_Center> kmean<Dist, Cl_Center>::~kmean()
+kmean::~kmean()
 {
 	delete[] this->cluster;
 	delete[] this->point_per_cluster;
@@ -26,7 +24,7 @@ template<typename Dist, typename Cl_Center> kmean<Dist, Cl_Center>::~kmean()
 }
 
 
-template<typename Dist, typename Cl_Center> inline int kmean<Dist, Cl_Center>::nearest(const int &lbl, const Point &centroid, const int &n_cluster, float *d2, const float &pt_x, const float &pt_y, float pt_z = 0.f)
+template<typename Dist> inline int kmean::nearest(const int &lbl, const Point &centroid, const int &n_cluster, float *d2, Dist dist, const float &pt_x, const float &pt_y, float pt_z)
 {
 	int min_index = lbl;
 	float d, min_dist = std::numeric_limits<float>::max();
@@ -34,13 +32,13 @@ template<typename Dist, typename Cl_Center> inline int kmean<Dist, Cl_Center>::n
 	if(pt_z != 0.f)
 	{
 		for(int i = 0; i < n_cluster; ++i)
-			if(min_dist > (d = Dist(pt_x, centroid.x[i], pt_y, centroid.y[i], pt_z, centrodi.z[i])))
+			if(min_dist > (d = dist(pt_x, centroid.x[i], pt_y, centroid.y[i], pt_z, centroid.z[i])))
 				{ min_dist = d; min_index = i;}
 	}
 	else
 	{
 		for(int i = 0; i < n_cluster; ++i)
-			if(min_dist > (d = Dist(pt_x, centroid.x[i], pt_y, centroid.y[i])))
+			if(min_dist > (d = dist(pt_x, centroid.x[i], pt_y, centroid.y[i])))
 				{ min_dist = d; min_index = i;}
 	}
 
@@ -49,7 +47,7 @@ template<typename Dist, typename Cl_Center> inline int kmean<Dist, Cl_Center>::n
 }
 
 
-template<typename Dist, typename Cl_Center> void kmean<Dist, Cl_Center>::kpp(const Point &point, Point &centroid, const int &n_point, const int &n_cluster, int *cluster, unsigned int seed)
+template<typename Dist> void kmean::kpp(const Point &point, Point &centroid, const int &n_point, const int &n_cluster, int *cluster, Dist dist, unsigned int seed)
 {
 	int cl;
 	float sum, *d = new float[n_point];
@@ -57,7 +55,7 @@ template<typename Dist, typename Cl_Center> void kmean<Dist, Cl_Center>::kpp(con
 	std::uniform_real_distribution<float> r_dist{0.f, 1.f};
 	int idx = (int)r_dist(engine)*n_point;
 	centroid.x[0] = point.x[idx]; centroid.y[0] = point.y[idx];
-	if(point.dim == 3) centroid.z = point.z[idx];
+	if(point.dim == 3) centroid.z[0] = point.z[idx];
 
 	for(cl = 1; cl < n_cluster; ++cl)
 	{
@@ -66,9 +64,9 @@ template<typename Dist, typename Cl_Center> void kmean<Dist, Cl_Center>::kpp(con
 		for(int j = 0; j < n_point; ++j)
 		{
 			if(point.dim == 3)
-				nearest(cluster[j], centroid, cl, d + j, point.x[j], point.y[j], point.z[j]);
+				nearest(cluster[j], centroid, cl, d + j, dist, point.x[j], point.y[j], point.z[j]);
 			else
-				nearest(cluster[j], centroid, cl, d + j, point.x[j], point.y[j]);
+				nearest(cluster[j], centroid, cl, d + j, dist, point.x[j], point.y[j]);
 			sum += d[j];
 		}
 		
@@ -89,9 +87,9 @@ template<typename Dist, typename Cl_Center> void kmean<Dist, Cl_Center>::kpp(con
 	for(int j = 0; j < n_point; ++j)
 	{
 		if(point.dim == 3)
-			cluster[j] = nearest(cluster[j], centroid, cl, 0, point.x[j], point.y[j], point.z[j]);
+			cluster[j] = nearest(cluster[j], centroid, cl, 0, dist, point.x[j], point.y[j], point.z[j]);
 		else
-			cluster[j] = nearest(cluster[j], centroid, cl, 0, point.x[j], point.y[j]);
+			cluster[j] = nearest(cluster[j], centroid, cl, 0, dist, point.x[j], point.y[j]);
 	}
 	
 	delete[] d;
@@ -107,7 +105,7 @@ template<typename Dist, typename Cl_Center> void kmean<Dist, Cl_Center>::kpp(con
 	return;
 }
 
-template<typename Dist, typename Cl_Center> void kmean<Dist, Cl_Center>::random_init(int *cluster, const int &n_point, unsigned int seed)
+void kmean::random_init(int *cluster, const int &n_point, unsigned int seed)
 {
 	std::mt19937 engine{seed};
 	std::uniform_int_distribution<int> i_dist{0, 1};
@@ -115,10 +113,10 @@ template<typename Dist, typename Cl_Center> void kmean<Dist, Cl_Center>::random_
 	return;
 }
 
-template<typename Dist, typename Cl_Center> void kmean<Dist, Cl_Center>::init_centroid(std::string mode, bool time)
+template<typename Dist> void kmean::init_centroid(Dist dist, std::string mode, bool time)
 {
 	auto start = std::chrono::steady_clock::now();
-	if(mode == "k++") kpp(this->point, this->centroid, this->n_point, this->n_cluster, this->cluster);
+	if(mode == "k++") kpp(this->point, this->centroid, this->n_point, this->n_cluster, this->cluster, dist);
 	else if(mode == "random") random_init(this->cluster, this->n_point);
 	else {std::cerr << "Invalid Initialization mode. Given : " << mode << ". Possible values are 'k++', 'random'." << std::endl; exit(1);}
 	if(time)
@@ -126,7 +124,7 @@ template<typename Dist, typename Cl_Center> void kmean<Dist, Cl_Center>::init_ce
 }
 
 
-template<typename Dist, typename Cl_Center> int* kmean<Dist, Cl_Center>::Kmean(Point &centroid, bool time)
+template<typename Dist, typename Cl_Center> int* kmean::Kmean(Point &centroid, Dist dist, Cl_Center cl, bool time)
 {
 	auto start = std::chrono::steady_clock::now();
 	int iteration = 0, changed;
@@ -134,7 +132,7 @@ template<typename Dist, typename Cl_Center> int* kmean<Dist, Cl_Center>::Kmean(P
 	while(true)
 	{
 		//Compute the centroid of the clusters
-		Cl_Center(this->point, centroid, this->n_point, this->n_cluster, this->cluster, this->point_per_cluster, this->w);	
+		cl(this->point, centroid, this->n_point, this->n_cluster, this->cluster, this->point_per_cluster, this->w);	
 		
 		// Exit once convergence is reached
 		++iteration;
@@ -153,7 +151,7 @@ template<typename Dist, typename Cl_Center> int* kmean<Dist, Cl_Center>::Kmean(P
 				//float x = point.x[k] - centroid.x[i];
 				//float y = point.y[k] - centroid.y[i];
 				//float z = point.z[k] - centroid.z[i];
-				float distance = (this->point.dim == 3) ? (this->met.*dist)(this->point.x[k], centroid.x[i], this->point.y[k], centroid.z[k], this->point.z[k], centroid.z[i]) : (this->met.*dist)(this->point.x[k], centroid.x[i], this->point.y[k], centroid.z[k]);
+				float distance = (this->point.dim == 3) ? dist(this->point.x[k], centroid.x[i], this->point.y[k], centroid.z[k], this->point.z[k], centroid.z[i]) : dist(this->point.x[k], centroid.x[i], this->point.y[k], centroid.z[k]);
 				if(distance < best_distance)
 				{
 					best_distance = distance;
