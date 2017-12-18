@@ -2,7 +2,7 @@
 HPP = ./lib
 OUT = ./bin
 TST = ./tst
-STD = -std=c++11
+STD = -std=c++14
 fmath = -ffast-math
 #fmath = -ffp-mode=fast
 OMP  = -fopenmp

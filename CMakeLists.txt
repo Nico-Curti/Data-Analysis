@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.0)
 
 project (Data-Analysis)
 enable_language (CXX)
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 14)
 
 ######################################## macro for Visual Studio  ===========================
 macro(configure_link_flags)
