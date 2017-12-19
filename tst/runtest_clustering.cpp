@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	// Kmeans clustering
 
 	kmean KM(points, n_point, n_cluster, n_iteration);
-	KM.init_centroid(euclidean, "k++", true);	
+	KM.kpp_centroid(euclidean, 123, true);	
 	index_km = KM.Kmean(centroid, euclidean, middle_point, true);
 
 	std::map<int, int> point_per_cluster;
@@ -37,6 +37,8 @@ int main(int argc, char *argv[])
 	index_dc = DC.DensityClustering(centroid, euclidean, control, ray, true);
 
 	point_per_cluster.clear();
+	for(int i = 0; i < n_point; ++i) ++point_per_cluster[index_dc[i]];
+		
 	std::cout << "Density clustering:" << std::endl;
 	for(const auto &i : point_per_cluster) std::cout << "cluster " << i.first << " : " << i.second << " points" << std::endl;
 	std::cout << std::endl;

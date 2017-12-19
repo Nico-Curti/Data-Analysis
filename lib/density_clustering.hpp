@@ -3,11 +3,12 @@ densityclustering::densityclustering(const Point &point)
 {
 	this->n_point = point.n;
 	this->point = point;
-	this->density = new int[n_point];
+	this->density = new int[this->n_point];
 }
 densityclustering::~densityclustering()
 {
-	delete[] this->density;
+	if(this->n_point != 0)
+		delete[] this->density;
 }
 
 // TO FIX
@@ -35,7 +36,6 @@ template<typename Dist> int* densityclustering::DensityClustering(Point &centroi
 
 	cluster = argsort<false>(this->density, 0, this->n_point);
 
-	delete[] this->density;
 #pragma omp parallel for
 	for(int i = 0; i < this->n_point; ++i)
 	{
