@@ -106,7 +106,7 @@ template<typename T> NeuralNetwork<T>::~NeuralNetwork()
 	delete[] this->nabla_b;
 }
 
-template<typename T> NeuralNetwork<T>::NeuralNetwork(int *size, const int &num_layers, std::string cost_)
+template<typename T> NeuralNetwork<T>::NeuralNetwork(int *size, const int &num_layers, std::string cost_, unsigned int seed)
 {
 	/*The list ``sizes`` contains the number of neurons in the
 	respective layers of the network.  For example, if the list
@@ -118,7 +118,7 @@ template<typename T> NeuralNetwork<T>::NeuralNetwork(int *size, const int &num_l
 	layer is assumed to be an input layer, and by convention we
 	won't set any biases for those neurons, since biases are only
 	ever used in computing the outputs from later layers.*/
-	srand((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
+	srand(seed);
 	this->cost = cost_;
 	if (this->cost == "CrossEntropy")
 	{

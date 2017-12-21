@@ -124,7 +124,6 @@ void kmean::random_centroid(unsigned int seed, bool time)
 
 template<typename Dist, typename Cl_Center> int* kmean::Kmean(Point &centroid, Dist dist, Cl_Center cl, bool time)
 {
-	std::cout << "HERE\n";
 	auto start = std::chrono::steady_clock::now();
 	int iteration = 0, changed;
 

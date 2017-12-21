@@ -65,3 +65,7 @@ x64/
 bld/
 [Bb]in/
 [Oo]bj/
+.snakemake/
+benchmark/
+[Pp]lt/
+[Rr]es/

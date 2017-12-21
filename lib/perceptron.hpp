@@ -3,18 +3,6 @@
 template<typename T> Perceptron<T>::Perceptron()
 { this->num_inputs = 0; this->size = 0; this->bias = (T)0.; this->weights = nullptr; }
 
-template<typename T> Perceptron<T>::Perceptron(const int &Nsample, const int &Ninput)
-{
-	this->num_inputs = Ninput; this->size = Nsample;
-	/*Initialize the perceptron with the bias and all weights
-    set to 0.0. ``num_inputs`` is the number of input bits to the
-    perceptron.*/
-    this->weights = new T[this->num_inputs];
-    srand((unsigned int)time(nullptr));
-    std::generate(this->weights, this->weights + this->num_inputs, []{return static_cast<T>(rand()) / static_cast<T>(RAND_MAX);});
-	this->bias = static_cast <T> (rand()) / (static_cast <T> (RAND_MAX/(T)1.));
-}
-
 template<typename T> Perceptron<T>::Perceptron(const Perceptron<T> &perceptron)
 {
 	this->num_inputs = perceptron.num_inputs;
@@ -39,15 +27,19 @@ template<typename T> Perceptron<T>::~Perceptron()
 { delete[] this->weights; }
 
 
-template<typename T> template<bool par, parallel<par, T>> void Perceptron<T>::train(const Patterns<T> &pattern, T eta)
+template<typename T> template<bool par, parallel<par, T>> void Perceptron<T>::train(const Patterns<T> &pattern, T eta, unsigned int seed)
 {
 	/*Find a bias and a set of weights for a perceptron that
     computes the function ``f``. ``eta`` is the learning rate, and
     should be a small positive number.  Does not terminate when
     the function cannot be computed using a perceptron.*/
     // initialize the bias and weights with random values
-	if(pattern.Nrow != this->size){std::cerr << "Wrong input dimensione! Number of inputs " << pattern.Nrow << " have to be the same of initialization (" << this->size << ")" << std::endl; exit(1);}
-	if(pattern.Ncol != this->num_inputs){std::cerr << "Wrong input dimensione! Number of samples " << pattern.Ncol << " have to be the same of initialization (" << this->num_inputs << ")" << std::endl; exit(1);}
+    this->size = pattern.Nrow;
+    this->num_inputs = pattern.Ncol;
+    this->weights = new T[this->num_inputs];
+    srand(seed);
+    std::generate(this->weights, this->weights + this->num_inputs, []{return static_cast<T>(rand()) / static_cast<T>(RAND_MAX);});
+	this->bias = static_cast <T> (rand()) / (static_cast <T> (RAND_MAX/(T)1.));
 
 	int number_of_errors = -1, it = 0;
 	T error, inner;
@@ -76,10 +68,14 @@ template<typename T> template<bool par, parallel<par, T>> void Perceptron<T>::tr
 	return;
 }
 
-template<typename T>template<bool par, serial<par, T>> void Perceptron<T>::train(const Patterns<T> &pattern, T eta)
+template<typename T>template<bool par, serial<par, T>> void Perceptron<T>::train(const Patterns<T> &pattern, T eta, unsigned int seed)
 {
-	if(pattern.Nrow != this->size){std::cerr << "Wrong input dimensione! Number of inputs " << pattern.Nrow << " have to be the same of initialization (" << this->size << ")" << std::endl; exit(1);}
-	if(pattern.Ncol != this->num_inputs){std::cerr << "Wrong input dimensione! Number of samples " << pattern.Ncol << " have to be the same of initialization (" << this->num_inputs << ")" << std::endl; exit(1);}
+	this->size = pattern.Nrow;
+    this->num_inputs = pattern.Ncol;
+    this->weights = new T[this->num_inputs];
+    srand(seed);
+    std::generate(this->weights, this->weights + this->num_inputs, []{return static_cast<T>(rand()) / static_cast<T>(RAND_MAX);});
+	this->bias = static_cast <T> (rand()) / (static_cast <T> (RAND_MAX/(T)1.));
 
 	int number_of_errors = -1, it = 0, error;
 	T inner;

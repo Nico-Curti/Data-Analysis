@@ -17,13 +17,12 @@ template<typename T> class Perceptron
 	T bias, *weights;
 public:
 	Perceptron();
-	Perceptron(const int &, const int &);
 	Perceptron(const Perceptron<T> &);
 	Perceptron<T>& operator=(const Perceptron<T> &);
 	~Perceptron();
 
-	template<bool par, parallel<par, T> = nullptr> void train(const Patterns<T> &, T eta = (T).1);
-	template<bool par, serial<par, T> = nullptr> void train(const Patterns<T> &, T eta = (T).1);
+	template<bool par, parallel<par, T> = nullptr> void train(const Patterns<T> &, T eta = (T).1, unsigned int seed = 0);
+	template<bool par, serial<par, T> = nullptr> void train(const Patterns<T> &, T eta = (T).1, unsigned int seed = 0);
 	template<bool par, parallel<par, T> = nullptr> int* test(const Patterns<T> &);
 	template<bool par, serial<par, T> = nullptr> int* test(const Patterns<T> &);
 };
@@ -63,7 +62,7 @@ template<typename T> class NeuralNetwork
 	inline T total_cost(const Patterns<T> &, const bool &, const T &);
 
 public:
-	NeuralNetwork(int *, const int &, std::string cost_ = "CrossEntropy");
+	NeuralNetwork(int *, const int &, std::string cost_ = "CrossEntropy", unsigned int seed = 0);
 	void SGD(const Patterns<T> &, const int &, const int &, const T &, const Patterns<T> &, const T &, bool convert = false, bool monitor_evaluation_cost = false, bool monitor_evaluation_accuracy = false, bool monitor_training_cost = false, bool monitor_training_accuracy = false);
 	void save(const std::string &, const Patterns<T> &, const int &, bool bin = false);
 	//void load(std::string &filename);

@@ -1,8 +1,8 @@
 #include "classifier.hpp"
 
-int main()
+int main(int argc, char *argv[])
 {
-	std::string patternsfile = "../tst/pattern/iris.dat";
+	std::string patternsfile = "tst/pattern/iris.dat";
 	Patterns<float> data(patternsfile);
 
 	// Bayesian diag-quadratic discriminant analysis classifier
@@ -18,6 +18,18 @@ int main()
 	for(const auto &i : score_diagQDA)
 		std::cout << i.first << " : " << i.second << std::endl;
 
+	if(os::dir_exists("tst/res"))
+	{
+		std::ofstream os("tst/res/diagqda.class");
+		for(int i = 0; i < data.Ncol; ++i) os << "feature" << i << "\t"; os << "label" << std::endl; //header
+		for(int i = 0; i < data.Nrow; ++i)
+		{
+			std::copy(data.input[i], data.input[i] + data.Ncol, std::ostream_iterator<float>(os, "\t"));
+			os << predict_diagQDA[i] << std::endl;
+		}
+		os.close();
+	}
+
 	// Bayesian quadratic discriminant analysis classifier
 	QDA<float> cls_2;
 	cls_2.train(data);
@@ -30,6 +42,18 @@ int main()
 	std::cout << "Prediction QDA:" << std::endl;
 	for(const auto &i : score_QDA)
 		std::cout << i.first << " : " << i.second << std::endl;
+
+	if(os::dir_exists("tst/res"))
+	{
+		std::ofstream os("tst/res/qda.class");
+		for(int i = 0; i < data.Ncol; ++i) os << "feature" << i << "\t"; os << "label" << std::endl; //header
+		for(int i = 0; i < data.Nrow; ++i)
+		{
+			std::copy(data.input[i], data.input[i] + data.Ncol, std::ostream_iterator<float>(os, "\t"));
+			os << predict_QDA[i] << std::endl;
+		}
+		os.close();
+	}
 
 	return 0;
 }

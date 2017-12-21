@@ -1,0 +1,107 @@
+# snakemake -s plots.snakemake
+# snakemake --dag | dot -Tpdf > pipe.pdf
+import pandas as pd
+import os
+import seaborn as sns
+import matplotlib.pylab as plt
+import platform
+from contextlib import suppress
+# in this way every output will be a scatter plot!!
+
+sns.set(style="white", font_scale=2.5)
+
+def f(x, **kwargs):
+    kwargs.pop("color")
+    col = next(plt.gca()._get_lines.prop_cycler)['color']
+    sns.kdeplot(x, color=col, shade=True, alpha=.5, **kwargs)
+    
+
+sep = os.sep
+runtest = ["runtest_nn", "runtest_bayes_cls", "runtest_clustering", "runtest_pca"]
+classify = ["diagqda", "qda", "perceptron", "pca"]
+cluster = ["kmean"]#, "densityclustering"]
+
+if platform.system() == "Windows":
+	extension = "exe"
+	build = "powershell .\\build.ps1"
+elif platform.system() == "Linux" or platform.system()[:6] == "CYGWIN":
+	extension = ""
+	build = 'bash -c "./build.sh"'
+else:
+	print("Unsupported OS")
+	sys.exit(1)
+
+with(suppress(OSError)):
+	os.makedirs(os.path.join("tst", "res")) 
+	os.makedirs("plt")
+
+rule all:
+	input:
+		exe  		 = expand(os.path.join("bin", "{res}." + extension), res=runtest),
+		imgs_cls 	 = expand(os.path.join("plt", "{res}.png"), res=classify),
+		imgs_cluster = expand(os.path.join("plt", "{res}.png"), res=cluster),
+
+rule build_program:
+	output:
+		exe = expand(os.path.join("bin", "{program}." + extension), program = runtest)
+	shell:
+		build
+
+rule run_exec:
+	input:
+		exe = expand(os.path.join("bin", "{program}." + extension), program=runtest),
+	output:
+		out1 = expand(os.path.join("tst", "res", "{res}.cluster"), res=cluster),
+		out2 = expand(os.path.join("tst", "res", "{res}.class"), res=classify)
+	benchmark:
+		os.path.join("benchmark", "run_exec.txt"),
+	run:
+		for exe in input.exe:
+			print("---------------- ", exe , " ----------------")
+			os.system(exe)
+			print("\n\n")
+
+rule plot_cluster:
+	input:
+		file = os.path.join("tst", "res", "{algo}.cluster"),
+	output:
+		img = os.path.join("plt", "{algo}.png"),
+	benchmark:
+		os.path.join("benchmark", "benchmark_plot_cluster_{algo}.txt")
+	run:
+		data = pd.read_csv(input.file, sep="\t", header=0)
+		fig, ax = plt.subplots(figsize=(10, 8))
+		for i, c in enumerate(pd.unique(data.label)):
+		    cmap = sns.cubehelix_palette(n_colors=50, 
+		                                 start=i*.3, 
+		                                 rot=0, 
+		                                 light=0.7, 
+		                                 dark=0,
+		                                 as_cmap=True)
+		    ax = sns.kdeplot(data[data.label==c].dim0,
+		                     data[data.label==c].dim1,
+		                     cmap= cmap, 
+		                     shade=True,
+		                     alpha=.6,
+		                     shade_lowest=False,
+		                     legend=True)
+		plt.savefig(output.img)
+
+rule plot_cls:
+	input:
+		file = os.path.join("tst", "res", "{algo}.class"),
+	output:
+		img = os.path.join("plt", "{algo}.png")
+	benchmark:
+		os.path.join("benchmark", "benchmark_plot_cls_{algo}.txt")
+	run:
+		data = pd.read_csv(input.file, sep="\t", header=0)
+		plot =  sns.PairGrid(data, 
+                    		 hue='label',
+                    		 vars=[c for c in data.columns if c != "label"],
+                    		 size=5
+                    		 )
+		plot.map_diag(f)
+		plot.map_offdiag(plt.scatter)
+		plot.add_legend()
+		plot.savefig(output.img)

@@ -111,7 +111,7 @@ template<typename T> void QDA<T>::train(const Patterns<T> &pattern, T *prior)
 					this->cov_inv[i][k][j] = sum / p[j];
 			}
 		this->det[i] *= (T)2.;
-		std::cout << this->det[i] << std::endl;
+		//std::cout << this->det[i] << std::endl;
 		// Cholesky inversion
 		for(int j = 0; j < this->N; ++j)
 		{
@@ -155,13 +155,13 @@ template<typename T> void QDA<T>::train(const Patterns<T> &pattern, T *prior)
 		delete[] mean_sq[i];
 
 		//TODO=========================
-		for(int j = 0; j < this->N; ++j)
-		{
-			for(int k = 0; k < this->N; ++k)
-				std::cout << this->cov_inv[i][j][k] << " ";
-			std::cout << std::endl;
-		}
-		std::cin.get();
+		//for(int j = 0; j < this->N; ++j)
+		//{
+		//	for(int k = 0; k < this->N; ++k)
+		//		std::cout << this->cov_inv[i][j][k] << " ";
+		//	std::cout << std::endl;
+		//}
+		//std::cin.get();
 
 		//=============================
 

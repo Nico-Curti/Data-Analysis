@@ -1,7 +1,7 @@
 #include "cross_validation.hpp"
 
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
 	int N = 13, 
 		K = 3,

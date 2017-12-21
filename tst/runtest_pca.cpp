@@ -5,14 +5,21 @@
 int main(int argc, char *argv[])
 {
 	int Ncomp = 2;
-	std::string patternsfile = "../tst/pattern/iris.dat";
+	std::string patternsfile = "tst/pattern/iris.dat";
 	Patterns<float> data(patternsfile);
 
-	float **components = pca(data.input, data.Ncol, data.Nrow, Ncomp);
-	for(int i = 0; i < Ncomp; ++i)
+	float **components = pca(data.input, data.Nrow, data.Ncol, Ncomp);
+	if(os::dir_exists("tst/res"));
 	{
-		std::copy(components[i], components[i] + data.Nrow, std::ostream_iterator<float>(std::cout, " "));
-		std::cout << std::endl;
+		std::ofstream os("tst/res/pca.class");
+		for(int i = 0; i < Ncomp; ++i) os << "component" << i << "\t"; os << "label" << std::endl; //header
+		for(int i = 0; i < data.Nrow; ++i)
+		{
+			for(int j = 0; j < Ncomp; ++j)
+				os << components[j][i] << "\t";
+			os << data.output[i] << std::endl;
+		}
+		os.close();
 	}
 
 	return 0;

@@ -31,17 +31,41 @@ int main(int argc, char *argv[])
 	for(const auto &i : point_per_cluster) std::cout << "cluster " << i.first << " : " << i.second << " points" << std::endl;
 	std::cout << std::endl;
 
+	if(os::dir_exists("tst/res"))
+	{
+		std::ofstream os("tst/res/kmean.cluster");
+		for(int i = 0; i < n_dim; ++i) os << "dim" << i << "\t"; os << "label" << std::endl; //header
+		for(int i = 0; i < n_point; ++i)
+		{
+			os << points.x[i] << "\t" << points.y[i] << "\t";
+			os << index_km[i] << std::endl;
+		}
+		os.close();
+	}
+
 	// Density Clustering
 
 	densityclustering DC(points);
 	index_dc = DC.DensityClustering(centroid, euclidean, control, ray, true);
-
+	
 	point_per_cluster.clear();
 	for(int i = 0; i < n_point; ++i) ++point_per_cluster[index_dc[i]];
 		
 	std::cout << "Density clustering:" << std::endl;
 	for(const auto &i : point_per_cluster) std::cout << "cluster " << i.first << " : " << i.second << " points" << std::endl;
 	std::cout << std::endl;
+	
+	if(os::dir_exists("tst/res"))
+	{
+		std::ofstream os("tst/res/densityclustering.cluster");
+		for(int i = 0; i < n_dim; ++i) os << "dim" << i << "\t"; os << "label" << std::endl; //header
+		for(int i = 0; i < n_point; ++i)
+		{
+			os << points.x[i] << "\t" << points.y[i] << "\t";
+			os << index_dc[i] << std::endl;
+		}
+		os.close();
+	}
 
 	return 0;
 }
