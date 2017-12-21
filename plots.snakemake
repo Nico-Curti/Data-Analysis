@@ -1,14 +1,18 @@
 # snakemake -s plots.snakemake
+# snakemake -s plots.snakemake --force clear
 # snakemake --dag | dot -Tpdf > pipe.pdf
 import pandas as pd
 import os
 import seaborn as sns
 import matplotlib.pylab as plt
 import platform
+import shutil
 from contextlib import suppress
-# in this way every output will be a scatter plot!!
+import matplotlib.patches as mpatches
 
-sns.set(style="white", font_scale=2.5)
+
+
+sns.set_context("paper", font_scale=1.5)
 
 def f(x, **kwargs):
     kwargs.pop("color")
@@ -70,7 +74,9 @@ rule plot_cluster:
 		os.path.join("benchmark", "benchmark_plot_cluster_{algo}.txt")
 	run:
 		data = pd.read_csv(input.file, sep="\t", header=0)
+		legend = []
 		fig, ax = plt.subplots(figsize=(10, 8))
+		fig.subplots_adjust(left=0.1, right=0.95, top=0.95,  bottom=0.1)
 		for i, c in enumerate(pd.unique(data.label)):
 		    cmap = sns.cubehelix_palette(n_colors=50, 
 		                                 start=i*.3, 
@@ -78,6 +84,9 @@ rule plot_cluster:
 		                                 light=0.7, 
 		                                 dark=0,
 		                                 as_cmap=True)
+		    legend.append(mpatches.Patch(color=cmap(1), 
+		    							label="cluster %d"%i)
+		    			  )
 		    ax = sns.kdeplot(data[data.label==c].dim0,
 		                     data[data.label==c].dim1,
 		                     cmap= cmap, 
@@ -85,6 +94,7 @@ rule plot_cluster:
 		                     alpha=.6,
 		                     shade_lowest=False,
 		                     legend=True)
+		ax.legend(handles=legend)
 		plt.savefig(output.img)
 
 rule plot_cls:
@@ -96,12 +106,28 @@ rule plot_cls:
 		os.path.join("benchmark", "benchmark_plot_cls_{algo}.txt")
 	run:
 		data = pd.read_csv(input.file, sep="\t", header=0)
-		plot =  sns.PairGrid(data, 
-                    		 hue='label',
-                    		 vars=[c for c in data.columns if c != "label"],
-                    		 size=5
-                    		 )
+		plot =  sns.pairplot(data, diag_kind="kde", markers="o",
+                 			hue="label",
+                 			vars=[c for c in data.columns if c != "label"],
+                  			plot_kws=dict(s=50, edgecolor="k", linewidth=1),
+                  			aspect=2,
+                  			)
 		plot.map_diag(f)
-		plot.map_offdiag(plt.scatter)
-		plot.add_legend()
+		plot.fig.subplots_adjust(left=0.1, right=0.95, top=0.95,  bottom=0.1)
 		plot.savefig(output.img)
+
+
+rule clear:
+	input:
+		build_dir 		= "build",
+		bin_dir			= "bin",
+		benchmark_dir	= "benchmark",
+		plt_dir			= "plt",
+		res_dir			= os.path.join("tst", "res"),
+	run:
+		shutil.rmtree(input.build_dir)
+		shutil.rmtree(input.bin_dir)
+		shutil.rmtree(input.benchmark_dir)
+		shutil.rmtree(input.plt_dir)
+		shutil.rmtree(input.res_dir)
+
