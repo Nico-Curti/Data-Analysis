@@ -423,7 +423,7 @@ template<typename T> inline int NeuralNetwork<T>::accuracy(const Patterns<T> &pa
 								[this](T* in, const int &out) mutable 
 								{
 									T *a = this->feedforward(in);
-									int res = (std::distance(a, std::max_element(a, a + this->sizes[0])) == out) ? 1 : 0;
+									int res = (std::distance(a, std::max_element(a, a + this->sizes[this->num_layers - 1])) == out) ? 1 : 0;
 									delete[] a;
 									return res;
 								});
@@ -438,7 +438,7 @@ template<typename T> int* NeuralNetwork<T>::test(const Patterns<T> &test)
 					predict, [this](T *input)
 					{
 						T *out = this->feedforward(input);
-						int res = std::distance(out, std::max_element(out, out + this->sizes[0]));
+						int res = std::distance(out, std::max_element(out, out + this->sizes[this->num_layers - 1]));
 						delete[] out;
 						return res;
 					});
@@ -451,7 +451,7 @@ template<typename T> int* NeuralNetwork<T>::cv_test(const Patterns<T> &test, con
 	for(int i = 0; i < (int)idx.size(); ++i)
 	{
 		T *out = this->feedforward(test[idx[i]]);
-		predict[i] = std::distance(out, std::max_element(out, out + this->sizes[0]));
+		predict[i] = std::distance(out, std::max_element(out, out + this->sizes[this->num_layers - 1]));
 		delete[] out;
 	}
 	return predict;
@@ -460,7 +460,7 @@ template<typename T> int* NeuralNetwork<T>::cv_test(const Patterns<T> &test, con
 template<typename T> int NeuralNetwork<T>::predict(T *input)
 {
 	T *out = this->feedforward(input);
-	int res = std::distance(out, std::max_element(out, out + this->sizes[0]));
+	int res = std::distance(out, std::max_element(out, out + this->sizes[this->num_layers - 1]));
 	delete[] out;
 	return res;
 }

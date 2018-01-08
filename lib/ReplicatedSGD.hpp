@@ -569,7 +569,7 @@ namespace RSGD
 		while(!ok && epoch < max_epochs)
 		{
 			++epoch;
-#pragma omp parallel for reduction(+:nets[:params.y]) private(shuffle_idx, eng)
+//#pragma omp parallel for reduction(+:nets[:params.y]) private(shuffle_idx, eng)
 			for(int i = 0; i < sub_epochs; ++i)
 			{
 				std::shuffle(shuffle_idx, shuffle_idx + params.y, eng);
@@ -652,17 +652,37 @@ namespace RSGD
 		return RSGD(pattern, K, params, batch, formula, 202, max_epochs, init_equal, waitcenter, center, outfile, false);
 	}
 
-	template<typename T> int* test(const Patterns<T> &patterns, T* weights, const int &M, const int &K, const int &N)
+	template<typename T> int* test(const Patterns<T> &patterns, T *weights, const int &K, const int &N)
 	{
-		int *Perf = nullptr;
-		return Perf;
+		int *results = new int[patterns.Nrow]; 
+		std::transform(	patterns.input, patterns.input + patterns.Nrow,
+						results, [&weights, &K, &N](const T *input)
+						{
+							return 0;//compute_output(input, weights, K, N);
+						});
+		return results;
 	}
 
 	template<typename T> int* test(const std::string &ifile, const std::string &wfile)
 	{
-		int *Perf = nullptr;
-		return Perf;
+		Patterns<T> patterns(ifile);
+		check_binary(patterns);		
+
+		int 	K, 
+				N,
+				*results = new int[patterns.Nrow];
+
+		T 		*weights = nullptr;//read_weights(wfile, K, N),
+
+		std::transform(	patterns.input, patterns.input + patterns.Nrow,
+						results, [&weights, &K, &N](const T *input)
+						{
+							return 0;//compute_output(input, weights, K, N);
+						});
+
+		return results;
 	}
+
 
 } // end of namespace RSGD
 

@@ -26,31 +26,31 @@ all: 	dir_tree \
 		clustering \
 		kabsch \
 		genetic \
-		gridsearch
-#fbp \
-#rsgd \
+		gridsearch \
+		fbp \
+		rsgd 
 
-#fbp:		$(TST)/runtest_bcrfbp.cpp \
-#			$(HPP)/FocusingBeliefPropagation.hpp \
-#			$(HPP)/classifier.hpp \
-#			$(HPP)/hyperparams.hpp \
-#			$(HPP)/os.hpp \
-#			$(HPP)/parse_args.hpp \
-#			$(HPP)/fmath.hpp \
-#			$(HPP)/patterns.hpp 
-#
-#		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_fbp 		$(TST)/runtest_bcrfbp.cpp
-#
-#rsgd:		$(TST)/runtest_bcrsgd.cpp \
-#			$(HPP)/ReplicatedSGD.hpp \
-#			$(HPP)/classifier.hpp \
-#			$(HPP)/hyperparams.hpp \
-#			$(HPP)/os.hpp \
-#			$(HPP)/parse_args.hpp \
-#			$(HPP)/fmath.hpp \
-#			$(HPP)/patterns.hpp 
-#
-#		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_rsgd 		$(TST)/runtest_bcrsgd.cpp
+fbp:		$(TST)/runtest_bcrfbp.cpp \
+			$(HPP)/ReplicatedFBP.hpp \
+			$(HPP)/classifier.hpp \
+			$(HPP)/hyperparams.hpp \
+			$(HPP)/os.hpp \
+			$(HPP)/parse_args.hpp \
+			$(HPP)/fmath.hpp \
+			$(HPP)/patterns.hpp 
+
+		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_fbp 		$(TST)/runtest_bcrfbp.cpp
+
+rsgd:		$(TST)/runtest_bcrsgd.cpp \
+			$(HPP)/ReplicatedSGD.hpp \
+			$(HPP)/classifier.hpp \
+			$(HPP)/hyperparams.hpp \
+			$(HPP)/os.hpp \
+			$(HPP)/parse_args.hpp \
+			$(HPP)/fmath.hpp \
+			$(HPP)/patterns.hpp 
+
+		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_rsgd 		$(TST)/runtest_bcrsgd.cpp
 
 fstat:		$(TST)/runtest_fstat.cpp \
 			$(HPP)/timing_func.hpp \

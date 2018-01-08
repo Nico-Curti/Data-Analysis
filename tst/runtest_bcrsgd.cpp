@@ -1,28 +1,25 @@
-#include <omp.h>
-#include "classifier.hpp"
-
+#include "ReplicatedSGD.hpp"
+#include "score_coef.hpp"
 
 int main(int argc, char *argv[])
 {
-	int hidden_layer = 3;
-	std::string patternsfile = "tst/pattern/fbp_train.dat";
-	Patterns<float> data(patternfile);
+	int hidden_layer = 3,
+	    n_rep = 7;
+	std::string trainfile = "tst/pattern/fbp_train.dat",
+				testfile = "tst/pattern/fb_test.dat";
 
-	ReplicatedSGD rsgd;
+	Patterns<float> train(trainfile);
+	float *weights = RSGD::train(train, hidden_layer, n_rep);
 
-	rsgd.train(data, hidden_layer);
-	int *predict_bcrsgd = rsgd.test(test);
-	//if(os::dir_exists("tst/res"))
-	//{
-	//	std::ofstream os("tst/res/bcrsgd.class");
-	//	for(int i = 0; i < data.Ncol; ++i) os << "feature" << i << "\t"; os << "label" << std::endl; //header
-	//	for(int i = 0; i < data.Nrow; ++i)
-	//	{
-	//		std::copy(data.input[i], data.input[i] + data.Ncol, std::ostream_iterator<float>(os, "\t"));
-	//		os << predict_bcrsgd[i] << std::endl;
-	//	}
-	//	os.close();
-	//}
+	Patterns<float> test(testfile);
+	int *label_predict = RSGD::test(test, weights, hidden_layer, test.Ncol);
+
+	auto score_rsgd = score::perfs(train.output, label_predict, train.Nout);
+
+	std::cout << "Prediction RSGD:" << std::endl;
+	for(const auto &i : score_rsgd)
+		std::cout << i.first << " : " << i.second << std::endl;
 
 	return 0;
 }
+

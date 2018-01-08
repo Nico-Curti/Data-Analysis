@@ -1,3 +1,4 @@
+#include <functional>
 #include <tuple>
 #define COUT_WNAME(os, name, sep) do{(os) << name << sep;}while(false)
 #define COUTNAME(os, a, sep) COUT_WNAME((os), #a, (sep))
@@ -45,7 +46,7 @@ struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, Perceptron<typ
 	inline hyperparams operator+(const hyperparams &p) // cross over operator
 	{
 		hyperparams res;
-		int pos = static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * std::tuple_size<decltype(this->func)>::value);
+		int pos = static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * std::tuple_size<decltype(this->func)>::value > 0.5f);
 		switch(pos)
 		{
 			case 0: res = hyperparams(p.eta, 100, this->seed);
@@ -94,7 +95,7 @@ struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, NeuralNetwork<
 		this->sizes = nullptr;
 		this->func = std::make_tuple(
 									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 10) + 1;}, // num_layers
-									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * std::tuple_size<decltype(cost_func)>::value);}, // cost
+									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * (std::tuple_size<decltype(cost_func)>::value - 1));}, // cost
 									 [&](){return 1000;}, // epochs
 /*FIX*/								 [&](){return 2;}, // mini_batch_size
 									 [&](){return static_cast<T>(std::rand()) / static_cast<T>(RAND_MAX);}, // eta

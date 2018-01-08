@@ -106,22 +106,22 @@ add_executable(	runtest_fstat
 				${HPP_DIR}/timing_func.hpp
 				${HPP_DIR}/fstat.hpp
 			  )
-#add_executable( runtest_fbp
-#				${TST_DIR}/runtest_bcrfbp.cpp
-#				${HPP_DIR}/FocusingBeliefPropagation.hpp
-#				${HPP_DIR}/os.hpp
-#				${HPP_DIR}/parse_args.hpp
-#				${HPP_DIR}/fmath.hpp
-#				${HPP_DIR}/patterns.hpp
-#			  )
-#add_executable(	runtest_rsgd
-#				${CMAKE_SOURCE_DIR}/tst/runtest_bcrsgd.cpp
-#				${HPP_DIR}/ReplicatedSGD.hpp
-#				${HPP_DIR}/os.hpp
-#				${HPP_DIR}/parse_args.hpp
-#				${HPP_DIR}/fmath.hpp
-#				${HPP_DIR}/patterns.hpp
-#			  )
+add_executable( runtest_fbp
+				${TST_DIR}/runtest_bcrfbp.cpp
+				${HPP_DIR}/ReplicatedFBP.hpp
+				${HPP_DIR}/os.hpp
+				${HPP_DIR}/parse_args.hpp
+				${HPP_DIR}/fmath.hpp
+				${HPP_DIR}/patterns.hpp
+			  )
+add_executable(	runtest_rsgd
+				${CMAKE_SOURCE_DIR}/tst/runtest_bcrsgd.cpp
+				${HPP_DIR}/ReplicatedSGD.hpp
+				${HPP_DIR}/os.hpp
+				${HPP_DIR}/parse_args.hpp
+				${HPP_DIR}/fmath.hpp
+				${HPP_DIR}/patterns.hpp
+			  )
 add_executable(	runtest_cv
 				${CMAKE_SOURCE_DIR}/tst/runtest_cv.cpp
 				${HPP_DIR}/cross_validation.hpp
