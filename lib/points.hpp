@@ -84,6 +84,12 @@ Point::Point(const std::string &filename, std::string sep)
 	
 Point& Point::operator=(const Point &t)
 {
+	if(this->n != 0)
+	{
+		delete[] this->x;
+		delete[] this->y;
+		if(this->dim == 3) delete[] this->z;
+	}
 	this->n = t.n;
 	this->dim = t.dim;
 	this->x = new float[t.n]; this->y = new float[t.n];
@@ -96,6 +102,12 @@ Point& Point::operator=(const Point &t)
 
 Point::Point(const Point &t)
 {
+	if(this->n != 0)
+	{
+		delete[] this->x;
+		delete[] this->y;
+		if(this->dim == 3) delete[] this->z;
+	}
 	this->n = t.n;
 	this->dim = t.dim;
 	this->x = new float[t.n]; this->y = new float[t.n];

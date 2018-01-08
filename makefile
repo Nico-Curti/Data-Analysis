@@ -24,12 +24,16 @@ all: 	dir_tree \
 		pca \
 		bayes_cls \
 		clustering \
-		kabsch
+		kabsch \
+		genetic \
+		gridsearch
 #fbp \
 #rsgd \
 
 #fbp:		$(TST)/runtest_bcrfbp.cpp \
 #			$(HPP)/FocusingBeliefPropagation.hpp \
+#			$(HPP)/classifier.hpp \
+#			$(HPP)/hyperparams.hpp \
 #			$(HPP)/os.hpp \
 #			$(HPP)/parse_args.hpp \
 #			$(HPP)/fmath.hpp \
@@ -39,6 +43,8 @@ all: 	dir_tree \
 #
 #rsgd:		$(TST)/runtest_bcrsgd.cpp \
 #			$(HPP)/ReplicatedSGD.hpp \
+#			$(HPP)/classifier.hpp \
+#			$(HPP)/hyperparams.hpp \
 #			$(HPP)/os.hpp \
 #			$(HPP)/parse_args.hpp \
 #			$(HPP)/fmath.hpp \
@@ -60,8 +66,10 @@ cross_val:	$(TST)/runtest_cv.cpp \
 neural_net:	$(TST)/runtest_nn.cpp \
 			$(HPP)/classifier.hpp \
 			$(HPP)/neural_network.hpp \
+			$(HPP)/hyperparams.hpp \
 			$(HPP)/fmath.hpp \
-			$(HPP)/patterns.hpp 
+			$(HPP)/patterns.hpp \
+			$(HPP)/os.hpp
 
 		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_nn		$(TST)/runtest_nn.cpp
 
@@ -69,14 +77,18 @@ pca:		$(TST)/runtest_pca.cpp \
 			$(HPP)/dimensionality_reduction.hpp \
 			$(HPP)/fstat.hpp \
 			$(HPP)/fmath.hpp \
-			$(HPP)/patterns.hpp
+			$(HPP)/patterns.hpp \
+			$(HPP)/os.hpp 
 
 		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_pca		$(TST)/runtest_pca.cpp
 
 bayes_cls:	$(TST)/runtest_bayes_cls.cpp \
 			$(HPP)/classifier.hpp \
 			$(HPP)/diagQDA.hpp \
-			$(HPP)/QDA.hpp
+			$(HPP)/QDA.hpp \
+			$(HPP)/hyperparams.hpp \
+			$(HPP)/patterns.hpp \
+			$(HPP)/os.hpp 
 
 		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_bayes_cls	$(TST)/runtest_bayes_cls.cpp
 
@@ -97,6 +109,27 @@ kabsch:		$(TST)/runtest_kabsch.cpp \
 			$(HPP)/points.hpp
 
 		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_kabsch	$(TST)/runtest_kabsch.cpp
+
+genetic:	$(TST)/runtest_genetic.cpp \
+			$(HPP)/genetic.hpp \
+			$(HPP)/fstat.hpp \
+			$(HPP)/fmath.hpp \
+			$(HPP)/os.hpp
+
+		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_genetic 	$(TST)/runtest_genetic.cpp
+
+gridsearch:	$(TST)/runtest_gridGA.cpp \
+			$(HPP)/grid_search.hpp \
+			$(HPP)/cv_classifier.hpp \
+			$(HPP)/classifier.hpp \
+			$(HPP)/neural_network.hpp \
+			$(HPP)/hyperparams.hpp \
+			$(HPP)/fstat.hpp \
+			$(HPP)/fmath.hpp \
+			$(HPP)/patterns.hpp \
+			$(HPP)/os.hpp \
+
+		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_gridGA 	$(TST)/runtest_gridGA.cpp
 
 dir_tree:
 		$(MKDIR_P)

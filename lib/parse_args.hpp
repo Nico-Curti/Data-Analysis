@@ -15,7 +15,6 @@ class ArgumentParser
 {
 	std::vector<argument> args;
 	std::string description, program;
-	template<typename T> std::string type_name();
 	inline void print_help();
 public:
 	ArgumentParser(std::string description_) : description(description_){};
@@ -57,31 +56,6 @@ argument::argument(const std::string &name_, const std::string &shr_flag_, const
 	type = type_;
 	required = required_;
 	def = def_;
-}
-
-template<typename T> std::string ArgumentParser::type_name()
-{
-    typedef typename std::remove_reference<T>::type TR;
-    std::unique_ptr<char, void(*)(void*)> own
-           (
-#ifndef _MSC_VER
-                abi::__cxa_demangle(typeid(TR).name(), nullptr,
-                                           nullptr, nullptr),
-#else
-                nullptr,
-#endif
-                std::free
-           );
-    std::string r = own != nullptr ? own.get() : typeid(TR).name();
-    if (std::is_const<TR>::value)
-        r += " const";
-    if (std::is_volatile<TR>::value)
-        r += " volatile";
-    if (std::is_lvalue_reference<T>::value)
-        r += "&";
-    else if (std::is_rvalue_reference<T>::value)
-        r += "&&";
-    return r;
 }
 
 template<typename T> void ArgumentParser::add_argument(const std::string &name, const std::string &shr_flag, const std::string &lng_flag, const std::string &help, const bool &req)

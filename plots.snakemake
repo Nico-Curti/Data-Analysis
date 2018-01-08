@@ -22,8 +22,8 @@ def f(x, **kwargs):
 
 sep = os.sep
 runtest = ["runtest_nn", "runtest_bayes_cls", "runtest_clustering", "runtest_pca"]
-classify = ["diagqda", "qda", "perceptron", "pca"]
-cluster = ["kmean"]#, "densityclustering"]
+classify = ["diagqda", "qda", "perceptron", "neuralnetwork", "pca"]
+cluster = ["kmean", "densityclustering"]
 
 if platform.system() == "Windows":
 	extension = "exe"

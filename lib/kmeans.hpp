@@ -1,30 +1,6 @@
 
-kmean::kmean(const Point &point, const int &n_point, const int &n_cluster, const int &n_iteration, float *point_weight)
-{
-	this->n_point = n_point;
-	this->n_cluster = n_cluster;
-	this->n_iteration = n_iteration;
-	this->point = point;
 
-	this->centroid = Point(n_cluster);
-	this->cluster = new int[n_point];
-	this->point_per_cluster = new int[n_cluster];
-	this->w = new float[n_point];
-	if(point_weight != nullptr)
-		std::memcpy(this->w, point_weight, sizeof(float)*this->n_point);
-	else
-		std::fill_n(w, this->n_point, 1.f);
-}
-
-kmean::~kmean()
-{
-	delete[] this->cluster;
-	delete[] this->point_per_cluster;
-	delete[] this->w;
-}
-
-
-template<typename Dist> inline int kmean::nearest(const int &lbl, const Point &centroid, const int &n_cluster, float *d2, Dist dist, const float &pt_x, const float &pt_y, float pt_z)
+template<typename Dist> inline int Kpp::nearest(const int &lbl, const Point &centroid, const int &n_cluster, float *d2, Dist dist, const float &pt_x, const float &pt_y, float pt_z)
 {
 	int min_index = lbl;
 	float d, min_dist = std::numeric_limits<float>::max();
@@ -47,109 +23,117 @@ template<typename Dist> inline int kmean::nearest(const int &lbl, const Point &c
 }
 
 
-template<typename Dist> void kmean::kpp_centroid(Dist dist, unsigned int seed, bool time)
+template<typename Dist> int* Kpp::operator()(const Point &point, Point &centroid, Dist dist, const int &n_cluster, unsigned int seed, bool time)
 {
 	auto start = std::chrono::steady_clock::now();
-	int cl, idx;
-	float sum, *d = new float[n_point];
+	int cl, idx, *cluster = new int[point.n];
+	float sum, *d = new float[point.n];
 	std::mt19937 engine{seed};
 	std::uniform_real_distribution<float> r_dist{0.f, 1.f};
-	idx = (int)r_dist(engine)*n_point;
-	this->centroid.x[0] = this->point.x[idx]; this->centroid.y[0] = this->point.y[idx];
-	if(this->point.dim == 3) this->centroid.z[0] = this->point.z[idx];
+	idx = (int)r_dist(engine)*point.n;
+	centroid.x[0] = point.x[idx]; centroid.y[0] = point.y[idx];
+	if(point.dim == 3) centroid.z[0] = point.z[idx];
 
-	for(cl = 1; cl < this->n_cluster; ++cl)
+	for(cl = 1; cl < n_cluster; ++cl)
 	{
 		sum = 0.f;
 #pragma omp parallel for reduction(+:sum)
-		for(int j = 0; j < this->n_point; ++j)
+		for(int j = 0; j < point.n; ++j)
 		{
 			if(point.dim == 3)
-				nearest(this->cluster[j], this->centroid, cl, d + j, dist, this->point.x[j], this->point.y[j], this->point.z[j]);
+				nearest(cluster[j], centroid, cl, d + j, dist, point.x[j], point.y[j], point.z[j]);
 			else
-				nearest(this->cluster[j], this->centroid, cl, d + j, dist, this->point.x[j], this->point.y[j]);
+				nearest(cluster[j], centroid, cl, d + j, dist, point.x[j], point.y[j]);
 			sum += d[j];
 		}
 		
 		sum *= r_dist(engine);
 
-		for(int j = 0; j < n_point; ++j)
+		for(int j = 0; j < point.n; ++j)
 		{
 			if((sum -= d[j]) > 0) continue;
-			this->centroid.x[cl] = this->point.x[j];
-			this->centroid.y[cl] = this->point.y[j];
-			if(this->point.dim == 3)
-				this->centroid.z[cl] = this->point.z[j];
+			centroid.x[cl] = point.x[j];
+			centroid.y[cl] = point.y[j];
+			if(point.dim == 3)
+				centroid.z[cl] = point.z[j];
 			break;
 		}
 	}
 
 #pragma omp parallel for
-	for(int j = 0; j < this->n_point; ++j)
+	for(int j = 0; j < point.n; ++j)
 	{
-		if(this->point.dim == 3)
-			this->cluster[j] = nearest(this->cluster[j], this->centroid, cl, 0, dist, this->point.x[j], this->point.y[j], this->point.z[j]);
+		if(point.dim == 3)
+			cluster[j] = nearest(cluster[j], centroid, cl, 0, dist, point.x[j], point.y[j], point.z[j]);
 		else
-			this->cluster[j] = nearest(this->cluster[j], this->centroid, cl, 0, dist, this->point.x[j], this->point.y[j]);
+			cluster[j] = nearest(cluster[j], centroid, cl, 0, dist, point.x[j], point.y[j]);
 	}
 	
 	delete[] d;
 
 #ifdef _DEBUG
 	std::set<int> u_cluster;
-	for(int i = 0; i < this->n_point; ++i)
-		u_cluster.insert(this->cluster[i]);
+	for(int i = 0; i < point.n; ++i)
+		u_cluster.insert(cluster[i]);
 	assert((int)u_cluster.size() == n_cluster);
 	u_cluster.clear();
 #endif
 
 	if(time)
-		std::cout << "Initialization of " << this->n_cluster << " kpp cluster took " << std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start).count() << " sec" << std::endl;
+		std::cout << "Initialization of " << n_cluster << " kpp cluster took " << std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start).count() << " sec" << std::endl;
 
-	return;
+	return cluster;
 }
 
-void kmean::random_centroid(unsigned int seed, bool time)
+template<typename Dist> int* RNG::operator()(const Point &point, Point &centroid, Dist dist, const int &n_cluster, unsigned int seed, bool time)
 {
+	int *cluster = new int[point.n];
 	auto start = std::chrono::steady_clock::now();
 	std::mt19937 engine{seed};
 	std::uniform_int_distribution<int> i_dist{0, 1};
-	std::generate(this->cluster, this->cluster + this->n_point, [&engine, &i_dist]{return i_dist(engine);});
+	std::generate(cluster, cluster + point.n, [&engine, &i_dist]{return i_dist(engine);});
 	if(time)
-		std::cout << "Initialization of " << this->n_cluster << " random cluster took " << std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start).count() << " sec" << std::endl;
+		std::cout << "Initialization of " << n_cluster << " random cluster took " << std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start).count() << " sec" << std::endl;
 
-	return;
+	return cluster;
 }
 
-
-template<typename Dist, typename Cl_Center> int* kmean::Kmean(Point &centroid, Dist dist, Cl_Center cl, bool time)
+template<typename Dist, typename Cl_center, typename Init> 
+int* Kmean::operator()(const Point &point, Point &centroid, Dist dist, Cl_center cl, Init init, const int &n_cluster, const int &n_iteration, float *point_weight, unsigned int seed, bool time)
 {
 	auto start = std::chrono::steady_clock::now();
-	int iteration = 0, changed;
-
+	int iteration = 0, 
+		changed,
+		*cluster = init(point, centroid, dist, n_cluster, seed, time),
+		*point_per_cluster = new int[n_cluster];
+	if(point_weight == nullptr)
+	{
+		point_weight = new float[point.n];
+		std::fill_n(point_weight, point.n, 1.f);
+	}
 	while(true)
 	{
 		//Compute the centroid of the clusters
-		cl(this->point, centroid, this->n_point, this->n_cluster, this->cluster, this->point_per_cluster, this->w);	
+		cl(point, centroid, point.n, n_cluster, cluster, point_per_cluster, point_weight);	
 		
 		// Exit once convergence is reached
 		++iteration;
-		if(iteration > this->n_iteration)
+		if(iteration > n_iteration)
 			break;
 
 		changed = 0; // stop when 99.9% of points are good 
 		// Reassign points to clusters
 #pragma omp parallel for reduction(+:changed)
-		for(int k = 0; k < this->n_point; ++k)
+		for(int k = 0; k < point.n; ++k)
 		{
 			float best_distance = std::numeric_limits<float>::max();
 			int best_centroid = -1;
-			for(int i = 0; i < this->n_cluster; ++i)
+			for(int i = 0; i < n_cluster; ++i)
 			{
 				//float x = point.x[k] - centroid.x[i];
 				//float y = point.y[k] - centroid.y[i];
 				//float z = point.z[k] - centroid.z[i];
-				float distance = (this->point.dim == 3) ? dist(this->point.x[k], centroid.x[i], this->point.y[k], centroid.y[i], this->point.z[k], centroid.z[i]) : dist(this->point.x[k], centroid.x[i], this->point.y[k], centroid.y[i]);
+				float distance = (point.dim == 3) ? dist(point.x[k], centroid.x[i], point.y[k], centroid.y[i], point.z[k], centroid.z[i]) : dist(point.x[k], centroid.x[i], point.y[k], centroid.y[i]);
 				if(distance < best_distance)
 				{
 					best_distance = distance;
@@ -159,30 +143,26 @@ template<typename Dist, typename Cl_Center> int* kmean::Kmean(Point &centroid, D
 
 	
 			changed += (cluster[k] != best_centroid) ? 1 : 0;
-			this->cluster[k] = best_centroid;
+			cluster[k] = best_centroid;
 		}
-		if(changed <= (this->n_point >> 10))
+		if(changed <= (point.n >> 10))
 			break;
 	}
 	
 	if(time)
-		std::cout << "K-Means over " << this->n_point << " points and " << this->n_cluster << " clusters and " << this->n_iteration << " iterations takes " << std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start).count() << " sec" << std::endl;
+		std::cout << "K-Means over " << point.n << " points and " << n_cluster << " clusters and " << n_iteration << " iterations takes " << std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start).count() << " sec" << std::endl;
 
 #ifdef _DEBUG
 	std::set<int> u_cluster;
-	for(int i = 0; i < n_point; ++i)
+	for(int i = 0; i < point.n; ++i)
 		u_cluster.insert(cluster[i]);
 	assert((int)u_cluster.size() == n_cluster);
 	u_cluster.clear();
 #endif
 
-	std::memcpy(centroid.x, this->centroid.x, n_cluster*sizeof(float));
-	std::memcpy(centroid.y, this->centroid.y, n_cluster*sizeof(float));
-	if(point.dim == 3)
-		std::memcpy(centroid.z, this->centroid.z, n_cluster*sizeof(float));
-
 	return cluster;
 }
+
 
 
 

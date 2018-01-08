@@ -25,6 +25,7 @@ public:
 	void LeaveOneOut(const int &, const int &);
 	void getFold(const int &, std::vector<int> &, std::vector<int> &);
 	void getTest(const int &, std::vector<int> &);
+	void getTrain(const int &, std::vector<int> &);
 };
 
 void CrossValidation::error(const std::string &message, const int &n)
@@ -47,7 +48,7 @@ CrossValidation::CrossValidation()
 }
 
 CrossValidation::~CrossValidation()
-{ delete[] whichFoldToGo;}
+{ if(this->end != 0) delete[] whichFoldToGo;}
 
 CrossValidation& CrossValidation::operator=(const CrossValidation &cv)
 {
@@ -81,7 +82,7 @@ void CrossValidation::KFold(const int &K, const int &beg, const int &end, bool s
 						++foldNo;
 						return foldNo % K;
 					});
-	if(K % (end - beg)) error("K-Fold warning! With this value of K = " + std::to_string(K) + " equal division of the data is not possible (n_sample = " + std::to_string(end - beg) + ")", 0);
+	if((end - beg) % K) error("K-Fold warning! With this value of K = " + std::to_string(K) + " equal division of the data is not possible (n_sample = " + std::to_string(end - beg) + ")", 0);
 	if(shuff)
 	{
 		std::mt19937 g(seed);
@@ -165,6 +166,16 @@ void CrossValidation::getTest(const int &foldNo, std::vector<int> &test)
 	int k = 0, i = this->beg;
 	while(i != this->beg)
 		if(this->whichFoldToGo[k++] == foldNo) test.push_back(i++);
+
+	return;
+}
+
+void CrossValidation::getTrain(const int &foldNo, std::vector<int> &train)
+{
+	train.clear();
+	int k = 0, i = this->beg;
+	while(i != this->beg)
+		if(this->whichFoldToGo[k++] != foldNo) train.push_back(i++);
 
 	return;
 }

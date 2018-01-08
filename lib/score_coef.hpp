@@ -1,6 +1,8 @@
 #pragma once
 #include <unordered_set> // std::unordered_set
+#include <unordered_map> // std::unordered_map
 #include <algorithm> // std::generate
+#include <numeric> // std::inner_product
 #include <iterator> // std::distance
 #include <cstring> // std::memset
 #include "fmath.hpp"
@@ -23,13 +25,45 @@ namespace score
 	{
 		template<typename lbl> inline auto operator()(lbl *true_lbl, lbl *predict_lbl, const int &n)
 		{
+			return std::inner_product(	true_lbl, true_lbl + n, 
+										predict_lbl, 0,
+										std::plus<int>(),
+										[](const lbl &t, const lbl &p)
+										{
+											return (int)(t == p);
+										});
+		}
+	} accuracy;
+
+	struct
+	{
+		template<typename lbl> inline auto operator()(lbl *true_lbl, lbl *predict_lbl, const int &n)
+		{
+			std::unordered_map<lbl, int> perfs;			
+			for(int i = 0; i < n; ++i) perfs[true_lbl[i]] += (true_lbl[i] == predict_lbl[i]) ? 1 : 0;
+			return perfs;
+		}
+	} perfs;
+
+	struct
+	{
+		template<typename lbl> inline auto operator()(lbl *true_lbl, lbl *predict_lbl, const int &n)
+		{
+			return predict_lbl;
+		}
+	} predict;
+
+	struct
+	{
+		template<typename lbl> inline auto operator()(lbl *true_lbl, lbl *predict_lbl, const int &n)
+		{
 			std::unordered_set<lbl> unique(true_lbl, true_lbl + n, sizeof(lbl)*n);
 			int n_lbl = (int)unique.size();
 			int **cfs_matrix = new int*[n_lbl];
 			std::generate(cfs_matrix, cfs_matrix + n_lbl, [&n_lbl]{return new int[n_lbl];});
 			std::for_each(cfs_matrix, cfs_matrix + n_lbl, [&n_lbl](int *x){std::memset(x, 0, sizeof(int)*n_lbl);});
 
-			for(int i = 0; i < n; ++i) ++cfs_matrix[std::distance(unique.begin(), unique.find(lbl_true[i]))][std::distance(unique.begin(), unique.find(lbl_pred[i]))];
+			for(int i = 0; i < n; ++i) ++cfs_matrix[std::distance(unique.begin(), unique.find(true_lbl[i]))][std::distance(unique.begin(), unique.find(predict_lbl[i]))];
 			return cfs_matrix;
 		}
 	} confusion_matrix;
@@ -45,7 +79,7 @@ namespace score
 			std::generate(cfs, cfs + n_lbl, [&n_lbl]{return new int[n_lbl];});
 			std::for_each(cfs, cfs + n_lbl, [&n_lbl](int *x){std::memset(x, 0, sizeof(int)*n_lbl);});
 
-			for(int i = 0; i < n; ++i) ++cfs[std::distance(unique.begin(), unique.find(lbl_true[i]))][std::distance(unique.begin(), unique.find(lbl_pred[i]))];
+			for(int i = 0; i < n; ++i) ++cfs[std::distance(unique.begin(), unique.find(true_lbl[i]))][std::distance(unique.begin(), unique.find(predict_lbl[i]))];
 			
 			switch(n_lbl)
 			{
@@ -93,7 +127,7 @@ namespace score
 			std::generate(cfs, cfs + n_lbl, [&n_lbl]{return new int[n_lbl];});
 			std::for_each(cfs, cfs + n_lbl, [&n_lbl](int *x){std::memset(x, 0, sizeof(int)*n_lbl);});
 
-			for(int i = 0; i < n; ++i) ++cfs[std::distance(unique.begin(), unique.find(lbl_true[i]))][std::distance(unique.begin(), unique.find(lbl_pred[i]))];
+			for(int i = 0; i < n; ++i) ++cfs[std::distance(unique.begin(), unique.find(true_lbl[i]))][std::distance(unique.begin(), unique.find(predict_lbl[i]))];
 			
 			score =	((1.f + beta_sq) * cfs[0][0]) / 
 					((1.f + beta_sq) * cfs[0][0] + beta_sq*cfs[0][1] + cfs[1][0]);
@@ -114,7 +148,7 @@ namespace score
 			std::generate(cfs, cfs + n_lbl, [&n_lbl]{return new int[n_lbl];});
 			std::for_each(cfs, cfs + n_lbl, [&n_lbl](int *x){std::memset(x, 0, sizeof(int)*n_lbl);});
 
-			for(int i = 0; i < n; ++i) ++cfs[std::distance(unique.begin(), unique.find(lbl_true[i]))][std::distance(unique.begin(), unique.find(lbl_pred[i]))];
+			for(int i = 0; i < n; ++i) ++cfs[std::distance(unique.begin(), unique.find(true_lbl[i]))][std::distance(unique.begin(), unique.find(predict_lbl[i]))];
 			
 			N = cfs[0][0] + cfs[0][1] + cfs[1][0] + cfs[1][1];
 			score = float(cfs[0][0] * cfs[1][1] - cfs[0][1] * cfs[1][0]) /

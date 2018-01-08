@@ -4,15 +4,15 @@
 
 int main(int argc, char *argv[])
 {
-	int n_point = 150, //1474560, 
-		n_cluster = 10, //1024,
+	int n_point = 150, 
+		n_cluster = 10,
 		n_iteration = 10,
 		n_dim = 2,
 		*index_km = nullptr,
 		*index_dc = nullptr;
 	float 	radius = 10.f, 
-			control = .1f,
-			ray = .5f;
+			control = 1.5f,
+			ray = 20.5f;
 
 	Point 	points,
 			centroid(n_cluster, n_dim);
@@ -20,9 +20,7 @@ int main(int argc, char *argv[])
 
 	// Kmeans clustering
 
-	kmean KM(points, n_point, n_cluster, n_iteration);
-	KM.kpp_centroid(euclidean, 123, true);	
-	index_km = KM.Kmean(centroid, euclidean, middle_point, true);
+	index_km = kmean(points, centroid, euclidean, middle_point, kpp, n_cluster, n_iteration, nullptr, 123, true);
 
 	std::map<int, int> point_per_cluster;
 	for(int i = 0; i < n_point; ++i) ++point_per_cluster[index_km[i]];
@@ -45,8 +43,7 @@ int main(int argc, char *argv[])
 
 	// Density Clustering
 
-	densityclustering DC(points);
-	index_dc = DC.DensityClustering(centroid, euclidean, control, ray, true);
+	index_dc = densityclustering(points, centroid, euclidean, control, ray, true);
 	
 	point_per_cluster.clear();
 	for(int i = 0; i < n_point; ++i) ++point_per_cluster[index_dc[i]];

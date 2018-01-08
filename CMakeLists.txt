@@ -132,6 +132,7 @@ add_executable(	runtest_nn
 				${HPP_DIR}/neural_network.hpp
 				${HPP_DIR}/fmath.hpp
 				${HPP_DIR}/patterns.hpp
+        ${HPP_DIR}/os.hpp
 			  )
 add_executable( runtest_pca
 				${CMAKE_SOURCE_DIR}/tst/runtest_pca.cpp
@@ -139,12 +140,16 @@ add_executable( runtest_pca
 				${HPP_DIR}/fstat.hpp
 				${HPP_DIR}/fmath.hpp
         ${HPP_DIR}/patterns.hpp
+        ${HPP_DIR}/os.hpp
 			  )
 add_executable(	runtest_bayes_cls
 				${CMAKE_SOURCE_DIR}/tst/runtest_bayes_cls.cpp
 				${HPP_DIR}/classifier.hpp
 				${HPP_DIR}/diagQDA.hpp
         ${HPP_DIR}/QDA.hpp
+        ${HPP_DIR}/hyperparams.hpp
+        ${HPP_DIR}/patterns.hpp
+        ${HPP_DIR}/os.hpp
 			  )
 add_executable( runtest_clustering
         ${CMAKE_SOURCE_DIR}/tst/runtest_clustering.cpp
@@ -162,3 +167,22 @@ add_executable(	runtest_kabsch
 				${HPP_DIR}/fmath.hpp
 				${HPP_DIR}/points.hpp
 			  )
+add_executable( runtest_genetic
+        ${CMAKE_SOURCE_DIR}/tst/runtest_genetic.cpp
+        ${HPP_DIR}/genetic.hpp
+        ${HPP_DIR}/fstat.hpp
+        ${HPP_DIR}/fmath.hpp
+        ${HPP_DIR}/os.hpp
+        )
+add_executable( runtest_gridGA
+        ${CMAKE_SOURCE_DIR}/tst/runtest_gridGA.cpp
+        ${HPP_DIR}/grid_search.hpp
+        ${HPP_DIR}/cv_classifier.hpp
+        ${HPP_DIR}/classifier.hpp
+        ${HPP_DIR}/neural_network.hpp
+        ${HPP_DIR}/hyperparams.hpp
+        ${HPP_DIR}/fstat.hpp
+        ${HPP_DIR}/fmath.hpp
+        ${HPP_DIR}/patterns.hpp
+        ${HPP_DIR}/os.hpp
+        )

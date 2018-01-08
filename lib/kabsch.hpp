@@ -15,10 +15,8 @@
 #define restrict_macro __restrict__
 #endif
 
-class kabsch
+class
 {
-	float rmsd;
-
 	//========= only float variables ===========================
 	inline float rsqrt(float x);
 	inline float rsqrt1(float x);
@@ -114,19 +112,18 @@ class kabsch
 	//================ common function for rmsd computation ===========================================
 	inline float dist(const float &, const float &, const float &, const float &, const float &, const float &);
 public:
-	kabsch(const Point &, const Point &);
-	~kabsch(void){};
-	inline float get_rmsd();
-};
+	inline float operator()(const Point &, const Point &);
+} kabsch;
+typedef decltype(kabsch) Kabsch;
 
 
-inline void kabsch::cross(float * restrict_macro z, const float * restrict_macro x, const float * restrict_macro y)
+inline void Kabsch::cross(float * restrict_macro z, const float * restrict_macro x, const float * restrict_macro y)
 {
     z[0] = x[1]*y[2]-x[2]*y[1];
     z[1] = -(x[0]*y[2]-x[2]*y[0]);
     z[2] = x[0]*y[1]-x[1]*y[0];
 }
-inline void kabsch::sort3(float * restrict_macro x)
+inline void Kabsch::sort3(float * restrict_macro x)
 {
     float tmp;
 
@@ -153,20 +150,20 @@ inline void kabsch::sort3(float * restrict_macro x)
         }
     }
 }
-inline void kabsch::unit3(float * restrict_macro x)
+inline void Kabsch::unit3(float * restrict_macro x)
 {
     float tmp = std::sqrt(x[0]*x[0] + x[1]*x[1] + x[2]*x[2]);
     x[0] /= tmp;
     x[1] /= tmp;
     x[2] /= tmp;
 }
-inline void kabsch::ldubsolve3(float * restrict_macro x, const float * restrict_macro y, const float * restrict_macro LDU, const int * restrict_macro P)
+inline void Kabsch::ldubsolve3(float * restrict_macro x, const float * restrict_macro y, const float * restrict_macro LDU, const int * restrict_macro P)
 {
     x[P[2]] = y[2];
     x[P[1]] = y[1] - LDU[3*P[2]+1]*x[P[2]];
     x[P[0]] = y[0] - LDU[3*P[2]+0]*x[P[2]] - LDU[3*P[1]+0]*x[P[1]];
 }
-inline void kabsch::matmul3(float * restrict_macro C, const float * restrict_macro A, const float * restrict_macro B)
+inline void Kabsch::matmul3(float * restrict_macro C, const float * restrict_macro A, const float * restrict_macro B)
 {
     C[3*0+0] = A[3*0+0]*B[3*0+0] + A[3*1+0]*B[3*0+1] + A[3*2+0]*B[3*0+2];
     C[3*1+0] = A[3*0+0]*B[3*1+0] + A[3*1+0]*B[3*1+1] + A[3*2+0]*B[3*1+2];
@@ -180,13 +177,13 @@ inline void kabsch::matmul3(float * restrict_macro C, const float * restrict_mac
     C[3*1+2] = A[3*0+2]*B[3*1+0] + A[3*1+2]*B[3*1+1] + A[3*2+2]*B[3*1+2];
     C[3*2+2] = A[3*0+2]*B[3*2+0] + A[3*1+2]*B[3*2+1] + A[3*2+2]*B[3*2+2];
 }
-inline void kabsch::matvec3(float * restrict_macro y, const float * restrict_macro A, const float * restrict_macro x)
+inline void Kabsch::matvec3(float * restrict_macro y, const float * restrict_macro A, const float * restrict_macro x)
 {
     y[0] = A[3*0+0]*x[0] + A[3*1+0]*x[1] + A[3*2+0]*x[2];
     y[1] = A[3*0+1]*x[0] + A[3*1+1]*x[1] + A[3*2+1]*x[2];
     y[2] = A[3*0+2]*x[0] + A[3*1+2]*x[1] + A[3*2+2]*x[2];
 }
-inline void kabsch::ata3(float * restrict_macro AA, const float * restrict_macro A)
+inline void Kabsch::ata3(float * restrict_macro AA, const float * restrict_macro A)
 {
     AA[3*0+0] = A[3*0+0]*A[3*0+0] + A[3*0+1]*A[3*0+1] + A[3*0+2]*A[3*0+2];
     AA[3*1+0] = A[3*0+0]*A[3*1+0] + A[3*0+1]*A[3*1+1] + A[3*0+2]*A[3*1+2];
@@ -200,7 +197,7 @@ inline void kabsch::ata3(float * restrict_macro AA, const float * restrict_macro
     AA[3*1+2] = AA[3*2+1];
     AA[3*2+2] = A[3*2+0]*A[3*2+0] + A[3*2+1]*A[3*2+1] + A[3*2+2]*A[3*2+2];
 }
-inline void kabsch::aat3(float * restrict_macro AA, const float * restrict_macro A)
+inline void Kabsch::aat3(float * restrict_macro AA, const float * restrict_macro A)
 {
     AA[3*0+0] = A[3*0+0]*A[3*0+0] + A[3*1+0]*A[3*1+0] + A[3*2+0]*A[3*2+0];
     AA[3*1+0] = A[3*0+0]*A[3*0+1] + A[3*1+0]*A[3*1+1] + A[3*2+0]*A[3*2+1];
@@ -214,7 +211,7 @@ inline void kabsch::aat3(float * restrict_macro AA, const float * restrict_macro
     AA[3*1+2] = AA[3*2+1];
     AA[3*2+2] = A[3*0+2]*A[3*0+2] + A[3*1+2]*A[3*1+2] + A[3*2+2]*A[3*2+2];
 }
-inline void kabsch::trans3(float * restrict_macro A)
+inline void Kabsch::trans3(float * restrict_macro A)
 {
     float tmp;
 
@@ -230,7 +227,7 @@ inline void kabsch::trans3(float * restrict_macro A)
     A[3*2+1] = A[3*1+2];
     A[3*1+2] = tmp;
 }
-void kabsch::solvecubic(float * restrict_macro c)
+void Kabsch::solvecubic(float * restrict_macro c)
 {
     const float sq3d2 = 0.86602540378443864676f, c2d3 = c[2]/3,
             c2sq = c[2]*c[2], Q = (3*c[1]-c2sq)/9,
@@ -271,7 +268,7 @@ void kabsch::solvecubic(float * restrict_macro c)
         c[1] = c[2] = -c2d3 - tmp;
     }
 }
-void kabsch::ldu3(float * restrict_macro A, int * restrict_macro P)
+void Kabsch::ldu3(float * restrict_macro A, int * restrict_macro P)
 {
     int tmp;
 
@@ -308,7 +305,7 @@ void kabsch::ldu3(float * restrict_macro A, int * restrict_macro P)
 
     A[3*P[2]+2] = A[3*P[2]+2] - A[3*P[0]+2]*A[3*P[2]+0]*A[3*P[0]+0] - A[3*P[1]+2]*A[3*P[2]+1]*A[3*P[1]+1];
 }
-void kabsch::svd3(float * restrict_macro U, float * restrict_macro S, float * restrict_macro V, const float * restrict_macro A)
+void Kabsch::svd3(float * restrict_macro U, float * restrict_macro S, float * restrict_macro V, const float * restrict_macro A)
 {
     const float thr = 1e-10f;
     int P[3], k;
@@ -488,7 +485,7 @@ void kabsch::svd3(float * restrict_macro U, float * restrict_macro S, float * re
 
 
 
-void kabsch::svd3x3(// input A
+void Kabsch::svd3x3(// input A
 					const float &a11, const float &a12, const float &a13,
 					const float &a21, const float &a22, const float &a23,
 					const float &a31, const float &a32, const float &a33,
@@ -537,7 +534,7 @@ void kabsch::svd3x3(// input A
 	);
 }
 
-inline void kabsch::QRDecomposition(// matrix that we want to decompose
+inline void Kabsch::QRDecomposition(// matrix that we want to decompose
 									 float b11, float b12, float b13,
 									 float b21, float b22, float b23,
 									 float b31, float b32, float b33,
@@ -601,7 +598,7 @@ inline void kabsch::QRDecomposition(// matrix that we want to decompose
     q33 = (-1+2*sh22)*(-1+2*sh32);
 }
 
-inline void kabsch::QRGivensQuaternion(const float &a1, const float &a2, float &ch, float &sh)
+inline void Kabsch::QRGivensQuaternion(const float &a1, const float &a2, float &ch, float &sh)
 {
 	float epsilon = (float)EPSILON;
     float rho = accurateSqrt(a1*a1 + a2*a2);
@@ -615,7 +612,7 @@ inline void kabsch::QRGivensQuaternion(const float &a1, const float &a2, float &
     sh *= w;
 }
 
-inline void kabsch::sortSingularValues(// matrix that we want to decompose
+inline void Kabsch::sortSingularValues(// matrix that we want to decompose
 										float &b11, float &b12, float &b13,
 										float &b21, float &b22, float &b23,
 										float &b31, float &b32, float &b33,
@@ -644,7 +641,7 @@ inline void kabsch::sortSingularValues(// matrix that we want to decompose
     condNegSwap(c,b32,b33); condNegSwap(c,v32,v33);
 }
 
-inline void kabsch::jacobiEigenanalysis(// symmetric matrix
+inline void Kabsch::jacobiEigenanalysis(// symmetric matrix
 										float &s11,
 										float &s21, float &s22,
 										float &s31, float &s32, float &s33,
@@ -664,12 +661,12 @@ inline void kabsch::jacobiEigenanalysis(// symmetric matrix
 	}
 }
 
-inline float kabsch::dist2(const float &x, const float &y, const float &z)
+inline float Kabsch::dist2(const float &x, const float &y, const float &z)
 {
 	return x*x + y*y + z*z;
 }
 
-inline void kabsch::jacobiConjugation(const int &x, const int &y, const int &z,
+inline void Kabsch::jacobiConjugation(const int &x, const int &y, const int &z,
 									  float &s11,
 									  float &s21, float &s22,
 									  float &s31, float &s32, float &s33,
@@ -721,7 +718,7 @@ inline void kabsch::jacobiConjugation(const int &x, const int &y, const int &z,
 	s31 = _s31; s32 = _s32; s33 = _s33;
 }
 
-inline void kabsch::approximateGivensQuaternion(const float &a11, const float &a12, const float &a22, float &ch, float &sh)
+inline void Kabsch::approximateGivensQuaternion(const float &a11, const float &a12, const float &a22, float &ch, float &sh)
 {
 	/*
      * Given givens angle computed by approximateGivensAngles,
@@ -738,7 +735,7 @@ inline void kabsch::approximateGivensQuaternion(const float &a11, const float &a
     sh = b ? w*sh : (float)_sstar;
 }
 
-inline void kabsch::quatfloatoMat3(const float *qV,
+inline void Kabsch::quatfloatoMat3(const float *qV,
 							   float &m11, float &m12, float &m13,
 							   float &m21, float &m22, float &m23,
 							   float &m31, float &m32, float &m33)
@@ -763,7 +760,7 @@ inline void kabsch::quatfloatoMat3(const float *qV,
     m31 = 2*(qxz - qwy); 		m32 = 2*(qyz + qwx); 		m33 = 1 - 2*(qxx + qyy);
 }
 
-inline void kabsch::multAtB(const float& a11, const float& a12, const float& a13,
+inline void Kabsch::multAtB(const float& a11, const float& a12, const float& a13,
 							const float& a21, const float& a22, const float& a23,
 							const float& a31, const float& a32, const float& a33,
 							//
@@ -780,7 +777,7 @@ inline void kabsch::multAtB(const float& a11, const float& a12, const float& a13
 	m31 = a13*b11 + a23*b21 + a33*b31;	m32 = a13*b12 + a23*b22 + a33*b32;	m33 = a13*b13 + a23*b23 + a33*b33;
 }
 
-inline void kabsch::multAB( const float& a11, const float& a12, const float& a13,
+inline void Kabsch::multAB( const float& a11, const float& a12, const float& a13,
 							const float& a21, const float& a22, const float& a23,
 							const float& a31, const float& a32, const float& a33,
 							//
@@ -797,7 +794,7 @@ inline void kabsch::multAB( const float& a11, const float& a12, const float& a13
     m31 = a31*b11 + a32*b21 + a33*b31;	m32 = a31*b12 + a32*b22 + a33*b32;	m33 = a31*b13 + a32*b23 + a33*b33;
 }
 
-inline void kabsch::condNegSwap(const bool &c, float &X, float &Y)
+inline void Kabsch::condNegSwap(const bool &c, float &X, float &Y)
 {
 	// used in step 2 and 3
     float Z = -X;
@@ -805,7 +802,7 @@ inline void kabsch::condNegSwap(const bool &c, float &X, float &Y)
     Y = c ? Z : Y;
 }
 
-inline void kabsch::condSwap(const bool &c, float &X, float &Y)
+inline void Kabsch::condSwap(const bool &c, float &X, float &Y)
 {
 	// used in step 2
     float Z = X;
@@ -813,12 +810,12 @@ inline void kabsch::condSwap(const bool &c, float &X, float &Y)
     Y = c ? Z : Y;
 }
 
-inline float kabsch::accurateSqrt(float x)
+inline float Kabsch::accurateSqrt(float x)
 {
 	return x * rsqrt1(x);
 }
 
-inline float kabsch::rsqrt1(float x)
+inline float Kabsch::rsqrt1(float x)
 {
 	float xhalf = 0.5f*x;
    	int i = *(int *)&x;          // View x as an int.
@@ -829,7 +826,7 @@ inline float kabsch::rsqrt1(float x)
    return x;
 }
 
-inline float kabsch::rsqrt(float x)
+inline float Kabsch::rsqrt(float x)
 {
 	float xhalf = 0.5f*x;
    	int i = *(int *)&x;          // View x as an int.
@@ -841,17 +838,12 @@ inline float kabsch::rsqrt(float x)
    return x;
 }
 
-inline float kabsch::dist(const float &x1, const float &y1, const float &z1, const float &x2, const float &y2, const float &z2)
+inline float Kabsch::dist(const float &x1, const float &y1, const float &z1, const float &x2, const float &y2, const float &z2)
 {
 	return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2);
 }
 
-inline float kabsch::get_rmsd()
-{
-	return this->rmsd;
-}
-
-kabsch::kabsch(const Point &p, const Point &q)
+inline float Kabsch::operator()(const Point &p, const Point &q)
 {
 	if(p.n != q.n){std::cerr << "Invalid number of points. In Kabsch algorithm points P and Q must have the same size." << std::endl; exit(1);}
 	float 	mpx = 0.f, mpy = 0.f, mpz = 0.f,
@@ -931,7 +923,7 @@ kabsch::kabsch(const Point &p, const Point &q)
 
 	scale = (S11 + S22 + S33) / (spx + spy + spz);
 	//scale = (S[0] + S[1] + S[2]) / (spx + spy + spz);
-	this->rmsd = 0.f;
+	float rmsd = 0.f;
 	for (int i = 0; i < p.n; ++i)
 	{
 		tmpx = p.x[i]; tmpy = p.y[i]; tmpz = p.z[i];
@@ -941,7 +933,7 @@ kabsch::kabsch(const Point &p, const Point &q)
 		//p.x[i] = ( (tmpx - mpx) * R[0][0] + (tmpy - mpy) * R[1][0] + (tmpz - mpz) * R[0][2] ) * scale;
 		//p.y[i] = ( (tmpx - mpx) * R[0][1] + (tmpy - mpy) * R[1][1] + (tmpz - mpz) * R[1][2] ) * scale;
 		//p.z[i] = ( (tmpx - mpx) * R[0][2] + (tmpy - mpy) * R[1][2] + (tmpz - mpz) * R[2][2] ) * scale;
-		this->rmsd += dist(p.x[i], p.y[i], p.z[i], q.x[i] - mqx, q.y[i] - mqy, q.z[i] - mqz);
+		rmsd += dist(p.x[i], p.y[i], p.z[i], q.x[i] - mqx, q.y[i] - mqy, q.z[i] - mqz);
 	}
-	this->rmsd = std::sqrt(this->rmsd / p.n);
+	return std::sqrt(rmsd / p.n);
 }

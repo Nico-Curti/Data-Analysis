@@ -33,12 +33,12 @@ template<bool par, typename T, serial<par, T> = nullptr> inline T idxmin(T *x, c
 template<typename T> int inline binary_search(T *x, const T &item, const int &low, const int &high);
 template<typename T> void inline insertion_sort(T *x, const int &N);
 #define SMALL 1000 // minimum size of array for serial sort
-template<typename T, typename Ord> void inline mergesort_serial(T *a, const int &start, const int &end, Ord ord);
-template<typename T, typename Ord> void inline mergesort_parallel_omp (T *a, const int &start, const int &end, const int &threads, Ord ord);
+template<typename T, typename Ord = std::less<T>> void inline mergesort_serial(T *a, const int &start, const int &end, Ord ord = Ord());
+template<typename T, typename Ord = std::less<T>> void inline mergesort_parallel_omp (T *a, const int &start, const int &end, const int &threads, Ord ord = Ord());
 template<bool par, typename T, typename Ord = std::less<T>, parallel<par, T> = nullptr> void inline sort(T *a, const int &start, const int &end, Ord ord = Ord());
 template<bool par, typename T, typename Ord = std::less<T>, serial<par, T> = nullptr> void inline sort(T *a, const int &start, const int &end, Ord ord = Ord());
-template<typename T, typename Ord> void inline mergeargsort_serial(pair<T> *arr, T *a, const int &start, const int &end, Ord ord);
-template<typename T, typename Ord> void inline mergeargsort_parallel_omp (pair<T> *arr, T *a, const int &start, const int &end, const int &threads, Ord ord);
+template<typename T, typename Ord = std::less<pair<T>>> void inline mergeargsort_serial(pair<T> *arr, T *a, const int &start, const int &end, Ord ord = Ord());
+template<typename T, typename Ord = std::less<pair<T>>> void inline mergeargsort_parallel_omp (pair<T> *arr, T *a, const int &start, const int &end, const int &threads, Ord ord = Ord());
 template<bool par, typename T, typename Ord = std::less<pair<T>>, parallel<par, T> = nullptr> inline int* argsort(T *a, const int &start, const int &end, Ord ord = Ord());
 template<bool par, typename T, typename Ord = std::less<pair<T>>, serial<par, T> = nullptr> inline int* argsort(T *a, const int &start, const int &end, Ord ord = Ord());
 //====================== variance functions ==================================
