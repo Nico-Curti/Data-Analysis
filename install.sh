@@ -59,11 +59,17 @@ if [ "$PROG" == "" ]; then
 		conda config --add channels bioconda
 		pip install -U numpy matplotlib seaborn networkx scikit-learn pandas snakemake
 		rm rm ./Miniconda3-latest-Linux-x86_64.sh
+	fi
 elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then
 	echo "Python3 already installed"
-	conda update conda -y
-	conda config --add channels bioconda
-	pip install -U numpy matplotlib seaborn networkx scikit-learn pandas snakemake
+	read -p "Do you want install snakemake and other dependecies? [y/n] " CONFIRM
+		if [ "$CONFIRM" == "n" ] || [ "$CONFIRM" == "N" ]; then
+			echo "Abort"
+		else
+			conda update conda -y
+			conda config --add channels bioconda
+			pip install -U numpy matplotlib seaborn networkx scikit-learn pandas snakemake
+		fi
 else
 	echo "Current python version is too old for snakemake"
 	echo "Please uninstall your python and re-run this script."
