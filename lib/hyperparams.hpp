@@ -297,3 +297,40 @@ struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, diagQDA<typena
 		return os;
 	}
 };
+
+
+
+// ReplicatedFBP
+template<class Cls> 
+struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, ReplicatedFBP<typename Cls::type>>::value>::type>
+{
+	using T = typename Cls::type;
+
+	hyperparams(){};
+	hyperparams(const int &i){};
+	hyperparams& operator=(const hyperparams &p)
+	{
+		return *this;
+	}
+	~hyperparams() = default;
+	void operator()(const unsigned int &s) // rn generator
+	{
+
+	}
+	void operator!(void) // mutation operator
+	{
+
+	}
+	hyperparams operator+(const hyperparams &p) // cross over operator
+	{
+
+	}
+	void get_name(std::ostream &os, char sep = '\t')
+	{
+
+	}
+	friend std::ostream& operator<<(std::ostream &os, const hyperparams &p)
+	{
+
+	}
+};

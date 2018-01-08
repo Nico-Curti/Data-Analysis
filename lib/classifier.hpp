@@ -76,7 +76,7 @@ public:
 
 	int *test(const Patterns<T> &);
 	int* cv_test(const Patterns<T> &, const std::vector<int> &);
-	int predict(T *);
+	inline int predict(T *);
 
 	void save(const std::string &, bool bin = false);
 	void load(const std::string &, bool bin = false);
@@ -141,20 +141,93 @@ public:
 
 //#include "ReplicatedSGD.hpp"
 
-//template<typename T, class Mag> class ReplicatedFBP
-//{
-//public:
-//	using type = T;
-//	using mag = Mag;
-//	ReplicatedFBP();
-//	~ReplicatedFBP();
-//
-//	void train(const Patterns<T> &);
-//	int *test(const Patterns<T> &);
-//};
+template<typename T> class ReplicatedFBP
+{
+	int input_size,
+		num_layers,
+		**weights;
 
-//#include "ReplicatedFBP.hpp"
-//
+public:
+	using type = T;
+	ReplicatedFBP();
+	~ReplicatedFBP();
+
+	template<class Mag> inline void train(const Patterns<T> &, const int &, const int &, const T &, const T &, const std::string &, const std::string &, const std::string &, int protocol_size = 101, int seed = 135, std::string output = "");
+	template<class Mag> inline void train(const Patterns<T> &, const hyperparams<ReplicatedFBP> &);
+	template<class Mag> inline void cv_train(const Patterns<T> &, const std::vector<int> &, const int &, const int &, const T &, const T &, const std::string &, const std::string &, const std::string &, int protocol_size = 101, int seed = 135, std::string output = "");
+	template<class Mag> inline void cv_train(const Patterns<T> &, const std::vector<int> &, const hyperparams<ReplicatedFBP> &);
+
+	inline int *test(const Patterns<T> &);
+	inline int *cv_test(const Patterns<T> &, const std::vector<int> &);
+	inline int predict(T *);
+};
+
+#include "ReplicatedFBP.hpp"
+
+// ReplicatedFBP Classifier
+template<typename T> ReplicatedFBP<T>::ReplicatedFBP()
+{
+	this->num_layers = 0;
+	this->input_size = 0;
+	this->weights = nullptr;
+}
+template<typename T> ReplicatedFBP<T>::~ReplicatedFBP()
+{
+	if(this->weights != nullptr)
+		delete[] this->weights;
+}
+template<typename T>template<class Mag> inline void ReplicatedFBP<T>::train(const Patterns<T> &data, const int &num_layers, const int &max_iters, const T &randfact, const T &damping, const std::string &accuracy1, const std::string &accuracy2, const std::string &fprotocol, int protocol_size, int seed, std::string output)
+{
+	this->num_layers = num_layers;
+	this->input_size = data.Ncol;
+	this->weigths = FBP::train<T, Mag>(data, num_layers, seed, max_iters, randfact, damping, accuracy1, accuracy2, fprotocol, protocol_size, output);
+	return;
+}
+template<typename T>template<class Mag> inline void ReplicatedFBP<T>::cv_train(const Patterns<T> &data, const std::vector<int> &idx, const int &num_layers, const int &max_iters, const T &randfact, const T &damping, const std::string &accuracy1, const std::string &accuracy2, const std::string &fprotocol, int protocol_size, int seed, std::string output)
+{
+	this->num_layers = num_layers;
+	this->input_size = data.Ncol;
+	Patterns<T> train;
+	train.Nrow = (int)idx.size();
+	train.Ncol = data.Ncol;
+	train.Nout = (int)idx.size();
+	train.output = new int[train.Nout];
+	train.input = new T*[train.Nrow];
+	std::generate(train.input, train.input + train.Nrow, [&data](){return new T[data.Ncol];});
+	for(int i = 0; i < (int)idx.size(); ++i)
+	{
+		std::memcpy(train.input[i], data.input[idx[i]], sizeof(T)*train.Ncol);
+		train.output[i] = data.output[idx[i]];
+	}
+	this->weigths = FBP::train<T, Mag>(train, num_layers, seed, max_iters, randfact, damping, accuracy1, accuracy2, fprotocol, protocol_size, output);
+	return;
+}
+template<typename T>template<class Mag> inline void ReplicatedFBP<T>::train(const Patterns<T> &data, const hyperparams<ReplicatedFBP> &params)
+{
+	this->num_layers = num_layers;
+	this->input_size = data.Ncol;
+	this->weights = FBP::train<T, Mag>(data, params.num_layers, params.seed, params.max_iters, params.randfact, params.damping, params.accuracy1, params.accuracy2, params.fprotocol, params.protocol_size);
+	return;
+}
+template<typename T>template<class Mag> inline void ReplicatedFBP<T>::cv_train(const Patterns<T> &data, const std::vector<int> &idx, const hyperparams<ReplicatedFBP> &params)
+{
+	this->cv_train(data, idx, params.num_layers, params.seed, params.max_iters, params.randfact, params.damping, params.accuracy1, params.accuracy2, params.fprotocol, params.protocol_size);
+}
+template<typename T> inline int *ReplicatedFBP<T>::test(const Patterns<T> &test)
+{
+	return FBP::test<T>(test, this->weights, this->input_size, this->num_layers);
+}
+template<typename T> inline int *ReplicatedFBP<T>::cv_test(const Patterns<T> &test, const std::vector<int> &idx)
+{
+	int *results = new int[idx.size()]; 
+	for(int i = 0; i < (int)idx.size(); ++i)
+		compute_output(test.input[idx[i]], this->weights, this->num_layers, this->input_size);
+	return results;
+}
+template<typename T> inline int ReplicatedFBP<T>::predict(T *input)
+{
+	return compute_output(input, this->weights, this->num_layers, this->input_size);
+}
 
 
 #include <hyperparams.hpp>

@@ -457,7 +457,7 @@ template<typename T> int* NeuralNetwork<T>::cv_test(const Patterns<T> &test, con
 	return predict;
 }
 
-template<typename T> int NeuralNetwork<T>::predict(T *input)
+template<typename T> inline int NeuralNetwork<T>::predict(T *input)
 {
 	T *out = this->feedforward(input);
 	int res = std::distance(out, std::max_element(out, out + this->sizes[this->num_layers - 1]));

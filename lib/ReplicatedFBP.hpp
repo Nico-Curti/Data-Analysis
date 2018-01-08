@@ -259,7 +259,7 @@ template<typename T, class Mag, class Input> using patt = typename std::enable_i
 template<typename T, class Mag, class Input> using file = typename std::enable_if<std::is_same<Input, std::string>::value, Input>::type*;
 
 
-namespace BinaryCommitteeMachineFBP
+namespace FBP
 {
 	template<typename T, class Mag> T 	 theta_node_update_approx(MagVec<Mag>, Mag &, T *, MagVec<Mag>, Mag &, const Params<T, Mag> &, const int &, const int &);
 	template<typename T, class Mag> T 	 theta_node_update_accurate(MagVec<Mag>, Mag &, T *, MagVec<Mag>, Mag &, const Params<T, Mag> &, const int &, const int &);
@@ -280,7 +280,6 @@ namespace BinaryCommitteeMachineFBP
 
 	template<typename T, class Mag, class Input, patt<T, Mag, Input> = nullptr> int** train(const Input &, int K = 3, int seed = 135, int max_iters = 1000, T randfact = (T).1, T damping = (T).5, std::string accuracy1 = "accurate", std::string accuracy2 = "accurate", std::string fprotocol = "standard_reinforcement", int protocol_size = 101, std::string output = "");
 	template<typename T, class Mag, class Input, file<T, Mag, Input> = nullptr> int** train(const Input &, int K = 3, int seed = 135, int max_iters = 1000, T randfact = (T).1, T damping = (T).5, std::string accuracy1 = "accurate", std::string accuracy2 = "accurate", std::string fprotocol = "standard_reinforcement", int protocol_size = 101, std::string output = "");
-	//template<typename T, class Mag, class Input, patt<T, Mag, Input>> MagVec3<Mag> train(const Input &, const Hyperparams &)
 
 	template<typename T> int* test(const Patterns<T> &, int**, const int &, const int &);
 	template<typename T> int* test(const std::string &, const std::string &);
@@ -1292,7 +1291,7 @@ template<typename T> void FocusingProtocol<T>::FreeScoping(const Vec2<T> &list)
 
 
 
-namespace BinaryCommitteeMachineFBP
+namespace FBP
 {
 
 	template<typename T, class Mag> T theta_node_update_approx(MagVec<Mag> m, Mag &M, T *xi, MagVec<Mag> u, Mag &U, const Params<T, Mag> &params, const int &nxi, const int &nm)
@@ -2062,7 +2061,6 @@ namespace BinaryCommitteeMachineFBP
 
 
 } // end of namespace BinaryCommitteeMachineFBP
-
 
 //======================================================================//
 //	______   ___  ______  _____  _____       ___  ______  _____  _____ 	//
