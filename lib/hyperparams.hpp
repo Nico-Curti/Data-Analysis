@@ -33,7 +33,7 @@ struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, Perceptron<typ
 	}
 	inline void operator!(void) // mutation operator
 	{
-		int pos = static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * std::tuple_size<decltype(this->func)>::value);
+		int pos = static_cast<int>(std::round((static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX)) * (std::tuple_size<decltype(this->func)>::value - 1)));
 		switch(pos)
 		{
 			case 0: this->eta = std::get<0>(this->func)();
@@ -46,7 +46,7 @@ struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, Perceptron<typ
 	inline hyperparams operator+(const hyperparams &p) // cross over operator
 	{
 		hyperparams res;
-		int pos = static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * std::tuple_size<decltype(this->func)>::value > 0.5f);
+		int pos = static_cast<int>(std::round((static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX)) * (std::tuple_size<decltype(this->func)>::value - 1)));
 		switch(pos)
 		{
 			case 0: res = hyperparams(p.eta, 100, this->seed);
@@ -94,9 +94,9 @@ struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, NeuralNetwork<
 	{
 		this->sizes = nullptr;
 		this->func = std::make_tuple(
-									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 10) + 1;}, // num_layers
+									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 9) + 1;}, // num_layers
 									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * (std::tuple_size<decltype(cost_func)>::value - 1));}, // cost
-									 [&](){return 1000;}, // epochs
+									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 1000) + 500;}, // epochs
 /*FIX*/								 [&](){return 2;}, // mini_batch_size
 									 [&](){return static_cast<T>(std::rand()) / static_cast<T>(RAND_MAX);}, // eta
 /*FIX*/								 [&](){return (T)2.;}, // lambda
@@ -177,7 +177,7 @@ struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, NeuralNetwork<
 	inline hyperparams operator+(const hyperparams &p) // cross over operator
 	{
 		hyperparams res;
-		int pos = static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * (std::tuple_size<decltype(this->func)>::value + 1));
+		int pos = static_cast<int>(std::round(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * (std::tuple_size<decltype(this->func)>::value + 1)));
 		switch(pos)
 		{
 			case 0: res = hyperparams(p.sizes, p.num_layers, p.cost, p.epochs, p.mini_batch_size, p.eta, p.lambda, p.seed);
@@ -305,32 +305,154 @@ template<class Cls>
 struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, ReplicatedFBP<typename Cls::type>>::value>::type>
 {
 	using T = typename Cls::type;
+	std::tuple<	std::function<int()>, // num_layers
+				std::function<int()>, // max_iters
+				std::function<T()>, // randfact 
+				std::function<T()>, // damping
+				std::function<std::string()>, // accuracy1
+				std::function<std::string()>, // accuracy2
+				std::function<std::string()>, // fprotocol
+				std::function<int()>, // protocol_size
+				std::function<int()> // seed
+				> func;
+	int num_layers, max_iters, protocol_size, seed;
+	T randfact, damping;
+	std::string accuracy1, accuracy2, fprotocol;
+	
+	hyperparams()
+	{
+		this->func = std::make_tuple(
+									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 10) + 1;}, // num_layers
+									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 1000) + 500;}, // max_iters
+									 [&](){return static_cast<T>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX));}, // randfact
+ 									 [&](){return static_cast<T>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) + static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX))/2;}, // damping 
+									 [&](){ float var = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX); 
+									 	   return (var < 0.333f) ? "none" : ((var < 0.666f) ? "accurate" : "exact");}, // accuracy1
+							 		 [&](){ float var = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX); 
+							 			   return (var < 0.333f) ? "none" : ((var < 0.666f) ? "accurate" : "exact");}, // accuracy2
+							 		 [&](){ float var = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX); 
+									 	   return (var < 0.25f) ? "scoping" : ((var < 0.5f) ? "pseudo_reinforcement" : ((var < 0.75f) ? "free_scoping" : "standard_reinforcement" ));}, // fprotocol
+									 [&](){return (int)101;}, // protocol_size
+									 [&](){return static_cast<int>(std::rand());} // seed
+									 );
+	}
 
-	hyperparams(){};
-	hyperparams(const int &i){};
+	
 	hyperparams& operator=(const hyperparams &p)
 	{
+		this->num_layers = p.num_layers;
+		this->max_iters = p.max_iters;
+		this->randfact = p.randfact;
+		this->damping = p.damping;
+		this->accuracy1 = p.accuracy1; 
+		this->accuracy2 = p.accuracy2;
+		this->fprotocol = p.fprotocol;
+		this->protocol_size = p.protocol_size;
+		this->seed = p.seed; 
 		return *this;
 	}
+
 	~hyperparams() = default;
-	void operator()(const unsigned int &s) // rn generator
-	{
 
+	inline void operator()(const unsigned int &s) // rn generator
+	{
+		std::srand(s);
+		this->num_layers = std::get<0>(this->func)();
+		this->max_iters = std::get<1>(this->func)();
+		this->randfact = std::get<2>(this->func)();
+		this->damping = std::get<3>(this->func)();
+		this->accuracy1 = std::get<4>(this->func)();
+		this->accuracy2 = std::get<5>(this->func)();
+		this->fprotocol = std::get<6>(this->func)();
+		this->protocol_size = std::get<7>(this->func)();
+		this->seed = std::get<8>(this->func)();
+
+		return;
 	}
-	void operator!(void) // mutation operator
-	{
 
+	inline void operator!(void) // mutation operator
+	{
+		int pos = static_cast<int>(static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * (std::tuple_size<decltype(this->func)>::value - 1);
+		switch(pos)
+		{
+			case 0: this->num_layers = std::get<0>(this->func)();
+			break;
+			case 1: this->max_iters = std::get<1>(this->func)();
+			break;
+			case 2: this->randfact = std::get<2>(this->func)();
+			break;
+			case 3: this->damping = std::get<3>(this->func)();
+			break;
+			case 4: this->accuracy1 = std::get<4>(this->func)();
+			break;
+			case 5: this->accuracy2 = std::get<5>(this->func)();
+			break;
+			case 6: this->fprotocol = std::get<6>(this->func)();
+			break;
+			case 7: this->protocol_size = std::get<7>(this->func)();
+			break;
+			case 8: this->seed = std::get<8>(this->func)();
+			break;
+		}
+		return;
 	}
-	hyperparams operator+(const hyperparams &p) // cross over operator
-	{
 
+	inline hyperparams operator+(const hyperparams &p) // cross over operator
+	{
+		hyperparams res;
+		int pos = static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * (std::tuple_size<decltype(this->func)>::value + 1));
+		switch(pos)
+		{
+			case 0: res = hyperparams(p.num_layers, p.max_iters, p.randfact, p.damping, p.accuracy1, p.accuracy2, p.fprotocol, p.protocol_size, p.seed);
+			break;
+			case 1: res = hyperparams(this->num_layers, p.max_iters, p.randfact, p.damping, p.accuracy1, p.accuracy2, p.fprotocol, p.protocol_size, p.seed);
+			break;
+			case 2: res = hyperparams(this->num_layers, this->max_iters, p.randfact, p.damping, p.accuracy1, p.accuracy2, p.fprotocol, p.protocol_size, p.seed);
+			break;
+			case 3: res = hyperparams(this->num_layers, this->max_iters, this->randfact, p.damping, p.accuracy1, p.accuracy2, p.fprotocol, p.protocol_size, p.seed);
+			break;
+			case 4: res = hyperparams(this->num_layers, this->max_iters, this->randfact, this->damping, p.accuracy1, p.accuracy2, p.fprotocol, p.protocol_size, p.seed);
+			break;
+			case 5: res = hyperparams(this->num_layers, this->max_iters, this->randfact, this->damping, this->accuracy1, p.accuracy2, p.fprotocol, p.protocol_size, p.seed);
+			break;
+			case 6: res = hyperparams(this->num_layers, this->max_iters, this->randfact, this->damping, this->accuracy1, this->accuracy2, p.fprotocol, p.protocol_size, p.seed);
+			break;
+			case 7: res = hyperparams(this->num_layers, this->max_iters, this->randfact, this->damping, this->accuracy1, this->accuracy2, this->fprotocol, p.protocol_size, p.seed);
+			break;
+			case 8: res = hyperparams(this->num_layers, this->max_iters, this->randfact, this->damping, this->accuracy1, this->accuracy2, this->fprotocol, this->protocol_size, p.seed);
+			break;
+			case 9: res = hyperparams(this->num_layers, this->max_iters, this->randfact, this->damping, this->accuracy1, this->accuracy2, this->fprotocol, this->protocol_size, this->seed);
+			break;
+		}		
+		return res;
 	}
-	void get_name(std::ostream &os, char sep = '\t')
-	{
 
+	inline void get_name(std::ostream &os, char sep = '\t')
+	{
+		COUTNAME(os, num_layers, sep);
+		COUTNAME(os, max_iters, sep);
+		COUTNAME(os, randfact, sep); 
+		COUTNAME(os, damping, sep); 
+		COUTNAME(os, accuracy1, sep);
+		COUTNAME(os, accuracy2, sep);
+		COUTNAME(os, fprotocol, sep); 
+		COUTNAME(os, protocol_size, sep);
+		COUTNAME(os, seed, sep);
+		return;
 	}
 	friend std::ostream& operator<<(std::ostream &os, const hyperparams &p)
 	{
+		COUTVAL(os, p.num_layers, '\t');
+		COUTVAL(os, p.max_iters, '\t');
+		COUTVAL(os, p.randfact, '\t'); 
+		COUTVAL(os, p.damping, '\t'); 
+		COUTVAL(os, p.accuracy1, '\t');
+		COUTVAL(os, p.accuracy2, '\t');
+		COUTVAL(os, p.fprotocol, '\t'); 
+		COUTVAL(os, p.protocol_size, '\t');
+		COUTVAL(os, p.seed, '\t');
 
+		return os;
 	}
+
 };

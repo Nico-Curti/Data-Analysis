@@ -253,7 +253,7 @@ public:
 
 static void menu_info();
 template<typename T> void parse_training_args(const int &, char **, std::string &, std::string &, int &, int &, int &, T &, T &, std::string &, std::string &, char &, char &);
-template<typename T> void parse_test_args(const int &, char **, std::string &, std::string &, std::string &);
+void parse_test_args(const int &, char **, std::string &, std::string &, std::string &);
 
 template<typename T, class Mag, class Input> using patt = typename std::enable_if<std::is_same<Input, Patterns<T>>::value, Input>::type*;
 template<typename T, class Mag, class Input> using file = typename std::enable_if<std::is_same<Input, std::string>::value, Input>::type*;
@@ -2132,7 +2132,7 @@ template<typename T> void parse_training_args(int argc, char *argv[], std::strin
 	return;
 }
 
-template<typename T> void parse_test_args(int argc, char *argv[], std::string &test_file, std::string &weight_file, std::string &output_file)
+void parse_test_args(int argc, char *argv[], std::string &test_file, std::string &weight_file, std::string &output_file)
 {
 	ArgumentParser argparse("Test BeliefPropagation 3.0");
 	argparse.add_argument<std::string>("fArg", "f", "test_file", "Test Filename (with extension)", true, "");
