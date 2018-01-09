@@ -2,7 +2,6 @@
 #include "cross_validation.hpp"
 #include "classifier.hpp"
 
-// TO FIX parallel
 template<	bool par,
 			class Cls, 
 			typename T, 
@@ -22,17 +21,14 @@ template<	bool par,
 					 idx_train; // vector of train indices
 	int *predict_lbl = new int[train.Nout]; // vector of predicted labels
 
-#pragma omp parallel for
+#pragma omp parallel for shared(cv) firstprivate(idx_train, idx_test)
 	for(int fold = 0; fold < cv.n_fold; ++fold) // loop over folds
 	{
 		std::unique_ptr<Cls> classifier(new Cls); // unique ptr to allow default destruction at the end of loop
 		cv.getFold(fold, idx_train, idx_test);
 		classifier->cv_train(train, idx_train, params);
 		for(const auto &test : idx_test) predict_lbl[test] = classifier->predict(train.input[test]);
-			std::cout << fold << std::endl;
 	}
-	for(int i = 0; i < train.Nout; ++i) std::cout << predict_lbl[i] << " ";
-		std::cout << std::endl;
 	auto score = score_func(train.output, predict_lbl, train.Nout);
 	delete[] predict_lbl;
 	return score;

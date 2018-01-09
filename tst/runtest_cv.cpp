@@ -1,5 +1,5 @@
 #include "cross_validation.hpp"
-
+#include <omp.h>
 
 int main(int argc, char *argv[])
 {
@@ -18,26 +18,35 @@ int main(int argc, char *argv[])
 
 	std::cout << "========== Leave One Out Cross Validation ============" << std::endl;
 	cv.LeaveOneOut(0, N);
+#pragma omp parallel for shared(cv) firstprivate(train, test)
 	for(int i = 0; i < N; ++i)
 	{
 		cv.getFold(i, train, test);
-		std::cout << "Fold " << i + 1 << " training data" << std::endl;
-		std::copy(train.begin(), train.end(), std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
-		std::cout << "Fold " << i + 1 << " testing data" << std::endl;
-		std::copy(test.begin(), test.end(), std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
+#pragma omp critical
+		{
+			std::cout << "Fold " << i + 1 << " training data" << std::endl;
+			std::copy(train.begin(), train.end(), std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
+			std::cout << "Fold " << i + 1 << " testing data" << std::endl;
+			std::copy(test.begin(), test.end(), std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
+		}
 	}
 
 	std::cout << "============== K-Fold Cross Validation ===============" << std::endl;
 	cv.KFold(K, 0, N, false);
+#pragma omp parallel for shared(cv) firstprivate(train, test)
 	for (int i = 0; i < K; ++i)
 	{
 		cv.getFold(i, train, test);
-		std::cout << "Fold " << i + 1 << " Training Data" << std::endl;
-		std::copy(train.begin(), train.end(), std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
-		std::cout << "Fold " << i + 1 << " Testing Data" << std::endl;
-		std::copy(test.begin(), test.end(), std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
+#pragma omp critical
+		{
+			std::cout << "Fold " << i + 1 << " Training Data" << std::endl;
+			std::copy(train.begin(), train.end(), std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
+			std::cout << "Fold " << i + 1 << " Testing Data" << std::endl;
+			std::copy(test.begin(), test.end(), std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
+		}
 	}
 
+	std::cout << "========= Stratified K-Fold Cross Validation =========" << std::endl;
 	std::fill_n(labels, 6, 0);
 	std::fill_n(labels + 6, 4, 1);
 	std::fill_n(labels + 10, 3, 2);
@@ -45,15 +54,18 @@ int main(int argc, char *argv[])
 	std::cout << "labels : ";
 	std::copy(labels, labels + N, std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
 
-	std::cout << "========= Stratified K-Fold Cross Validation =========" << std::endl;
 	cv.StratifiedKFold(labels, K, 0, N, false);
+#pragma omp parallel for shared(cv) firstprivate(train, test)
 	for (int i = 0; i < K; ++i)
 	{
 		cv.getFold(i, train, test);
-		std::cout << "Fold " << i + 1 << " Training Data" << std::endl;
-		std::copy(train.begin(), train.end(), std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
-		std::cout << "Fold " << i + 1 << " Testing Data" << std::endl;
-		std::copy(test.begin(), test.end(), std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
+#pragma omp critical
+		{
+			std::cout << "Fold " << i + 1 << " Training Data" << std::endl;
+			std::copy(train.begin(), train.end(), std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
+			std::cout << "Fold " << i + 1 << " Testing Data" << std::endl;
+			std::copy(test.begin(), test.end(), std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
+		}
 	}
 
 	delete[] labels;

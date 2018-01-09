@@ -2,16 +2,16 @@
 
 int main(int argc, char *argv[])
 {
-	int num_layers = 3,
-		*sizes = new int[num_layers],
-		epochs = 1000,
+	int num_layers = 3, // number of layers in the Neural Network
+		*sizes = new int[num_layers], // layers sizes in the Neural Network
+		epochs = 1000, 
 		mini_batch_size = 2,
 		cost = 0, // 0 -> QuadraticCost -- 1 -> CrossEntropyCost
-		K = 10,
-		n_population = 10,//2048,
-		max_iter = 3;//2000;
-	unsigned int seed = 123;
-	float 	eta = .8f, 
+		K = 10, // number of folds
+		n_population = 10,// number of dna in each generation
+		max_iter = 3;// max number of iteration in the GA
+	unsigned int seed = 123; // random seed
+	float 	eta = .8f, // learning rate
 			lambda = .3f,
 			elit_rate = .3f, // percentage of population to conserve
 			mutation_rate = .3f; // probability of mutation
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 											 seed);
 
 	std::cout << "Stratified " << K << "-Fold CV with Neural Network" << std::endl;
-	auto score = cross_val_score<false, NeuralNetwork<float>>(	data,
+	auto score = cross_val_score<true, NeuralNetwork<float>>(	data,
 																std::bind(	&CrossValidation::StratifiedKFold, 
 																 			std::placeholders::_1, 
 																 			data.output, K, 0, data.Nout, true, seed),
