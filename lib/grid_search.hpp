@@ -70,13 +70,13 @@ namespace grid_search
 				{
 					nth = (nth % 2) ? nth-1 : nth;
 					size = ((diff = n_population % nth)) ? n_population - diff : n_population;
-					mergeargsort_parallel_omp(arr, fitness, 0, size, nth); // std::greater
+					mergeargsort_parallel_omp(arr, fitness, 0, size, nth, std::greater<pair<int>>());
 				}
 			} // end of parallel zone
 			if(diff)
 			{
 				std::sort(arr + size, arr + n_population);
-				std::inplace_merge(arr, arr + size, arr + n_population); // std::greater
+				std::inplace_merge(arr, arr + size, arr + n_population, std::greater<pair<int>>());
 			}
 			for(int j = 0; j < n_population; ++j) rank[j] = arr[j].idx;
 			best = rank[0];
