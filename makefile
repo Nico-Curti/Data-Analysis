@@ -39,7 +39,7 @@ fbp:		$(TST)/runtest_bcrfbp.cpp \
 			$(HPP)/fmath.hpp \
 			$(HPP)/patterns.hpp 
 
-		$(CXX) $(STD) $(fmath) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_fbp 		$(TST)/runtest_bcrfbp.cpp
+		$(CXX) $(STD) $(gnu) $(OMP)  -O3 -I $(HPP) -o $(OUT)/runtest_fbp 		$(TST)/runtest_bcrfbp.cpp
 
 rsgd:		$(TST)/runtest_bcrsgd.cpp \
 			$(HPP)/ReplicatedSGD.hpp \

@@ -197,14 +197,7 @@ public:
 	static Cavity_Message<T, Mag> read_messages(const std::string &);
 };
 
-int** read_weights(const std::string &, int &, int &, bool bin = false);
-template<typename T, class Mag> void save_weights(const std::string &, const Cavity_Message<T, Mag> &, const int &, const int &, const int &, const int &, const T &, const T &, const std::string &, const std::string &);
-void save_weights(const std::string &, int **, const int &, const int &);
-template<typename T> int compute_output(T *,  int **, const int &, const int &);
-template<typename T, class Mag> int compute_output(T *, MagVec2<Mag>, const int &, const int &);
-template<typename T, class Mag> int** M2W(MagVec2<Mag> , const int &, const int &);
-template<typename T, class Mag, magP<T, Mag> = nullptr> inline void set_outfields(const Cavity_Message<T, Mag> &, int *, const T &);
-template<typename T, class Mag, magT<T, Mag> = nullptr> inline void set_outfields(const Cavity_Message<T, Mag> &, int *, const T &);
+
 template<typename T> std::ostream& operator<<(std::ostream &, const MagP64<T> &);
 template<typename T> std::ostream& operator<<(std::ostream &, const MagT64<T> &);
 
@@ -275,14 +268,24 @@ namespace FBP
 	template<typename T, class Mag> Mag  compute_q_bar(const Cavity_Message<T, Mag> &, const Params<T, Mag> &);
 	template<typename T, class Mag> T 	 compute_q(const Cavity_Message<T, Mag> &, const int &, const int &);
 	template<typename T, class Mag> void mags_symmetry(const Cavity_Message<T, Mag> &, T *);
+	
+	int** read_weights(const std::string &, int &, int &, bool bin = false);
+	template<typename T, class Mag> void save_weights(const std::string &, const Cavity_Message<T, Mag> &, const int &, const int &, const int &, const int &, const T &, const T &, const std::string &, const std::string &);
+	void save_weights(const std::string &, int **, const int &, const int &);
+	template<typename T> int compute_output(T *,  int **, const int &, const int &);
+	template<typename T, class Mag> int compute_output(T *, MagVec2<Mag>, const int &, const int &);
+	template<typename T, class Mag> int** M2W(MagVec2<Mag> , const int &, const int &);
+	template<typename T, class Mag, magP<T, Mag> = nullptr> inline void set_outfields(const Cavity_Message<T, Mag> &, int *, const T &);
+	template<typename T, class Mag, magT<T, Mag> = nullptr> inline void set_outfields(const Cavity_Message<T, Mag> &, int *, const T &);
 
 	template<typename T, class Mag> int** focusingBP(const int &, const Patterns<T> &, const int &, const int &, const int &, const T &, const bool &, const std::string &, const std::string &, const T &randfact, const FocusingProtocol<T> &, const T &, const std::string &, const bool &, const std::string &, std::string, std::string, const std::string &);
 
-	template<typename T, class Mag, class Input, patt<T, Mag, Input> = nullptr> int** train(const Input &, int K = 3, int seed = 135, int max_iters = 1000, T randfact = (T).1, T damping = (T).5, std::string accuracy1 = "accurate", std::string accuracy2 = "accurate", std::string fprotocol = "standard_reinforcement", int protocol_size = 101, std::string output = "");
-	template<typename T, class Mag, class Input, file<T, Mag, Input> = nullptr> int** train(const Input &, int K = 3, int seed = 135, int max_iters = 1000, T randfact = (T).1, T damping = (T).5, std::string accuracy1 = "accurate", std::string accuracy2 = "accurate", std::string fprotocol = "standard_reinforcement", int protocol_size = 101, std::string output = "");
+	template<typename T, class Mag, class Input, patt<T, Mag, Input> = nullptr> int** train(const Input &, int K = 3, int seed = 135, int max_iters = 1000, T randfact = (T).1, T damping = (T).5, std::string accuracy1 = "accurate", std::string accuracy2 = "accurate", std::string fprotocol = "standard_reinforcement", int protocol_size = 101, bool quiet = false, std::string output = "");
+	template<typename T, class Mag, class Input, file<T, Mag, Input> = nullptr> int** train(const Input &, int K = 3, int seed = 135, int max_iters = 1000, T randfact = (T).1, T damping = (T).5, std::string accuracy1 = "accurate", std::string accuracy2 = "accurate", std::string fprotocol = "standard_reinforcement", int protocol_size = 101, bool quiet = false, std::string output = "");
 
 	template<typename T> int* test(const Patterns<T> &, int**, const int &, const int &);
 	template<typename T> int* test(const std::string &, const std::string &);
+
 }
 
 
@@ -976,121 +979,6 @@ template<typename T, class Mag> Cavity_Message<T, Mag>::~Cavity_Message()
 
 		delete[] this->m_on;
 	}
-}
-
-int** read_weights(const std::string &filename, int &K, int &N, bool bin)
-{
-	int **W = nullptr;
-	std::ifstream is;
-	if(bin)
-	{
-		is.open(filename, std::ios::binary);
-		if( !is ) {std::cerr << "Weights file not found! Given : " << filename << std::endl; exit(1);}
-		is.read((char*)&K, sizeof(int));
-		is.read((char*)&N, sizeof(int));
-		W = new int*[K];
-		std::generate(W, W + K, [&N](){return new int[N];});
-		for(int i = 0; i < K; ++i)
-			std::for_each(W[i], W[i] + N, [&is](int &val){is.read((char*)&val, sizeof(int));});
-		//TODO maybe a generate
-		is.close();
-	}
-	else
-	{
-		std::string row;
-		is.open(filename);
-		if(!is){std::cerr << "Weights file not found! Given : " << filename << std::endl; exit(1);}
-		std::getline(is, row); // fmt:
-		is >> row;
-		is >> K;
-		is >> N;
-		W = new int*[K];
-		std::generate(W, W + K, [&N](){return new int[N];});
-		for(int i = 0; i < K; ++i)
-			std::for_each(W[i], W[i] + N, [&is](int &val){ is >> val; });
-		is.close();
-	}
-	return W;
-}
-
-template<typename T, class Mag> void save_weights(const std::string &filename, const Cavity_Message<T, Mag> &message, const int &seed, const int &max_iters, const T &randfact, const T &damping, const std::string &accuracy1, const std::string &accuracy2)
-{
-	std::ofstream os(filename);
-	os << "fmt: " << Mag::magformat() << ", seed: " << seed << ", max_iters: " << max_iters << ", randfact: " << randfact << ", damping: " << damping << ", accuracy1: " << accuracy1 << ", accuracy2: " << accuracy2 << std::endl <<
-		  "K,N:\t" << message.K << "\t" << message.N << std::endl;
-	for (int i = 0; i < message.K; ++i)
-	{
-		std::for_each(message.m_j_star[i], message.m_j_star[i] + message.N, [&os](const Mag &m){os << Magnetization::sign0<T, Mag>(m) << "\t";});
-		os << std::endl;
-	}
-	os << "END" << std::endl;
-	os.close();
-	return;
-}
-
-void save_weights(const std::string &filename, int **W, const int &K, const int &N)
-{
-	std::ofstream os(filename, std::ios::out | std::ios::binary);
-	os.write( (const char *) &K, sizeof( int ));
-	os.write( (const char *) &N, sizeof( int ));
-	
-	//TODO maybe a generate	
-	for(int i = 0; i < K; ++i)
-		for(int j = 0; j < N; ++j)
-			os.write( (const char *) &W[i][j], sizeof( int ));
-	os.close();
-}
-
-template<typename T> int compute_output(T *input, int **W, const int &K, const int &N)
-{
-	return sign(std::accumulate(	W, W + K, 0, 
-							[&input, &N] (const int &out, int *Wi)
-							{
-								return out + sign( std::inner_product( Wi, Wi + N, input, (T)0.) );
-							})
-				);
-}
-
-template<typename T, class Mag> int compute_output(T *input, MagVec2<Mag> W, const int &K, const int &N)
-{
-	return sign(std::accumulate(	W, W + K, 0, 
-							[&input, &N] (const int &out, MagVec<Mag> Wi)
-							{
-								return out + sign( std::inner_product( Wi, Wi + N, input, (T)0.) );
-							})
-				);
-}
-
-
-template<typename T, class Mag> int** M2W(MagVec2<Mag> M, const int &K, const int &N)
-{
-	int **W = new int*[K];
-	std::generate(W, W + K, [&N](){return new int[N];});
-	
-	for(int i = 0; i < K; ++i)
-		std::transform(M[i], M[i] + N, W[i],
-						[](const Mag &Mij)
-						{
-							return Magnetization::sign0<T, Mag>(Mij);
-						});
-	return W;
-};
-
-
-template<typename T, class Mag, magP<T, Mag>> inline void set_outfields(const Cavity_Message<T, Mag> &message, int *output, const T &beta)
-{
-	//assert(Nout == message.M);
-	T t = (T)tanh(beta / 2);
-	std::transform(output, output + message.M, message.m_on, [&t](const int o){return Mag(o * t);});
-	return;
-}
-
-template<typename T, class Mag, magT<T, Mag>> inline void set_outfields(const Cavity_Message<T, Mag> &message, int *output, const T &beta)
-{
-	//assert(Nout == message.M);
-	T t = (T)tanh(beta / 2);
-	std::transform(output, output + message.M, message.m_on, [&t](const int o){return Mag(std::atanh(o * t));});
-	return;
 }
 
 template<typename T, class Mag> std::ostream& operator<<(std::ostream &os, const Cavity_Message<T, Mag> &message)
@@ -1812,6 +1700,122 @@ namespace FBP
 		return; /* qs/N; */
 	}
 
+	int** read_weights(const std::string &filename, int &K, int &N, bool bin)
+	{
+		int **W = nullptr;
+		std::ifstream is;
+		if(bin)
+		{
+			is.open(filename, std::ios::binary);
+			if( !is ) {std::cerr << "Weights file not found! Given : " << filename << std::endl; exit(1);}
+			is.read((char*)&K, sizeof(int));
+			is.read((char*)&N, sizeof(int));
+			W = new int*[K];
+			std::generate(W, W + K, [&N](){return new int[N];});
+			for(int i = 0; i < K; ++i)
+				std::for_each(W[i], W[i] + N, [&is](int &val){is.read((char*)&val, sizeof(int));});
+			//TODO maybe a generate
+			is.close();
+		}
+		else
+		{
+			std::string row;
+			is.open(filename);
+			if(!is){std::cerr << "Weights file not found! Given : " << filename << std::endl; exit(1);}
+			std::getline(is, row); // fmt:
+			is >> row;
+			is >> K;
+			is >> N;
+			W = new int*[K];
+			std::generate(W, W + K, [&N](){return new int[N];});
+			for(int i = 0; i < K; ++i)
+				std::for_each(W[i], W[i] + N, [&is](int &val){ is >> val; });
+			is.close();
+		}
+		return W;
+	}
+
+	template<typename T, class Mag> void save_weights(const std::string &filename, const Cavity_Message<T, Mag> &message, const int &seed, const int &max_iters, const T &randfact, const T &damping, const std::string &accuracy1, const std::string &accuracy2)
+	{
+		std::ofstream os(filename);
+		os << "fmt: " << Mag::magformat() << ", seed: " << seed << ", max_iters: " << max_iters << ", randfact: " << randfact << ", damping: " << damping << ", accuracy1: " << accuracy1 << ", accuracy2: " << accuracy2 << std::endl <<
+			  "K,N:\t" << message.K << "\t" << message.N << std::endl;
+		for (int i = 0; i < message.K; ++i)
+		{
+			std::for_each(message.m_j_star[i], message.m_j_star[i] + message.N, [&os](const Mag &m){os << Magnetization::sign0<T, Mag>(m) << "\t";});
+			os << std::endl;
+		}
+		os << "END" << std::endl;
+		os.close();
+		return;
+	}
+
+	void save_weights(const std::string &filename, int **W, const int &K, const int &N)
+	{
+		std::ofstream os(filename, std::ios::out | std::ios::binary);
+		os.write( (const char *) &K, sizeof( int ));
+		os.write( (const char *) &N, sizeof( int ));
+		
+		//TODO maybe a generate	
+		for(int i = 0; i < K; ++i)
+			for(int j = 0; j < N; ++j)
+				os.write( (const char *) &W[i][j], sizeof( int ));
+		os.close();
+	}
+
+	template<typename T> int compute_output(T *input, int **W, const int &K, const int &N)
+	{
+		return sign(std::accumulate(	W, W + K, 0, 
+								[&input, &N] (const int &out, int *Wi)
+								{
+									return out + sign( std::inner_product( Wi, Wi + N, input, (T)0.) );
+								})
+					);
+	}
+
+	template<typename T, class Mag> int compute_output(T *input, MagVec2<Mag> W, const int &K, const int &N)
+	{
+		return sign(std::accumulate(	W, W + K, 0, 
+								[&input, &N] (const int &out, MagVec<Mag> Wi)
+								{
+									return out + sign( std::inner_product( Wi, Wi + N, input, (T)0.) );
+								})
+					);
+	}
+
+
+	template<typename T, class Mag> int** M2W(MagVec2<Mag> M, const int &K, const int &N)
+	{
+		int **W = new int*[K];
+		std::generate(W, W + K, [&N](){return new int[N];});
+		
+		for(int i = 0; i < K; ++i)
+			std::transform(M[i], M[i] + N, W[i],
+							[](const Mag &Mij)
+							{
+								return Magnetization::sign0<T, Mag>(Mij);
+							});
+		return W;
+	};
+
+
+	template<typename T, class Mag, magP<T, Mag>> inline void set_outfields(const Cavity_Message<T, Mag> &message, int *output, const T &beta)
+	{
+		//assert(Nout == message.M);
+		T t = (T)tanh(beta / 2);
+		std::transform(output, output + message.M, message.m_on, [&t](const int o){return Mag(o * t);});
+		return;
+	}
+
+	template<typename T, class Mag, magT<T, Mag>> inline void set_outfields(const Cavity_Message<T, Mag> &message, int *output, const T &beta)
+	{
+		//assert(Nout == message.M);
+		T t = (T)tanh(beta / 2);
+		std::transform(output, output + message.M, message.m_on, [&t](const int o){return Mag(std::atanh(o * t));});
+		return;
+	}
+
+
 
 	template<typename T, class Mag> int** focusingBP(
 										const int &K,
@@ -1972,14 +1976,14 @@ namespace FBP
 	//		                                                                                         	  //
 	//====================================================================================================//
 
-	template<typename T, class Mag, class Input, file<T, Mag, Input>> int** train(const Input &patternsfile, int K, int seed, int max_iters, T randfact, T damping, std::string accuracy1, std::string accuracy2, std::string fprotocol, int protocol_size, std::string output)
+	template<typename T, class Mag, class Input, file<T, Mag, Input>> int** train(const Input &patternsfile, int K, int seed, int max_iters, T randfact, T damping, std::string accuracy1, std::string accuracy2, std::string fprotocol, int protocol_size, bool quiet, std::string output)
 	{
 		Patterns<T> patterns(patternsfile);
 		check_binary(patterns);
-		return train(patterns, K, seed, max_iters, randfact, damping, accuracy1, accuracy2, fprotocol, protocol_size, output);
+		return train(patterns, K, seed, max_iters, randfact, damping, quiet, accuracy1, accuracy2, fprotocol, protocol_size, output);
 	}
 
-	template<typename T, class Mag, class Input, patt<T, Mag, Input>> int** train(const Input &patterns, int K, int seed, int max_iters, T randfact, T damping, std::string accuracy1, std::string accuracy2, std::string fprotocol, int protocol_size, std::string output)
+	template<typename T, class Mag, class Input, patt<T, Mag, Input>> int** train(const Input &patterns, int K, int seed, int max_iters, T randfact, T damping, std::string accuracy1, std::string accuracy2, std::string fprotocol, int protocol_size, bool quiet, std::string output)
 	{
 		FocusingProtocol<T> fps;
 		int p = (fprotocol == "scoping") ? 0 : (fprotocol == "pseudo_reinforcement") ? 1 : (fprotocol == "free_scoping") ? 2 : (fprotocol == "standard_reinforcement") ? 3 : 4, i = 0;
@@ -2027,7 +2031,7 @@ namespace FBP
 				exit(1);
 			}
 		}
-		return focusingBP<T, Mag>(K, patterns, max_iters, INT_MAX, seed, damping, false, accuracy1, accuracy2, randfact, fps, (T)1e-3, "nothing", true, "none", "nothing", "nothing", output);
+		return focusingBP<T, Mag>(K, patterns, max_iters, INT_MAX, seed, damping, quiet, accuracy1, accuracy2, randfact, fps, (T)1e-3, "nothing", true, "none", "nothing", "nothing", output);
 	}
 
 	template<typename T> int* test(const Patterns<T> &patterns, int **weights, const int &K, const int &N)

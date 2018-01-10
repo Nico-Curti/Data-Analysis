@@ -39,11 +39,6 @@ template<typename T> struct parameters
 template<typename T, class C,typename std::enable_if<std::is_same<C, NetNK<T>>::value, C>::type* = nullptr> inline void update(C &obj);
 template<typename T, class C,typename std::enable_if<std::is_same<C, parameters<T>>::value, C>::type* = nullptr> inline void update(C &obj);
 
-// TO DO
-template<typename T> int* compute_output(T **input, const int &, const int &, T **, const int &M, const int &, const int &);
-template<typename T> int* compute_output(T **, const int &, const int &, T**, const int &, const int &, const int &);
-//
-
 struct PatternPermutation
 {
 	int a, M, batch, *MM;
@@ -68,10 +63,16 @@ namespace RSGD
 	template<typename T> void kickboth(NetNK<T> &, NetNK<T> &, const parameters<T> &);
 	template<typename T> void kickboth_traced(NetNK<T> &, NetNK<T> &, const parameters<T> &, const std::string &);
 	template<typename T> void kickboth_traced_continuous(NetNK<T> &, NetNK<T> &, const parameters<T> &);
+
+	// TO DO
+	template<typename T> int* compute_output(T **input, const int &, const int &, T **, const int &M, const int &, const int &);
+	template<typename T> int* compute_output(T **, const int &, const int &, T**, const int &, const int &, const int &);
+	//
+
 	template<typename T> T* RSGD(const Patterns<T> &, const int &, const int &, parameters<T> &, const int &, const std::string &, const int &, const int &, const bool &, const bool &, const bool &, std::string outfile = "", bool quiet = false);	
 
-	template<typename T> inline T* train(const std::string &, int K = 1, int y = 1, int batch = 5, int max_epochs = 1000, T eta = (T)2., T lambda = (T).1, T gamma = std::numeric_limits<T>::infinity(), T eta_factor = (T)1., T lambda_factor = (T)1., T gamma_step = (T).01, bool waitcenter = false, bool equal = true, bool center = false, std::string formula = "simple", std::string outfile = "");
-	template<typename T> inline T* train(const Patterns<T> &, int K = 1, int y = 1, int batch = 5, int max_epochs = 1000, T eta = (T)2., T lambda = (T).1, T gamma = std::numeric_limits<T>::infinity(), T eta_factor = (T)1., T lambda_factor = (T)1., T gamma_step = (T).01, bool waitcenter = false, bool equal = true, bool center = false, std::string formula = "simple", std::string outfile = "");
+	template<typename T> inline T* train(const std::string &, int K = 1, int y = 1, int batch = 5, int max_epochs = 1000, T eta = (T)2., T lambda = (T).1, T gamma = std::numeric_limits<T>::infinity(), T eta_factor = (T)1., T lambda_factor = (T)1., T gamma_step = (T).01, bool waitcenter = false, bool equal = true, bool center = false, std::string formula = "simple", bool quiet = false, std::string outfile = "");
+	template<typename T> inline T* train(const Patterns<T> &, int K = 1, int y = 1, int batch = 5, int max_epochs = 1000, T eta = (T)2., T lambda = (T).1, T gamma = std::numeric_limits<T>::infinity(), T eta_factor = (T)1., T lambda_factor = (T)1., T gamma_step = (T).01, bool waitcenter = false, bool equal = true, bool center = false, std::string formula = "simple", bool quiet = false, std::string outfile = "");
 
 	template<typename T> int* test(const Patterns<T> &, T*, const int &, const int &);
 	template<typename T> int* test(const std::string &, const std::string &);
@@ -248,30 +249,6 @@ template<typename T> inline parameters<T>& parameters<T>::operator++()
 	this->gamma += this->gamma_step;
 	return *this;
 }
-
-//=====================================================================================================================//
-//                                                              __                          _     _                    //
-//     ___    ___    _ __ ___    _ __ ___     ___    _ __      / _|  _   _   _ __     ___  | |_  (_)   ___    _ __     //
-//    / __|  / _ \  | '_ ` _ \  | '_ ` _ \   / _ \  | '_ \    | |_  | | | | | '_ \   / __| | __| | |  / _ \  | '_ \    //
-//   | (__  | (_) | | | | | | | | | | | | | | (_) | | | | |   |  _| | |_| | | | | | | (__  | |_  | | | (_) | | | | |   //
-//    \___|  \___/  |_| |_| |_| |_| |_| |_|  \___/  |_| |_|   |_|    \__,_| |_| |_|  \___|  \__| |_|  \___/  |_| |_|   //
-//                                                                                                                     //
-//=====================================================================================================================//
-
-template<typename T> int* compute_output(T **input, const int &Nrow, const int &Ncol, T **weigths, const int &M, const int &K, const int &N)
-{
-	int *out = new int[Nrow], res;
-
-	return out;
-}
-
-template<typename T, class Mag> int* compute_output(T **input, const int &Nrow, const int &Ncol, T** weights, const int &M, const int &K, const int &N)
-{
-	int *out = new int[Nrow], res;
-
-	return out;
-}
-
 
 
 //===========================================================================================//
@@ -466,6 +443,22 @@ namespace RSGD
 		return;
 	}
 
+	template<typename T> int* compute_output(T **input, const int &Nrow, const int &Ncol, T **weigths, const int &M, const int &K, const int &N)
+	{
+		int *out = new int[Nrow], res;
+
+		return out;
+	}
+
+	template<typename T, class Mag> int* compute_output(T **input, const int &Nrow, const int &Ncol, T** weights, const int &M, const int &K, const int &N)
+	{
+		int *out = new int[Nrow], res;
+
+		return out;
+	}
+
+
+
 	template<typename T> T* RSGD(const Patterns<T> &pattern, const int &K, parameters<T> &params, const int &batch, const std::string &formula, const int &seed, const int &max_epochs, const bool &init_equal, const bool &waitcenter, const bool &center, std::string outfile, bool quiet)
 	{
 		bool ok = false;
@@ -638,18 +631,18 @@ namespace RSGD
 	}
 
 
-	template<typename T> inline T* train(const std::string &patternsfile, int K, int y, int batch, int max_epochs, T eta, T lambda, T gamma, T eta_factor, T lambda_factor, T gamma_step, bool waitcenter, bool init_equal, bool center, std::string formula, std::string outfile)
+	template<typename T> inline T* train(const std::string &patternsfile, int K, int y, int batch, int max_epochs, T eta, T lambda, T gamma, T eta_factor, T lambda_factor, T gamma_step, bool waitcenter, bool init_equal, bool center, std::string formula, bool quiet, std::string outfile)
 	{
 		Patterns<T> pattern(patternsfile);
 		check_binary(pattern);
 		parameters<T> params(y, eta, lambda, gamma, eta_factor, lambda_factor, gamma_step);
-		return RSGD(pattern, K, params, batch, formula, 202, max_epochs, init_equal, waitcenter, center, outfile, false);
+		return RSGD(pattern, K, params, batch, formula, 202, max_epochs, init_equal, waitcenter, center, outfile, quiet);
 	}
 
-	template<typename T> inline T* train(const Patterns<T> &pattern, int K, int y, int batch, int max_epochs, T eta, T lambda, T gamma, T eta_factor, T lambda_factor, T gamma_step, bool waitcenter, bool init_equal, bool center, std::string formula, std::string outfile)
+	template<typename T> inline T* train(const Patterns<T> &pattern, int K, int y, int batch, int max_epochs, T eta, T lambda, T gamma, T eta_factor, T lambda_factor, T gamma_step, bool waitcenter, bool init_equal, bool center, std::string formula, bool quiet, std::string outfile)
 	{
 		parameters<T> params(y, eta, lambda, gamma, eta_factor, lambda_factor, gamma_step);
-		return RSGD(pattern, K, params, batch, formula, 202, max_epochs, init_equal, waitcenter, center, outfile, false);
+		return RSGD(pattern, K, params, batch, formula, 202, max_epochs, init_equal, waitcenter, center, outfile, quiet);
 	}
 
 	template<typename T> int* test(const Patterns<T> &patterns, T *weights, const int &K, const int &N)

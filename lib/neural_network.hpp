@@ -111,9 +111,13 @@ void NeuralNetwork<T>::train(const Patterns<T> &data,
 		**nabla_w, **delta_nabla_w,
 		**nabla_b, **delta_nabla_b;
 	// initialization
-	this->num_layers = num_layers;
+	this->num_layers = num_layers + 2;
 	this->sizes 	= new int[this->num_layers];
-	std::transform(sizes, sizes + this->num_layers, this->sizes, [](const T &val){return val;});
+	std::transform(sizes, sizes + num_layers, this->sizes + 1, [](const T &val){return val;});
+	this->sizes[0]  = data.Ncol;
+	std::unordered_set<int> unique(data.output, data.output + data.Nout, data.Nout*sizeof(int));
+	this->sizes[this->num_layers - 1] = (int)unique.size();
+
 	this->biases  	= new T*[this->num_layers - 1]; 
 	nabla_b 		= new T*[this->num_layers - 1]; 
 	delta_nabla_b 	= new T*[this->num_layers - 1];

@@ -94,10 +94,6 @@ endif()
 if (CYGWIN)
 	set (CMAKE_CXX_FLAGS "-std=gnu++14 ${CMAKE_CXX_FLAGS}")
 endif()
-if (NOT MSVC)
-  set (CMAKE_CXX_FLAGS "-ffast-math ${CMAKE_CXX_FLAGS}") # perform more aggressive floating-point optimizations
-  set (CMAKE_C_FLAGS "-ffast-math ${CMAKE_C_FLAGS}")
-endif()
 
 # ============ .EXE ===============
 
