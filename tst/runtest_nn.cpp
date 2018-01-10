@@ -8,9 +8,9 @@ int main(int argc, char *argv[])
 		mini_batch_size = 2;
 	sizes[0] = 3; sizes[1] = 4; sizes[2] = 2;
 	float eta = .8f, lambda = .0f;
-	std::string pattern = "../tst/pattern/train_nn.dat",
-				testfile = "../tst/pattern/test_nn.dat",
-				wfile = "../tst/pattern/nn_weights.dat";
+	std::string pattern = "tst/pattern/train_nn.dat",
+				testfile = "tst/pattern/test_nn.dat",
+				wfile = "tst/pattern/nn_weights.dat";
 	Patterns<float> training(pattern);
 	Patterns<float> test(testfile);
 	/*--------------------------------*/
