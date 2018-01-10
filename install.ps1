@@ -2,6 +2,36 @@
 # Set-ExecutionPolicy Bypass -Scope Process -Force;
 
 # Chocolatey installation (recomended)
+Write-Host "Installation of Chocolatey"
+If( -Not (Get-Command choco -ErrorAction SilentlyContinue) )
+{
+    Write-Host "Chocolatey not installed"
+    $CONFIRM = Read-Host -Prompt "Do you want install it (recomended)? [y/n]"
+    if($CONFIRM -eq "N" -Or $CONFIRM -eq "n")
+    {
+        Write-Host "Abort Chocolatey installation"
+    }
+    Else
+    {
+        Write-Host "Chocolatey will be install in C:\ProgramData\chocoportable"
+        # Set directory for installation - Chocolatey does not lock
+        # down the directory if not the default
+        $InstallDir='C:\ProgramData\chocoportable'
+        $env:ChocolateyInstall="$InstallDir"
+        # If your PowerShell Execution policy is restrictive, you may
+        # not be able to get around that. Try setting your session to
+        # Bypass.
+        Set-ExecutionPolicy Bypass
+        # All install options - offline, proxy, etc at
+        # https://chocolatey.org/install
+        iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    }
+}
+Else
+{
+    Write-Host "Choco already installed"
+}
+
 #Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 # SublimeText3 installation (recomended)
 #Start-BitsTransfer -Source https://download.sublimetext.com/Sublime%20Text%20Build%203143%20x64%20Setup.exe
@@ -49,6 +79,7 @@ function Install($program, $url)
 #Set-Variable -Name "OMP_CANCELLATION" -Value True -Option constant -Scope global -Description "Set cancellation of the parallel loops"
 Install "cmake" "https://cmake.org/files/v3.10/cmake-3.10.1-win64-x64.msi"
 Install "ninja" "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip"
+Install "sublime" "https://download.sublimetext.com/Sublime%20Text%20Build%203143%20x64.zip"
 
 # Miniconda3 Installer
 Write-Host "Python3 is required for snakemake use."
@@ -93,9 +124,10 @@ Else
 }
 
 ## install gcc new version for OpenMP 4. support
-#Start-BitsTransfer -Source https://sourceforge.net/projects/msys2/files/Base/i686/msys2-base-i686-20161025.tar.xz/download
-#cmake -e tar zxf msys2-base-i686-20161025.tar.xz
+#Start-BitsTransfer -Source https://sourceforge.net/projects/msys2/files/Base/i686/msys2-base-i686-20161025.tar.xz
+#cmake -E tar zxf msys2-base-i686-20161025.tar.xz
+#Remove-Item msys2-base-i686-20161025.tar.xz -Force -Recurse -ErrorAction SilentlyContinue
 ## TODO add to path
 #Set-ItemProperty -Path "Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment" -Name PATH -Value $newPath
-#export CC=msys2/usr/bin/gcc.exe
-#export CXX=msys2/usr/bin/g++.exe
+#export CC=msys32/usr/bin/gcc.exe
+#export CXX=msys32/usr/bin/g++.exe
