@@ -9,7 +9,8 @@ import platform
 import shutil
 from contextlib import suppress
 import matplotlib.patches as mpatches
-
+from sklearn.metrics import confusion_matrix
+from collections import Counter
 
 
 sns.set_context("paper", font_scale=1.5)
@@ -22,8 +23,9 @@ def f(x, **kwargs):
 
 sep = os.sep
 runtest = ["runtest_nn", "runtest_bayes_cls", "runtest_clustering", "runtest_pca", "runtest_bcrfbp", "runtest_bcrsgd"]
-classify = ["diagqda", "qda", "perceptron", "neuralnetwork", "pca", "rfbp", "rsgd"]
+classify = ["diagqda", "qda", "perceptron", "neuralnetwork", "pca"]
 cluster = ["kmean", "densityclustering"]
+deep = ["rfbp", "rsgd"]
 
 if platform.system() == "Windows":
 	extension = "exe"
@@ -44,6 +46,7 @@ rule all:
 		exe  		 = expand(os.path.join("bin", "{res}." + extension), res=runtest),
 		imgs_cls 	 = expand(os.path.join("plt", "{res}.png"), res=classify),
 		imgs_cluster = expand(os.path.join("plt", "{res}.png"), res=cluster),
+		imgs_deep    = expand(os.path.join("plt", "{res}.png"), res=deep),
 
 rule build_program:
 	output:
@@ -116,6 +119,49 @@ rule plot_cls:
 		plot.fig.subplots_adjust(left=0.1, right=0.95, top=0.95,  bottom=0.1)
 		plot.savefig(output.img)
 
+rule plot_deep:
+    input:
+        file = os.path.join("tst", "res", "{algo}.class"),
+    output:
+        img = os.path.join("plt", "{algo}.png"),
+    benchmark:
+        os.path.join("benchmark", "benchmark_plot_depp_{algo}.txt")
+    run:
+        data = pd.read_csv("data.csv", sep="\t", header=0)
+		results = pd.Series(data=confusion_matrix(data["true_lbl"], data["predict_lbl"]).ravel(), index=["TP", "FP", "FN", "TN"], name="validation", dtype=np.float)
+		occ = Counter(data["true_lbl"])
+		fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(15,8))
+		cfs = pd.DataFrame(data=res.values.reshape(2,2), columns=["TP", "FP"], index=["FN", "TN"])
+		table = sns.heatmap(cfs, 
+		                    annot=True, 
+		                    fmt=".0f", 
+		                    linewidths=-1, 
+		                    cmap="coolwarm_r", 
+		                    annot_kws={"size":14, "weight":"semibold"}, 
+		                    cbar=150%2, 
+		                    vmin=res.min().min(), 
+		                    vmax=res.max().max(),
+		                    ax=ax2,
+		                    )
+		ax2.set_title("Confusion Matrix", fontsize=14)
+		res["TP"]/=occ[0]
+		res["FP"]/=occ[0]
+		res["FN"]/=occ[1]
+		res["TN"]/=occ[0]
+		res.plot(kind='pie', 
+		         subplots=True,
+		         labels=list(res.index),
+		         colors=['royalblue', 'gold', 'lightgreen', 'darkkhaki'], 
+		         autopct='%.2f%%', 
+		         fontsize=20, 
+		         shadow=True, 
+		         startangle=140, 
+		         explode=(.02,.02,.02,.02),
+		         legend=True,
+		         ax=ax1
+		         )
+		ax1.set_title("Performances", fontsize=14)
+		plt.savefig(output.img)
 
 rule clear:
 	input:

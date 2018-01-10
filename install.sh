@@ -39,7 +39,7 @@ function install # $1 program name, $2 url
 
 #export OMP_CANCELLATION=true
 install "cmake" "https://cmake.org/files/v3.10/cmake-3.10.0-Linux-x86_64.tar.gz"
-install "ninja" "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip"
+install "ninja" "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip"
 
 echo "Python3 and snakemake installation required"
 PROG="$(which python)"
@@ -74,3 +74,29 @@ else
 	echo "Current python version is too old for snakemake"
 	echo "Please uninstall your python and re-run this script."
 fi
+
+# install gcc new version for OpenMP 4.0 support
+GCCVER=$(gcc --version | awk '/gcc /{print $0;exit 0;}' | cut -d' ' -f 4 | cut -d'.' -f 1)
+if [[ "$GCCVER" -lt "5" ]]; then
+	echo "gcc version too old or not installed"
+	read -p "Do you want install it? [y/n] " CONFIRM
+	if [ "$CONFIRM" == "n" ] || [ "$CONFIRM" == "N" ]; then
+		echo "Abort gcc installation"
+	else
+		wget "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz"
+		tar xzf gcc-7.2.0.tar.gz
+		mv gcc-7.2.0 gcc-7.2.0-sources
+		cd gcc-7.2.0-sources
+		./contrib/download_prerequisites
+		cd ..
+		mkdir objdir
+		cd objdir
+		$PWD/../gcc-7.2.0-sources/configure --prefix=$HOME/gcc-7.2.0 --enable-languages=c,c++,fortran,go
+		make
+		make install
+		rm -rf objdir gcc-7.2.0-sources
+		export CC=$HOME/gcc-7.2.0/bin/gcc
+		export CXX=$HOME/gcc-7.2.0/bin/g++
+	fi
+fi
+

@@ -89,6 +89,13 @@ Else
     start /wait "" Miniconda3-latest-Windows-x86_64.exe /InstallationType=JustMe /RegisterPython=1 /S /D=%UserProfile%\Miniconda3
     conda update conda -y
     conda config --add channels bioconda
-    pip install seaborn pandas ipython numpy matplotlib snakemake
+    pip install seaborn pandas ipython numpy matplotlib snakemake scikit-learn
 }
 
+## install gcc new version for OpenMP 4. support
+#Start-BitsTransfer -Source https://sourceforge.net/projects/msys2/files/Base/i686/msys2-base-i686-20161025.tar.xz/download
+#cmake -e tar zxf msys2-base-i686-20161025.tar.xz
+## TODO add to path
+#Set-ItemProperty -Path "Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment" -Name PATH -Value $newPath
+#export CC=msys2/usr/bin/gcc.exe
+#export CXX=msys2/usr/bin/g++.exe
