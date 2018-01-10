@@ -4,8 +4,8 @@
 int main(int argc, char *argv[])
 {
 	int hidden_layer = 3;
-	std::string trainfile = "tst/pattern/fbp_train.dat",
-				testfile = "tst/pattern/fb_test.dat";
+	std::string trainfile = "../tst/pattern/train_fbp.dat",
+				testfile = "../tst/pattern/test_fbp.dat";
 
 	Patterns<double> train(trainfile);
 	int **weights = FBP::train<double, MagP64<double>>(train, hidden_layer, 135, 5);
