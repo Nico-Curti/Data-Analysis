@@ -8,9 +8,9 @@ int main(int argc, char *argv[])
 		mini_batch_size = 2;
 	sizes[0] = 3; sizes[1] = 4; sizes[2] = 2;
 	float eta = .8f, lambda = .0f;
-	std::string pattern = "tst/pattern/nand_train.dat",
-				testfile = "tst/pattern/nand_test.dat",
-				wfile = "tst/pattern/nn_weights_nand.dat";
+	std::string pattern = "../tst/pattern/train_nn.dat",
+				testfile = "../tst/pattern/test_nn.dat",
+				wfile = "../tst/pattern/nn_weights.dat";
 	Patterns<float> training(pattern);
 	Patterns<float> test(testfile);
 	/*--------------------------------*/
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
 	std::cout << "input vector\ttrue\tpredict" << std::endl;
 	for(int i = 0; i < test.Nout; ++i)
-		std::cout << "test of (" << test.input[i][0] << "," << test.input[i][1] << "," << test.input[i][2] << ")"
+		std::cout << "test of (" << test.input[i][0] << "," << test.input[i][1] << "," << test.input[i][2] << "," << test.input[i][3] << ")"
 				  << "\t" << test.output[i] << "\t" << lbl_predict_perceptron[i] << std::endl;
 
 	std::cout << "Performances : " << 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
 	std::cout << "input vector\ttrue\tpredict" << std::endl;
 	for(int i = 0; i < test.Nout; ++i)
-		std::cout << "test of (" << test.input[i][0] << "," << test.input[i][1] << "," << test.input[i][2] << ")"
+		std::cout << "test of (" << test.input[i][0] << "," << test.input[i][1] << "," << test.input[i][2] << "," << test.input[i][2] << ")"
 				  << "\t" << test.output[i] << "\t" << lbl_predict_nn[i] << std::endl;
 
 	std::cout << "Performances : " << 
