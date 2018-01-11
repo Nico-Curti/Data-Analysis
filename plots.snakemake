@@ -146,10 +146,10 @@ rule plot_deep:
                             ax=ax2,
                             )
         ax2.set_title("Confusion Matrix", fontsize=14)
-        res["TP"]/=occ[0]
-        res["FP"]/=occ[0]
-        res["FN"]/=occ[1]
-        res["TN"]/=occ[0]
+        res["TP"] /= occ[-1]
+        res["FP"] /= occ[-1]
+        res["FN"] /= occ[1]
+        res["TN"] /= occ[1]
         res.plot(kind='pie', 
                  subplots=True,
                  labels=list(res.index),
