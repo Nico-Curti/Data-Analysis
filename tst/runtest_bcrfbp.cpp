@@ -28,8 +28,7 @@ int main(int argc, char *argv[])
 								accuracy,
 								fprotocol,
 								protocol_size,
-								seed,
-								false);
+								seed);
 	int *label_predict = fbp.test(test);
 	auto score_fbp = score::perfs(test.output, label_predict, test.Nout);
 
