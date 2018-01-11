@@ -273,7 +273,6 @@ namespace FBP
 	template<typename T, class Mag> void save_weights(const std::string &, const Cavity_Message<T, Mag> &, const int &, const int &, const int &, const int &, const T &, const T &, const std::string &, const std::string &);
 	void save_weights(const std::string &, int **, const int &, const int &);
 	template<typename T> int compute_output(T *,  int **, const int &, const int &);
-	template<typename T, class Mag> int compute_output(T *, MagVec2<Mag>, const int &, const int &);
 	template<typename T, class Mag> int** M2W(MagVec2<Mag> , const int &, const int &);
 	template<typename T, class Mag, magP<T, Mag> = nullptr> inline void set_outfields(const Cavity_Message<T, Mag> &, int *, const T &);
 	template<typename T, class Mag, magT<T, Mag> = nullptr> inline void set_outfields(const Cavity_Message<T, Mag> &, int *, const T &);
@@ -1556,11 +1555,12 @@ namespace FBP
 
 	template<typename T, class Mag> int nonbayes_test(const Cavity_Message<T, Mag> &messages, const Patterns<T> &patterns) 
 	{
-		T **sign_m_j_star = new T*[messages.K], s, s2, trsf0;
-		int t = 0;
+		int **sign_m_j_star = new int*[messages.K], t = 0;
+		T s, s2, trsf0;
+
 		for (int k = 0; k < messages.K; ++k)
 		{
-			sign_m_j_star[k] = new T[messages.N];
+			sign_m_j_star[k] = new int[messages.N];
 			std::transform(messages.m_j_star[k], messages.m_j_star[k] + messages.N,
 						   sign_m_j_star[k], [](const Mag &mj)
 						   {
@@ -1571,17 +1571,17 @@ namespace FBP
 		for (int i = 0; i < patterns.Nrow; ++i)
 		{
 			s = std::accumulate(sign_m_j_star, sign_m_j_star + messages.K, (T)0.,
-								[&trsf0, &s2, &patterns, &i](const T &val, T *mjs_i)
+								[&trsf0, &s2, &patterns, &i](const T &val, int *mjs_i)
 								{
 									trsf0 = (T)0.;
-									std::inner_product(mjs_i, mjs_i + patterns.Ncol,
-													   patterns.input[i], (T)0.,
-													   std::plus<T>(), [&trsf0](const T &mjs, const T &in)
-													   {
-													   	trsf0 += mjs * in;
-													   	return (1 - mjs * mjs) * (in * in);
-													   });
-									return std::erf( trsf0 / std::sqrt(s2) );
+									s2 = std::inner_product(mjs_i, mjs_i + patterns.Ncol,
+														    patterns.input[i], (T)0.,
+														    std::plus<T>(), [&trsf0](const int &mjs, const T &in)
+														    {
+														   	 trsf0 += mjs * in;
+														   	 return (1 - mjs * mjs) * (in * in);
+														    });
+									return std::erf( trsf0 / std::sqrt(2 * s2) );
 								});
 			t += ((int)sign<T>(s) != patterns.output[i]);
 		}
@@ -1763,26 +1763,26 @@ namespace FBP
 		os.close();
 	}
 
-	template<typename T> int compute_output(T *input, int **W, const int &K, const int &N)
+	template<typename T> int compute_output(T *pattern,  int **weights, const int &K, const int &N)
 	{
-		return sign(std::accumulate(	W, W + K, 0, 
-								[&input, &N] (const int &out, int *Wi)
-								{
-									return out + sign( std::inner_product( Wi, Wi + N, input, (T)0.) );
-								})
-					);
-	}
+		T s, trsf0, s2;
 
-	template<typename T, class Mag> int compute_output(T *input, MagVec2<Mag> W, const int &K, const int &N)
-	{
-		return sign(std::accumulate(	W, W + K, 0, 
-								[&input, &N] (const int &out, MagVec<Mag> Wi)
-								{
-									return out + sign( std::inner_product( Wi, Wi + N, input, (T)0.) );
-								})
-					);
-	}
+		s = std::accumulate(weights, weights + K, (T)0.,
+							[&trsf0, &s2, &pattern, &N](const T &val, int *wi)
+							{
+								trsf0 = (T)0.;
+								s2 = std::inner_product(wi, wi + N,
+													   	pattern, (T)0.,
+													   	std::plus<T>(), [&trsf0](const int &wij, const T &in)
+													   	{
+													   		trsf0 += wij * in;
+													   		return (1 - wij * wij) * (in * in);
+													   	});
+								return std::erf( trsf0 / std::sqrt(2 * s2) );
+							});
 
+			return (int)sign<T>(s);
+	}
 
 	template<typename T, class Mag> int** M2W(MagVec2<Mag> M, const int &K, const int &N)
 	{
@@ -1795,6 +1795,7 @@ namespace FBP
 							{
 								return Magnetization::sign0<T, Mag>(Mij);
 							});
+
 		return W;
 	};
 
@@ -2037,11 +2038,25 @@ namespace FBP
 	template<typename T> int* test(const Patterns<T> &patterns, int **weights, const int &K, const int &N)
 	{
 		int *results = new int[patterns.Nrow]; 
-		std::transform(	patterns.input, patterns.input + patterns.Nrow,
-						results, [&weights, &K, &N](const T *input)
-						{
-							return compute_output(input, weights, K, N);
-						});
+		T s, trsf0, s2;
+
+		for (int i = 0; i < patterns.Nrow; ++i)
+		{
+			s = std::accumulate(weights, weights + K, (T)0.,
+								[&trsf0, &s2, &patterns, &i](const T &val, int *wi)
+								{
+									trsf0 = (T)0.;
+									s2 = std::inner_product(wi, wi + patterns.Ncol,
+														   	patterns.input[i], (T)0.,
+														   	std::plus<T>(), [&trsf0](const int &wij, const T &in)
+														   	{
+														   		trsf0 += wij * in;
+														   		return (1 - wij * wij) * (in * in);
+														   	});
+									return std::erf( trsf0 / std::sqrt(2 * s2) );
+								});
+			results[i] = (int)sign<T>(s);
+		}
 		return results;
 	}
 
@@ -2052,15 +2067,9 @@ namespace FBP
 
 		int 	K, 
 				N,
-				**weights = read_weights(wfile, K, N),
-				*results = new int[patterns.Nrow];
-		std::transform(	patterns.input, patterns.input + patterns.Nrow,
-						results, [&weights, &K, &N](const T *input)
-						{
-							return compute_output(input, weights, K, N);
-						});
+				**weights = read_weights(wfile, K, N);
 
-		return results;
+		return test(patterns, weights, K, N);
 	}
 
 

@@ -6,13 +6,13 @@ int main(int argc, char *argv[])
 	int hidden_layer = 3,
 		max_iters = 1000,
 		protocol_size = 101,
-		seed = 123;
+		seed = 135;
 	double  randfact = .1,
 			damping = .5;
 	std::string trainfile = "tst/pattern/train_fbp.dat",
 				testfile = "tst/pattern/test_fbp.dat",
 				accuracy = "accurate",
-				fprotocol = "standard_reinforcement";
+				fprotocol = "pseudo_reinforcement";
 
 	Patterns<double> train(trainfile);
 	Patterns<double> test(testfile);
@@ -28,7 +28,8 @@ int main(int argc, char *argv[])
 								accuracy,
 								fprotocol,
 								protocol_size,
-								seed);
+								seed,
+								false);
 	int *label_predict = fbp.test(test);
 	auto score_fbp = score::perfs(test.output, label_predict, test.Nout);
 

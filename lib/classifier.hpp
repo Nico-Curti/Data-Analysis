@@ -244,7 +244,7 @@ template<typename T> inline int* ReplicatedFBP<T>::cv_test(const Patterns<T> &te
 {
 	int *results = new int[idx.size()]; 
 	for(int i = 0; i < (int)idx.size(); ++i)
-		FBP::compute_output(test.input[idx[i]], this->weights, this->num_layers, this->input_size);
+		results[i] = FBP::compute_output(test.input[idx[i]], this->weights, this->num_layers, this->input_size);
 	return results;
 }
 template<typename T> inline int ReplicatedFBP<T>::predict(T *input)
