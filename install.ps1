@@ -33,33 +33,33 @@ Else
     Write-Host Choco already installed
 }
 
-Write-Host Installation of SublimeText3
-$sub = (Get-ChildItem "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall") | Where-Object { $_.GetValue( "DisplayName" ) -like "*sublime*"} | Select Name
-If( $sub -eq $null) # not installed
-{
-    Write-Host "SublimeText3 not installed (recomended)"
-    $CONFIRM = Read-Host -Prompt "Do you want install it (recomended)? [y/n]"
-    If($CONFIRM -eq "N" -Or $CONFIRM -eq "n")
-    {
-        Write-Host Abort SublimeText3 installation
-    }
-    Else
-    {
-        Write-Host Download sublimetext3 from "https://download.sublimetext.com/Sublime%20Text%20Build%203143%20x64.zip"
-        Start-BitsTransfer -Source "https://download.sublimetext.com/Sublime%20Text%20Build%203143%20x64.zip"
-        
-        Write-Host unzip Sublime%20Text%20Build%203143%20x64.zip
-        Expand-Archive Sublime%20Text%20Build%203143%20x64.zip -DestinationPath "./sublimetext3"
-        Remove-Item Sublime%20Text%20Build%203143%20x64.zip -Force -Recurse -ErrorAction SilentlyContinue
-        
-        Write-Host Add of alias sublime to powershell configuration
-        Set-Alias sublime "./sublimetext3/subl.exe"
-    }
-}
-Else
-{
-    Write-Host SublimeText3 already installed
-}
+#Write-Host Installation of SublimeText3
+#$sub = (Get-ChildItem "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall") | Where-Object { $_.GetValue( "DisplayName" ) -like "*sublime*"} | Select Name
+#If( $sub -eq $null) # not installed
+#{
+#    Write-Host "SublimeText3 not installed (recomended)"
+#    $CONFIRM = Read-Host -Prompt "Do you want install it (recomended)? [y/n]"
+#    If($CONFIRM -eq "N" -Or $CONFIRM -eq "n")
+#    {
+#        Write-Host Abort SublimeText3 installation
+#    }
+#    Else
+#    {
+#        Write-Host Download sublimetext3 from "https://download.sublimetext.com/Sublime%20Text%20Build%203143%20x64.zip"
+#        Start-BitsTransfer -Source "https://download.sublimetext.com/Sublime%20Text%20Build%203143%20x64.zip"
+#        
+#        Write-Host unzip Sublime%20Text%20Build%203143%20x64.zip
+#        Expand-Archive Sublime%20Text%20Build%203143%20x64.zip -DestinationPath "./sublimetext3"
+#        Remove-Item Sublime%20Text%20Build%203143%20x64.zip -Force -Recurse -ErrorAction SilentlyContinue
+#        
+#        Write-Host Add of alias sublime to powershell configuration
+#        Set-Alias sublime "./sublimetext3/subl.exe"
+#    }
+#}
+#Else
+#{
+#    Write-Host SublimeText3 already installed
+#}
 
 #Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 # SublimeText3 installation (recomended)
