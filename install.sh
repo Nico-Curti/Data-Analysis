@@ -31,6 +31,7 @@ function install # $1 program name, $2 url
 			mv ${OUT} $OUT_DIR
 			source ~/.bashrc
 			export PATH=$PATH:$OUT_DIR/bin
+			echo "export PATH='$PATH':$OUT_DIR/bin" >> ~/.bashrc
 		fi
 	else
 		echo $1 "already installed"
@@ -97,6 +98,26 @@ if [[ "$GCCVER" -lt "5" ]]; then
 		rm -rf objdir gcc-7.2.0-sources
 		export CC=$HOME/gcc-7.2.0/bin/gcc
 		export CXX=$HOME/gcc-7.2.0/bin/g++
+		echo "export CC=$HOME/gcc-7.2.0/bin/gcc" >> ~/.bashrc
+		echo "export CXX=$HOME/gcc-7.2.0/bin/g++" >> ~/.bashrc
 	fi
+else
+	echo "gcc already installed"
 fi
 
+
+# Install Data-Analysis Lib
+echo "Install Data-Analysis libraries with cmake"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+ export CC="/usr/local/bin/gcc-7"
+ export CXX="/usr/local/bin/g++-7"
+fi
+
+rm -rf build
+mkdir -p build
+cd build
+
+#sudo apt-get install ninja-build
+cmake -G "Ninja" "-DCMAKE_BUILD_TYPE=Release" ..
+cmake --build .
+cd ..
