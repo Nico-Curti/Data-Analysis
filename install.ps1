@@ -1,12 +1,111 @@
 # For the right Permission
 # Set-ExecutionPolicy Bypass -Scope Process -Force;
+Push-Location
+Set-Location $env:HOMEDRIVE$env:HOMEPATH
+New-Item -Path .\toolchain -ItemType directory -Force
+Set-Location toolchain
+
+Write-Host "Looking for packages"
+Write-Host "CMAKE identification"
+If( -Not (Get-Command cmake -ErrorAction SilentlyContinue) ) # cmake not installed
+{
+    Write-Host CMAKE not FOUND
+    $CONFIRM = Read-Host -Prompt "Do you want install it? [y/n]"
+    If($CONFIRM -eq "N" -Or $CONFIRM -eq "n")
+    {
+        Write-Host Abort CMAKE installation
+    }
+    Else
+    {
+        Write-Host "Download CMAKE from https://cmake.org/files/v3.10/cmake-3.10.1-win64-x64.zip"
+        $url = "https://cmake.org/files/v3.10/cmake-3.10.1-win64-x64.zip"
+        $out_dir = $url.split('/')[-1]
+        $out = $out_dir.Substring(0, $out_dir.Length - 4)
+        Start-BitsTransfer -Source $url
+
+        Write-Host unzip $out_dir
+        Expand-Archive $out_dir -DestinationPath cmake
+        $env:PATH = $env:PATH + ";$PWD\cmake\$out\bin\"
+        Write-Host '$env:PATH = $env:PATH'" + `";$PWD\cmake\$out\bin\`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        Remove-Item $out_dir -Force -Recurse -ErrorAction SilentlyContinue
+    }
+}
+Else
+{
+    Write-Host CMAKE FOUND
+}
+
+
+## install gcc new version for OpenMP 4. support
+Write-Host "C++ compiler identification (g++ version greater than 4.9)"
+$gcc = Get-Command g++ | Select-Object -ExpandProperty Definition
+$version = & g++ "--version"
+If( $gcc -eq $null ) # g++ not found
+{
+    Write-Host g++ not installed
+    $CONFIRM = Read-Host -Prompt "Do you want install it? [y/n]"
+    If($CONFIRM -eq "N" -Or $CONFIRM -eq "n")
+    {
+        Write-Host "Abort g++ installation"
+    }
+    Else
+    {
+        Start-BitsTransfer -Source https://sourceforge.net/projects/msys2/files/Base/i686/msys2-base-i686-20161025.tar.xz
+        cmake -E tar zxf msys2-base-i686-20161025.tar.xz
+        Remove-Item msys2-base-i686-20161025.tar.xz -Force -Recurse -ErrorAction SilentlyContinue
+        Set-Location msys32
+        ./msys2_shell.cmd
+        ./usr/bin/pacman -Syuu --noconfirm
+        ./usr/bin/pacman -S --noconfirm --needed base-devel mingw-w64-i686-toolchain #mingw-w64-x86_64-toolchain
+        
+        $env:PATH = $env:PATH + ";$PWD\mingw32\bin\"
+        Write-Host '$env:PATH = $env:PATH'" + `";$PWD\mingw32\bin\`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        $env:CC = "$PWD\mingw32\bin\gcc.exe"
+        Write-Host '$env:CC'" = `"$PWD\mingw32\bin\gcc.exe`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        $env:CXX = "$PWD\mingw32\bin\g++.exe"
+        Write-Host '$env:CXX'" = `"$PWD\mingw32\bin\g++.exe`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+
+    }
+}
+ElseIf( $version.split(' ')[6].split('.')[0] -lt 4 ) # version too old
+{
+    Write-Host g++ version too old for OpenMP 4
+    $CONFIRM = Read-Host -Prompt "Do you want install a new version? [y/n]"
+    If($CONFIRM -eq "N" -Or $CONFIRM -eq "n")
+    {
+        Write-Host "Abort g++ installation"
+    }
+    Else
+    {
+        Start-BitsTransfer -Source https://sourceforge.net/projects/msys2/files/Base/i686/msys2-base-i686-20161025.tar.xz
+        cmake -E tar zxf msys2-base-i686-20161025.tar.xz
+        Remove-Item msys2-base-i686-20161025.tar.xz -Force -Recurse -ErrorAction SilentlyContinue
+        Set-Location msys32
+        ./msys2_shell.cmd
+        ./usr/bin/pacman -Syuu --noconfirm
+        ./usr/bin/pacman -S --noconfirm --needed base-devel mingw-w64-i686-toolchain #mingw-w64-x86_64-toolchain
+        $gcc = $gcc.Substring(0, $gcc.Length - 8)
+        $env:PATH = $env:PATH + ";$PWD\mingw32\bin\"
+        Write-Host '$env:PATH = $env:PATH'" + `";$PWD\mingw32\bin\`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        $env:PATH = $env:PATH - ";$gcc"
+        Write-Host '$env:PATH = $env:PATH'" - `";$gcc`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        $env:CC = "$PWD\mingw32\bin\gcc.exe"
+        Write-Host '$env:CC'" = `"$PWD\mingw32\bin\gcc.exe`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        $env:CXX = "$PWD\mingw32\bin\g++.exe"
+        Write-Host '$env:CXX'" = `"$PWD\mingw32\bin\g++.exe`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+    }
+}
+Else
+{
+    Write-Host "A sufficient version of g++ already installed"
+}
 
 # Chocolatey installation (recomended)
-Write-Host Installation of Chocolatey
+Write-Host Chocolatey identification
 $choco = Get-Command choco -ErrorAction SilentlyContinue
 If( $choco -eq $null )
 {
-    Write-Host Chocolatey not installed
+    Write-Host Chocolatey not FOUND
     $CONFIRM = Read-Host -Prompt "Do you want install it (recomended)? [y/n]"
     If($CONFIRM -eq "N" -Or $CONFIRM -eq "n")
     {
@@ -30,7 +129,7 @@ If( $choco -eq $null )
 }
 Else
 {
-    Write-Host Choco already installed
+    Write-Host Choco FOUND
 }
 
 #Write-Host Installation of SublimeText3
@@ -64,65 +163,64 @@ Else
 #Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 # SublimeText3 installation (recomended)
 #Start-BitsTransfer -Source https://download.sublimetext.com/Sublime%20Text%20Build%203143%20x64%20Setup.exe
-function Install($program, $url)
+
+
+Write-Host ninja identification
+If( -Not (Get-Command ninja -ErrorAction SilentlyContinue) ) # cmake not installed
 {
-    Write-Host $program installation
-    If( -Not (Get-Command $program -ErrorAction SilentlyContinue) )
+    Write-Host ninja not FOUND
+    $CONFIRM = Read-Host -Prompt "Do you want install it? [y/n]"
+    If($CONFIRM -eq "N" -Or $CONFIRM -eq "n")
     {
-        Write-Host $program not installed
-        $CONFIRM = Read-Host -Prompt "Do you want install it? [y/n]"
-        If($CONFIRM -eq "N" -Or $CONFIRM -eq "n")
-        {
-            Write-Host Abort $program installation
-        }
-        Else
-        {
-            Write-Host Download $program from $url
-            $token = @($url.split('/'))
-            $out_dir = $token[$token.Count - 1]
-            $out = @($out_dir.split("-"))
-            Start-BitsTransfer -Source $url
-            If($out_dir -like "*.tar.gz*" -or $out_dir -like "*.zip")
-            {
-                Write-Host unzip $out_dir
-                Expand-Archive $out_dir -DestinationPath 
-            }
-            Else
-            {
-                Write-Host already unzip
-            }
-            Move-Item $out_dir $out[0]
-            $env:PATH = $env:PATH + ";$PWD\$out[0]\bin\"
-            Set-ItemProperty -Path "Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment" -Name PATH -Value $env:PATH
-            Remove-Item $out_dir -Force -Recurse -ErrorAction SilentlyContinue
-        }
+        Write-Host Abort ninja installation
     }
     Else
     {
-        Write-Host $program already installed
+        Write-Host "Download ninja from https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip"
+        $url = "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip"
+        $out_dir = $url.split('/')[-1]
+        Invoke-WebRequest $url -OutFile $out_dir
+
+        Write-Host unzip $out_dir
+        Expand-Archive $out_dir -DestinationPath ninja
+        $env:PATH = $env:PATH + ";$PWD\ninja\"
+        Write-Host '$env:PATH = $env:PATH'" + `";$PWD\ninja\`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        Remove-Item $out_dir -Force -Recurse -ErrorAction SilentlyContinue
     }
+}
+Else
+{
+    Write-Host ninja FOUND
 }
 
 #Set-Variable -Name "OMP_CANCELLATION" -Value True -Option constant -Scope global -Description "Set cancellation of the parallel loops"
-Install "cmake" "https://cmake.org/files/v3.10/cmake-3.10.1-win64-x64.msi"
-Install "ninja" "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip"
 
 # Miniconda3 Installer
-Write-Host Python3 is required for snakemake use
+Write-Host Python3 identification
 $pyver = python -c "import sys; print(sys.version)" # python version
 If($pyver -like "*3.*" -Or $pyver -like "*Anaconda 3.*") # right version 3. so install snakemake
 {
-    Write-Host Python3 is already install
-    $CONFIRM = Read-Host -Prompt "Do you want install snakemake and other dependecies? [y/n]"
-    If($CONFIRM -eq 'N' -Or $CONFIRM -eq 'n')
+    Write-Host Python3 FOUND
+    Write-Host snakemake identification
+    If( -Not (Get-Command snakemake -ErrorAction SilentlyContinue) )
     {
-        Write-Host Abort
+        Write-Host snakemake not FOUND
+        $CONFIRM = Read-Host -Prompt "Do you want install snakemake and other dependecies? [y/n]"
+        If($CONFIRM -eq 'N' -Or $CONFIRM -eq 'n')
+        {
+            Write-Host Abort
+        }
+        Else
+        {
+            Write-Host snakemake FOUND
+            conda update conda -y
+            conda config --add channels bioconda
+            pip install seaborn pandas ipython numpy matplotlib snakemake graphviz
+        }
     }
     Else
     {
-        conda update conda -y
-        conda config --add channels bioconda
-        pip install seaborn pandas ipython numpy matplotlib snakemake
+        Write-Host snakemake FOUND
     }
 }
 ElseIf($pyver -like "*2.*" -Or $pyver -like "*Anaconda 2.*")
@@ -134,11 +232,11 @@ ElseIf($pyver -like "*2.*" -Or $pyver -like "*Anaconda 2.*")
 }
 Else
 {
-    Write-Host No Python version found
+    Write-Host Python not FOUND
     $CONFIRM = Read-Host -Prompt "Do you want install Python3 and other dependecies? [y/n]"
     If($CONFIRM -eq 'N' -Or $CONFIRM -eq 'n')
     {
-        Write-Host "Abort"
+        Write-Host Abort Python3 installation
         exit
     }
     Write-Host Download Miniconda3 from https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe
@@ -148,66 +246,13 @@ Else
     start /wait "" Miniconda3-latest-Windows-x86_64.exe /InstallationType=JustMe /RegisterPython=1 /S /D=%UserProfile%\Miniconda3
     conda update conda -y
     conda config --add channels bioconda
-    pip install seaborn pandas ipython numpy matplotlib snakemake scikit-learn
+    pip install seaborn pandas ipython numpy matplotlib snakemake scikit-learn graphviz
 }
 
-## install gcc new version for OpenMP 4. support
-Write-Host "C++ compiler installation (g++ version greater than 4.9)"
-$gcc = Get-Command g++ | Select-Object -ExpandProperty Definition
-$version = & g++ "--version"
-If( $gcc -eq $null ) # g++ not found
-{
-    Write-Host g++ not installed
-    $CONFIRM = Read-Host -Prompt "Do you want install it? [y/n]"
-    If($CONFIRM -eq "N" -Or $CONFIRM -eq "n")
-    {
-        Write-Host "Abort g++ installation"
-    }
-    Else
-    {
-        Start-BitsTransfer -Source https://sourceforge.net/projects/msys2/files/Base/i686/msys2-base-i686-20161025.tar.xz
-        cmake -E tar zxf msys2-base-i686-20161025.tar.xz
-        Remove-Item msys2-base-i686-20161025.tar.xz -Force -Recurse -ErrorAction SilentlyContinue
-        cd msys32
-        ./msys2_shell.cmd
-        ./usr/bin/pacman -Syuu --noconfirm
-        ./usr/bin/pacman -S --noconfirm --needed base-devel mingw-w64-i686-toolchain #mingw-w64-x86_64-toolchain
-        $env:PATH = $env:PATH + ";$PWD\mingw32\bin\"
-        $env:CC = "$PWD\mingw32\bin\gcc.exe"
-        $env:CXX = "$PWD\mingw32\bin\g++.exe"
-    }
-}
-ElseIf( $version.split(' ')[6].split('.')[0] -lt 4 ) # version too old
-{
-    Write-Host g++ version too old for OpenMP 4
-    $CONFIRM = Read-Host -Prompt "Do you want install a new version? [y/n]"
-    If($CONFIRM -eq "N" -Or $CONFIRM -eq "n")
-    {
-        Write-Host "Abort g++ installation"
-    }
-    Else
-    {
-        Start-BitsTransfer -Source https://sourceforge.net/projects/msys2/files/Base/i686/msys2-base-i686-20161025.tar.xz
-        cmake -E tar zxf msys2-base-i686-20161025.tar.xz
-        Remove-Item msys2-base-i686-20161025.tar.xz -Force -Recurse -ErrorAction SilentlyContinue
-        cd msys32
-        ./msys2_shell.cmd
-        ./usr/bin/pacman -Syuu --noconfirm
-        ./usr/bin/pacman -S --noconfirm --needed base-devel mingw-w64-i686-toolchain #mingw-w64-x86_64-toolchain
-        $env:PATH = $env:PATH + ";$PWD\mingw32\bin\"
-        $env:PATH = $env:PATH - ";$gcc"
-        $env:CC = "$PWD\mingw32\bin\gcc.exe"
-        $env:CXX = "$PWD\mingw32\bin\g++.exe"
-    }
-}
-Else
-{
-    Write-Host "A sufficient version of g++ already installed"
-}
-
+Pop-Location
 
 # Install Data-Analysis Lib
-Write-Host Install Data-Analysis libraries with cmake
+Write-Host Build Data-Analysis libraries with cmake-ninja
 Remove-Item build -Force -Recurse -ErrorAction SilentlyContinue
 New-Item -Path .\build -ItemType directory -Force
 Set-Location build
