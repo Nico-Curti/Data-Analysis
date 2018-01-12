@@ -238,7 +238,11 @@ namespace os
     	std::string result;
 #if !defined (__clang__)
 		std::array<char, FILENAME_MAX> buffer;
+#ifdef _MSC_VER
+		std::shared_ptr<FILE> pipe(Popen(cmd, "r"), _pclose);
+#else
 		std::shared_ptr<FILE> pipe(Popen(cmd, "r"), pclose);
+#endif
             if (!pipe) throw std::runtime_error("popen() failed!");
 	    while (!feof(pipe.get())) {
 	        if (fgets(buffer.data(), FILENAME_MAX, pipe.get()) != nullptr)

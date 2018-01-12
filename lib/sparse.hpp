@@ -3,17 +3,19 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
-#include <type_traits>
 
 template<typename T> class coo_matrix;
 template<typename T> class csr_matrix;
 template<typename T> class sbcsr_matrix;
 
-template<typename Sparse> std::ostream& inline operator<<(std::ostream &, const Sparse &);
+template<typename T> std::ostream& operator<<(std::ostream &, coo_matrix<T> &);
+template<typename T> std::ostream& operator<<(std::ostream &, csr_matrix<T> &);
+template<typename T> std::ostream& operator<<(std::ostream &, sbcsr_matrix<T> &);
 
 template<typename T> class coo_matrix
 {
 public:
+	using type = T;
 	std::vector<T> * values;
 	int Nrows, Ncols;
 	std::vector<int> *index;
@@ -49,6 +51,8 @@ template<typename T> void save_gephi(const coo_matrix<T> &, std::string *, std::
 template<typename T> class csr_matrix
 {
 public:
+	using type = T;
+
 	int Nrows, Ncols;
 	std::vector<T> *values;
 	std::vector<int> *rows, *cols;
@@ -77,7 +81,7 @@ public:
 	bool operator==(const csr_matrix &);
 	bool operator!=(const csr_matrix &);
 	T operator()(const int &, const int &);
-	void operator()(const int &, const int &, const T &);
+	void operator()(const int &, const int &, const T &); // TO FIX
 
 	csr_matrix<T> transpose(); // TO DO
 	void t(); // TO DO
@@ -96,6 +100,8 @@ template<typename T> void save_gephi(const csr_matrix<T> &, std::string *, std::
 template<typename T> class sbcsr_matrix
 {
 public:
+	using type = T;
+
 	int Nrows, Ncols, blc1, blc2;
 	std::vector<T> *values;
 	std::vector<int> *index, *block_ptr, *bcol_ind, *brow_ptr;
@@ -135,12 +141,32 @@ template<typename T> void save_gephi(const sbcsr_matrix<T> &, std::string *, std
 #include "sbcsr_matrix.hpp"
 
 
-template<typename Sparse> std::ostream& inline operator<<(std::ostream &os, const Sparse &matrix)
+template<typename T> std::ostream& operator<<(std::ostream &os, coo_matrix<T> &matrix)
 {
 	for(int i = 0; i < matrix.Nrows; ++i)
 	{
 		for(int j = 0; j < matrix.Ncols; ++j)
-			os << ((auto element = matrix(i,j)) ? element : T()) << " ";
+			os << matrix(i,j) << " ";
+		os << std::endl;
+	}
+	return os;
+}
+template<typename T> std::ostream& operator<<(std::ostream &os, csr_matrix<T> &matrix)
+{
+	for (int i = 0; i < matrix.Nrows; ++i)
+	{
+		for (int j = 0; j < matrix.Ncols; ++j)
+			os << matrix(i, j) << " ";
+		os << std::endl;
+	}
+	return os;
+}
+template<typename T> std::ostream& operator<<(std::ostream &os, sbcsr_matrix<T> &matrix)
+{
+	for (int i = 0; i < matrix.Nrows; ++i)
+	{
+		for (int j = 0; j < matrix.Ncols; ++j)
+			os << matrix(i, j) << " ";
 		os << std::endl;
 	}
 	return os;
