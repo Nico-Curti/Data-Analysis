@@ -1,5 +1,6 @@
 #pragma once
 #include "fmath.hpp"
+#include <cstring>
 #include <vector>
 #include <algorithm>
 #include <fstream>

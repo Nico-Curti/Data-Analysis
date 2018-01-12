@@ -73,7 +73,7 @@ template<typename T> sbcsr_matrix<T>::sbcsr_matrix(T *v, int *irow, int *jcol, c
 	this->Nrows = n;
 	this->Ncols = m;
 	this->blc1 = gd(n);
-	this->blc2 = (this->Nrows != this->Ncols) ? util::gd(m) : this->blc1;
+	this->blc2 = (this->Nrows != this->Ncols) ? gd(m) : this->blc1;
 	this->values = nullptr;
 	this->index = nullptr;
 	this->brow_ptr = new std::vector<int>(this->Nrows/this->blc1 + 1);
@@ -195,7 +195,7 @@ template<typename T> inline void sbcsr_matrix<T>::operator()(const int &irow, co
 		this->index->at(0) = (irow % this->blc1) * this->blc2 + jcol % this->blc2;
 		this->bcol_ind = new std::vector<int>(1, jcol / this->blc2);
 		this->block_ptr->insert(this->block_ptr->begin() + 1, 1);
-		std::transform(this->brow_ptr->begin() + idx, this->brow_ptr->end(), this->brow_ptr->begin() + idx, [](const int &i){return ++i;});
+		std::transform(this->brow_ptr->begin() + idx, this->brow_ptr->end(), this->brow_ptr->begin() + idx, [](int &i){return ++i;});
 	}
 	else
 	{

@@ -1,6 +1,7 @@
 #pragma once
 #include "sparse.hpp"
 #include <type_traits>
+#include <climits>
 
 namespace graph
 {
@@ -14,11 +15,9 @@ namespace graph
 	//============ centrality measures ========================
 	struct
 	{
-		template<typename Sparse, typename Enable = void> auto operator()(const Sparse &, bool w = false);
 		//========== CSR MATRIX =================//
-		template<typename Sparse, typename std::enable_if<std::is_same<Sparse, csr_matrix<typename Sparse::type>>::value>::type> auto operator()(const Sparse &A, bool w)
+		template<typename T> T* operator()(const csr_matrix<T> &A, bool w)
 		{
-			using T = typename Sparse::type;
 			T *degree = new T[A.Ncols];
 			std::memset(degree, 0, A.Ncols * sizeof(T));
 			switch ((int)w)
@@ -35,28 +34,26 @@ namespace graph
 			return degree;
 		}
 		//========== COO MATRIX =================//
-		template<typename Sparse, typename std::enable_if<std::is_same<Sparse, coo_matrix<typename Sparse::type>>::value>::type> auto operator()(const Sparse &A, bool w)
+		template<typename T> T* operator()(const coo_matrix<T> &A, bool w)
 		{
-			using T = typename Sparse::type;
 			T *degree = new T[A.Ncols];
 			std::memset(degree, 0, A.Ncols * sizeof(T));
 			switch ((int)w)
 			{
 			case 0:
 			{
-				for (int i = 0; i < A.index->size(); ++i) ++degree[A.index->at(i) % A.Ncols];
+				for (int i = 0; i < (int)A.index->size(); ++i) ++degree[A.index->at(i) % A.Ncols];
 			}break;
 			case 1:
 			{
-				for (int i = 0; i < A.index->size(); ++i) degree[A.index->at(i) % A.Ncols] += A.values->at(i);
+				for (int i = 0; i < (int)A.index->size(); ++i) degree[A.index->at(i) % A.Ncols] += A.values->at(i);
 			}break;
 			}
 			return degree;
 		}
 		//========== SBCSR MATRIX =================//
-		template<typename Sparse, typename std::enable_if<std::is_same<Sparse, sbcsr_matrix<typename Sparse::type>>::value>::type> auto operator()(const Sparse &A, bool w)
+		template<typename T>T* operator()(const sbcsr_matrix<T> &A, bool w)
 		{
-			using T = typename Sparse::type;
 			T *degree = new T[A.Ncols];
 			std::memset(degree, 0, A.Ncols * sizeof(T));
 			switch ((int)w)
@@ -79,7 +76,7 @@ namespace graph
 	{
 		template<typename Sparse, typename Enable = void> typename Sparse::type operator()(const Sparse &, bool w = false);
 		//========== CSR MATRIX =================//
-		template<typename Sparse, typename std::enable_if<std::is_same<Sparse, csr_matrix<typename Sparse::type>>::value>::type> typename Sparse::type operator()(const Sparse &A, bool w)
+		template<typename Sparse, typename std::enable_if<std::is_same<Sparse, csr_matrix<typename Sparse::type>>::value>::type> typename Sparse::type* operator()(const Sparse &A, bool w)
 		{
 			using T = typename Sparse::type;
 			T *degree = new T[A.Nrows];
@@ -97,7 +94,7 @@ namespace graph
 			return degree;
 		}
 		//========== COO MATRIX =================//
-		template<typename Sparse, typename std::enable_if<std::is_same<Sparse, coo_matrix<typename Sparse::type>>::value>::type> typename Sparse::type operator()(const Sparse &A, bool w)
+		template<typename Sparse, typename std::enable_if<std::is_same<Sparse, coo_matrix<typename Sparse::type>>::value>::type> typename Sparse::type* operator()(const Sparse &A, bool w)
 		{
 			using T = typename Sparse::type;
 			T *degree = new T[A.Nrows];
@@ -106,17 +103,17 @@ namespace graph
 			{
 			case 0:
 			{
-				for (int i = 0; i < A.index->size(); ++i) ++degree[A.index->at(i) / A.Ncols];
+				for (int i = 0; i < (int)A.index->size(); ++i) ++degree[A.index->at(i) / A.Ncols];
 			}break;
 			case 1:
 			{
-				for (int i = 0; i < A.index->size(); ++i) degree[A.index->at(i) / A.Ncols] += A.values->at(i);
+				for (int i = 0; i < (int)A.index->size(); ++i) degree[A.index->at(i) / A.Ncols] += A.values->at(i);
 			}break;
 			}
 			return degree;
 		}
 		//========== SBCSR MATRIX =================//
-		template<typename Sparse, typename std::enable_if<std::is_same<Sparse, sbcsr_matrix<typename Sparse::type>>::value>::type> typename Sparse::type operator()(const Sparse &A, bool w)
+		template<typename Sparse, typename std::enable_if<std::is_same<Sparse, sbcsr_matrix<typename Sparse::type>>::value>::type> typename Sparse::type* operator()(const Sparse &A, bool w)
 		{
 			using T = typename Sparse::type;
 			T *degree = new T[A.Nrows];
@@ -160,11 +157,11 @@ namespace graph
 			bool *seen = new bool[graph.Nrows];
 			int *dist = new int[graph.Nrows], min, min_idx;
 			std::memset(seen, graph.Nrows * sizeof(bool), false);
-			for (int i = 0; i < graph.Nrows; ++i) { dist[i] = INT_MAX; shortest_path[i] = -1; }
+			for (int i = 0; i < graph.Nrows; ++i) { dist[i] = std::numeric_limits<int>::infinity(); shortest_path[i] = -1; }
 			dist[src] = 0;
 			for (int count = 0; count < graph.Nrows - 1; ++count)
 			{
-				min = INT_MAX;
+				min = std::numeric_limits<int>::infinity();
 				for (int v = 0; v < graph.Nrows; ++v)
 					if (seen[v] == false && dist[v] <= min)
 					{
@@ -174,7 +171,7 @@ namespace graph
 				for (int v = 0; v < graph.Nrows; ++v)
 				{
 					auto element = graph(min_idx, v);
-					if (!seen[v] && element && dist[min_idx] != INT_MAX && dist[min_idx] + element < dist[v])
+					if (!seen[v] && element && dist[min_idx] != std::numeric_limits<int>::infinity() && dist[min_idx] + element < dist[v])
 					{
 						shortest_path[v] = min_idx;
 						dist[v] = dist[min_idx] + element;
@@ -190,11 +187,11 @@ namespace graph
 			bool *seen = new bool[graph.Nrows];
 			int *dist = new int[graph.Nrows], min, min_idx, *path = new int[graph.Nrows];
 			std::memset(seen, graph.Nrows * sizeof(bool), false);
-			for (int i = 0; i < graph.Nrows; ++i) { dist[i] = INT_MAX; path[i] = -1; }
+			for (int i = 0; i < graph.Nrows; ++i) { dist[i] = std::numeric_limits<int>::infinity(); path[i] = -1; }
 			dist[src] = 0;
 			for (int count = 0; count < graph.Nrows - 1; ++count)
 			{
-				min = INT_MAX;
+				min = std::numeric_limits<int>::infinity();
 				for (int v = 0; v < graph.Nrows; ++v)
 					if (seen[v] == false && dist[v] <= min)
 					{
@@ -204,13 +201,13 @@ namespace graph
 				for (int v = 0; v < graph.Nrows; ++v)
 				{
 					auto element = graph(min_idx, v);
-					if (!seen[v] && element && dist[min_idx] != INT_MAX && dist[min_idx] + element < dist[v])
+					if (!seen[v] && element && dist[min_idx] != std::numeric_limits<int>::infinity() && dist[min_idx] + element < dist[v])
 					{
 						path[v] = min_idx;
 						dist[v] = dist[min_idx] + element;
 					}
 				}
-				if (min_idx == dst || dist[min_idx] == INT_MAX)
+				if (min_idx == dst || dist[min_idx] == std::numeric_limits<int>::infinity())
 				{
 					delete[] seen;
 					shortest_path.push_back(src);
@@ -228,13 +225,9 @@ namespace graph
 	//=========== laplacian functions =========================
 	struct
 	{
-		template<typename Sparse, typename Enable = void> Sparse operator()(const Sparse &, bool w = false);
-
-
-		template<typename Sparse, typename std::enable_if<std::is_same<Sparse, csr_matrix<typename Sparse::type>>::value>::type> Sparse operator()(const Sparse &A, bool w)
+		template<typename T> csr_matrix<T> operator()(const csr_matrix<T> &A, bool w)
 		{
-			using T = typename Sparse::type;
-			Sparse L(A.Nrows, A.Ncols);
+			csr_matrix<T> L(A.Nrows, A.Ncols);
 			L.values = new std::vector<T>(A.values->size());
 			L.cols = new std::vector<int>(A.cols->size());
 			for (int i = 0; i < (int)A.values->size(); ++i)
@@ -248,10 +241,9 @@ namespace graph
 			delete[] degree;
 			return L;
 		}
-		template<typename Sparse, typename std::enable_if<std::is_same<Sparse, coo_matrix<typename Sparse::type>>::value>::type> Sparse operator()(const Sparse &A, bool w)
+		template<typename T> coo_matrix<T> operator()(const coo_matrix<T> &A, bool w)
 		{
-			using T = typename Sparse::type;
-			Sparse L(A.Nrows, A.Ncols);
+			coo_matrix<T> L(A.Nrows, A.Ncols);
 			L.values = new std::vector<T>(A.values->size());
 			L.index = new std::vector<int>(A.index->size());
 			for (int i = 0; i < (int)A.values->size(); ++i)
@@ -283,11 +275,12 @@ namespace graph
 		{
 			// DIJKSTRA ALGORITHM
 			std::memset(seen, false, sizeof(bool)*graph.Nrows);
-			for(int i = 0; i < graph.Nrows; ++i) {dist[i] = INT_MAX; shortest_path[i] = -1;}
+			std::fill_n(dist, graph.Nrows, std::numeric_limits<int>::infinity());
+			std::fill_n(shortest_path, graph.Nrows, -1);
 			dist[src] = 0;
 			for(int count = 0; count < graph.Nrows - 1; ++count)
 			{
-				min = INT_MAX;
+				min = std::numeric_limits<int>::infinity();
 				for(int v = 0; v < graph.Nrows; ++v)
 					if(seen[v] == false && dist[v] <= min)
 					{
@@ -297,7 +290,7 @@ namespace graph
 				for(int v = 0; v < graph.Nrows; ++v)
 				{
 					element = graph(min_idx, v);
-					if(!seen[v] && element && dist[min_idx] != INT_MAX && dist[min_idx] + element < dist[v])
+					if(!seen[v] && element && dist[min_idx] != std::numeric_limits<int>::infinity() && dist[min_idx] + element < dist[v])
 					{
 						if(shortest_path != nullptr) shortest_path[v] = min_idx;
 						dist[v] = dist[min_idx] + element;
@@ -309,10 +302,10 @@ namespace graph
 				push_path(shortest_path, src, j, sigma_st[src], sigma_st_v);
 		} // end loop src
 		
-		if(normalized)
-			for(int i = 0; i < graph.Nrows; ++i) bc[i] = (sigma_st_v[i] * 4.f) / ((sigma_st[i] - 1) * (graph.Nrows - 1) * (graph.Nrows - 2));
+		if (normalized)
+			std::transform(sigma_st, sigma_st + graph.Nrows, sigma_st_v, bc, [&graph](const T &st, const T &stv) {return (stv*(T)4.) / ((st - (T)1.)*(graph.Nrows - 1)*(graph.Nrows - 2)); });
 		else
-			for(int i = 0; i < graph.Nrows; ++i) bc[i] = (sigma_st_v[i] * 2.f) / (sigma_st[i] - 1);
+			std::transform(sigma_st, sigma_st + graph.Nrows, sigma_st_v, bc, [](const T &st, const T &stv) {return (stv * (T)2.) / (st - (T)1.); });
 
 		delete[] seen;
 		delete[] dist;
