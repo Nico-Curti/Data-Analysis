@@ -13,31 +13,32 @@
 
 template<typename T> struct NetNK
 {
-	int N, K, size,
-		*J, *oldJ;
+	using type = T;
+	int N, K, size;
 	T *H, *DeltaH;
+	int *J, *oldJ;
 	NetNK();
 	NetNK(const int &, const int &);
 	~NetNK();
 	NetNK(const NetNK &);
 	NetNK& operator=(const NetNK &);
 	inline int operator-(const NetNK<T> &);
-	inline NetNK& operator++(); // update function
 };
 
 template<typename T> struct parameters
 {
+	using type = T;
 	int y;
 	T eta, lambda, gamma, eta_factor, lambda_factor, gamma_step;
 	parameters(const int &, const T &, const T &, const T &, const T &, const T &, const T &);
 	~parameters() = default;
 	parameters<T>& operator=(const parameters<T> &);
 	parameters(const parameters<T> &);
-	inline parameters<T>& operator++(); // update function
 };
 
-template<typename T, class C,typename std::enable_if<std::is_same<C, NetNK<T>>::value, C>::type* = nullptr> inline void update(C &obj);
-template<typename T, class C,typename std::enable_if<std::is_same<C, parameters<T>>::value, C>::type* = nullptr> inline void update(C &obj);
+template<class C,typename std::enable_if<std::is_same<C, NetNK<typename C::type>>::value, C>::type* = nullptr> inline void update(C &obj);
+template<class C,typename std::enable_if<std::is_same<C, parameters<typename C::type>>::value, C>::type* = nullptr> inline void update(C &obj);
+
 
 struct PatternPermutation
 {
@@ -47,7 +48,7 @@ struct PatternPermutation
 	~PatternPermutation();
 	PatternPermutation(const PatternPermutation &);
 	PatternPermutation& operator=(const PatternPermutation &);
-	int getbatch(int *&);
+	int getbatch(int *& );
 };
 
 static void menu_info();
@@ -58,24 +59,25 @@ namespace RSGD
 {
 	template<typename T> NetNK<T> mean_net(NetNK<T> *, const int &, const int &, const int &);
 	template<typename T> int compute_errs(const NetNK<T> &net, const Patterns<T> &pattern);
-	template<typename T> void subepoch(NetNK<T> &, const Patterns<T> &, PatternPermutation &, const parameters<T> &, const unsigned int &);
+	template<typename T> void subepoch(NetNK<T> &, const Patterns<T> &, PatternPermutation &, const parameters<T> &);
 	template<typename T> inline T compute_kick(const std::string &, const T &);
 	template<typename T> void kickboth(NetNK<T> &, NetNK<T> &, const parameters<T> &);
 	template<typename T> void kickboth_traced(NetNK<T> &, NetNK<T> &, const parameters<T> &, const std::string &);
 	template<typename T> void kickboth_traced_continuous(NetNK<T> &, NetNK<T> &, const parameters<T> &);
 
-	// TO DO
-	template<typename T> int* compute_output(T **input, const int &, const int &, T **, const int &M, const int &, const int &);
-	template<typename T> int* compute_output(T **, const int &, const int &, T**, const int &, const int &, const int &);
-	//
+	int* read_weights(const std::string &, int &, int &, bool bin = false);
+	template<typename T> void save_weights(const std::string &, const NetNK<T> &, const int &, const int &, const int &, const int &, const std::string, const T &, const T &, const T &, const T &, const T &, const T &);
+	void save_weights(const std::string &, int *, const int &, const int &);
 
-	template<typename T> T* RSGD(const Patterns<T> &, const int &, const int &, parameters<T> &, const int &, const std::string &, const int &, const int &, const bool &, const bool &, const bool &, std::string outfile = "", bool quiet = false);	
+	template<typename T> int* RSGD(const Patterns<T> &, const int &, const int &, parameters<T> &, const int &, const std::string &, const int &, const int &, const bool &, const bool &, const bool &, std::string outfile = "", bool quiet = false);	
 
-	template<typename T> inline T* train(const std::string &, int K = 1, int y = 1, int batch = 5, int max_epochs = 1000, T eta = (T)2., T lambda = (T).1, T gamma = std::numeric_limits<T>::infinity(), T eta_factor = (T)1., T lambda_factor = (T)1., T gamma_step = (T).01, bool waitcenter = false, bool equal = true, bool center = false, std::string formula = "simple", bool quiet = false, std::string outfile = "");
-	template<typename T> inline T* train(const Patterns<T> &, int K = 1, int y = 1, int batch = 5, int max_epochs = 1000, T eta = (T)2., T lambda = (T).1, T gamma = std::numeric_limits<T>::infinity(), T eta_factor = (T)1., T lambda_factor = (T)1., T gamma_step = (T).01, bool waitcenter = false, bool equal = true, bool center = false, std::string formula = "simple", bool quiet = false, std::string outfile = "");
+	template<typename T> int* train(const std::string &, int K = 1, int y = 1, int batch = 5, int max_epochs = 1000, T eta = (T)2., T lambda = (T).1, T gamma = std::numeric_limits<T>::infinity(), T eta_factor = (T)1., T lambda_factor = (T)1., T gamma_step = (T).01, std::string formula = "simple", std::string outfile = "", bool waitcenter = false, bool equal = true, bool center = false);
+	template<typename T> int* train(const Patterns<T> &, int K = 1, int y = 1, int batch = 5, int max_epochs = 1000, T eta = (T)2., T lambda = (T).1, T gamma = std::numeric_limits<T>::infinity(), T eta_factor = (T)1., T lambda_factor = (T)1., T gamma_step = (T).01, std::string formula = "simple", std::string outfile = "", bool waitcenter = false, bool equal = true, bool center = false);
 
-	template<typename T> int* test(const Patterns<T> &, T*, const int &, const int &);
-	template<typename T> int* test(const std::string &, const std::string &);
+	template<typename T> int* test(const Patterns<T> &, int *, const int &, const int &);
+	template<typename T> int* test(std::string &, std::string &);
+
+	template<typename T> int compute_output(T *,  int *, const int &, const int &);
 }
 
 
@@ -184,22 +186,6 @@ template<typename T> inline int NetNK<T>::operator-(const NetNK<T> &net)
 	return dist;
 }
 
-template<typename T> inline NetNK<T>& NetNK<T>::operator++()
-{
-	std::transform(	this->DeltaH, this->DeltaH + this->size,
-					this->H, this->H, 
-					[](const T &dh, const T &h)
-					{
-						return dh + h;
-					});
-	std::transform(	this->H, this->H + this->size,
-					this->J, [](const T &h)
-					{
-						return (h > (T)0.) ? 1 : 0;
-					});
-	return *this;
-}
-
 //=================================================================================//
 //    ____                                              _                          //
 //   |  _ \    __ _   _ __    __ _   _ __ ___     ___  | |_    ___   _ __   ___    //
@@ -242,12 +228,32 @@ template<typename T> parameters<T>::parameters(const parameters<T> &p)
 	this->gamma_step = p.gamma_step;
 }
 
-template<typename T> inline parameters<T>& parameters<T>::operator++()
+//=====================================================================================================================//
+//                                                              __                          _     _                    //
+//     ___    ___    _ __ ___    _ __ ___     ___    _ __      / _|  _   _   _ __     ___  | |_  (_)   ___    _ __     //
+//    / __|  / _ \  | '_ ` _ \  | '_ ` _ \   / _ \  | '_ \    | |_  | | | | | '_ \   / __| | __| | |  / _ \  | '_ \    //
+//   | (__  | (_) | | | | | | | | | | | | | | (_) | | | | |   |  _| | |_| | | | | | | (__  | |_  | | | (_) | | | | |   //
+//    \___|  \___/  |_| |_| |_| |_| |_| |_|  \___/  |_| |_|   |_|    \__,_| |_| |_|  \___|  \__| |_|  \___/  |_| |_|   //
+//                                                                                                                     //
+//=====================================================================================================================//
+
+template<class C,typename std::enable_if<std::is_same<C, NetNK<typename C::type>>::value, C>::type* = nullptr> inline void update(C &obj)
 {
-	this->eta *= this->eta_factor;
-	this->lambda *= this->lambda_factor;
-	this->gamma += this->gamma_step;
-	return *this;
+	using T = typename C::type;
+	#pragma omp parallel for
+	for(int i = 0; i < obj.size; ++i)
+	{
+		obj.H[i] += obj.DeltaH[i];
+		obj.J[i] = (obj.H[i] > (T)0.) ? 1 : 0;
+	}
+	return;
+}
+template<class C,typename std::enable_if<std::is_same<C, parameters<typename C::type>>::value, C>::type* = nullptr> inline void update(C &obj)
+{
+	obj.eta *= obj.eta_factor;
+	obj.lambda *= obj.lambda_factor;
+	obj.gamma += obj.gamma_step;
+	return;
 }
 
 
@@ -268,11 +274,11 @@ PatternPermutation::PatternPermutation(const int &a, const int &M, const int &ba
 	this->a = a; this->M = M; this->batch = batch;
 	this->MM = new int[this->M];
 	std::iota(this->MM, this->MM + this->M, 0);
-	std::shuffle(this->MM, this->MM + this->M, std::mt19937(std::rand()));
+	std::random_shuffle(this->MM, this->MM + this->M);
 }
 
 PatternPermutation::~PatternPermutation()
-{ if(this->M != 0) delete[] this->MM; }
+{ delete[] this->MM; }
 
 PatternPermutation::PatternPermutation(const PatternPermutation &patt)
 {
@@ -290,12 +296,12 @@ PatternPermutation& PatternPermutation::operator=(const PatternPermutation &patt
 	return *this;
 }
 
-int PatternPermutation::getbatch(int *&perm)
+int PatternPermutation::getbatch(int *&perm )
 {
 	int b = std::min(this->a + this->batch - 1, this->M);
 	if(b == this->M)
 	{
-		std::shuffle(this->MM, this->MM + this->M, std::mt19937(std::rand()));
+		std::random_shuffle(this->MM, this->MM + this->M);
 		this->a = 1;
 	}
 	else
@@ -311,21 +317,24 @@ namespace RSGD
 	template<typename T> NetNK<T> mean_net(NetNK<T> *nets, const int &n_nets, const int &N, const int &K)
 	{
 		NetNK<T> netmean(N, K);
-		std::memset(netmean.DeltaH, (T)0., sizeof(T)*netmean.size);
 		for(int i = 0; i < netmean.size; ++i)
 		{
-			netmean.H[i] = 2 * std::accumulate(nets, nets + n_nets, (T)0., [&i](const T &a, const NetNK<T> &b){return a + b.J[i];});
-			netmean.H[i] /= n_nets - (T)1.;
+			netmean.H[i] = 2 * std::accumulate(nets, nets + n_nets, 0, [&i](const int &a, const NetNK<T> &b){return a + b.J[i];});
+			netmean.DeltaH[i] = (T)0.;
+			//netmean.J[i] = 0;
+			//netmean.oldJ[i] = 0;
+			//for(int j = 0; j < n_nets; ++j)
+			//	netmean.H[i] += nets[j].J[i];
+			netmean.H[i] /= /*2 * netmean.H[i] /*/ n_nets - (T)1.;
 			netmean.J[i] = (netmean.H[i] > (T)0.) ? 1 : 0;
+			netmean.oldJ[i] = netmean.J[i];
 		}
-		std::memcpy(netmean.oldJ, netmean.J, sizeof(int)*netmean.size);
 		return netmean;
 	}
 
 	template<typename T> int compute_errs(const NetNK<T> &net, const Patterns<T> &pattern)
 	{
-		int errs = 0, t_out;
-		T dot, sum, h_out;
+		int errs = 0, dot, sum, h_out, t_out;
 		for(int i = 0; i < pattern.Nrow; ++i)
 		{
 			h_out = 0;
@@ -337,7 +346,8 @@ namespace RSGD
 					dot += pattern.input[i][k] * net.J[j*net.N + k];
 					sum += pattern.input[i][k] + net.J[j*net.N + k];
 				}
-				h_out += (4 * dot - 2 * sum + net.N > 0) ? 1 : -1;
+
+				h_out += ((4 * dot - 2 * sum + net.N) > 0) ? 1 : -1;
 			}
 			t_out = (h_out > 0) ? 1 : -1;
 			errs += (t_out != pattern.output[i]);
@@ -347,12 +357,10 @@ namespace RSGD
 
 	template<typename T> void subepoch(NetNK<T> &net, const Patterns<T> &pattern, PatternPermutation &patt_perm, const parameters<T> &params)
 	{
-		int *Mbatch = nullptr, size_mb = patt_perm.getbatch(Mbatch), t_out, h_out, tofix;
-		T  dot, sum,  *h = new T[net.K], tmp;
-		std::vector<T> wrongh;
-		std::vector<int> indh;
+		int *Mbatch = nullptr, size_mb = patt_perm.getbatch(Mbatch), dot, sum, *h = new int[net.K], t_out, h_out, tofix, tmp;
+		std::vector<int> wrongh, indh;
 
-		std::memset(net.DeltaH, (T)0., sizeof(T)*net.size);
+		std::memset(net.DeltaH, 0, sizeof(T)*net.size);
 		for(int i = 0; i < size_mb; ++i)
 		{
 			h_out = 0;
@@ -364,8 +372,8 @@ namespace RSGD
 					dot += pattern.input[Mbatch[i]][k] * net.J[j*net.N + k];
 					sum += pattern.input[Mbatch[i]][k] + net.J[j*net.N + k];
 				}
-				h[j] = 4 * dot - 2 * sum + net.N;
-				h_out += (h[j] > 0) ? 1 : -1;
+				h[i] = 4 * dot - 2 * sum + net.N;
+				h_out += (h[i] > 0) ? 1 : -1;
 			}
 			t_out = (h_out > 0) ? 1 : -1;
 			if(t_out != pattern.output[Mbatch[i]])
@@ -374,7 +382,7 @@ namespace RSGD
 				tofix = (int)(T(-pattern.output[Mbatch[i]] * h_out + 1) / 2), tmp;
 				for(int j = 0; j < net.K; ++j)
 				{
-					tmp = h[j] * pattern.output[Mbatch[i]];
+					tmp = h[i] * pattern.output[Mbatch[i]];
 					if(tmp > 0) continue;
 					wrongh.push_back(-tmp);
 					indh.push_back(i);
@@ -387,7 +395,7 @@ namespace RSGD
 				indh.clear();
 			}
 		}
-		++net;
+		update(net);
 
 		delete[] Mbatch;
 		delete[] h;
@@ -423,7 +431,7 @@ namespace RSGD
 			net1.H[i] += params.lambda * (compute_kick(val, params.gamma * params.y * net2.H[i]) - correction * (2 * net1.J[i] - 1));
 			net1.J[i] = (net1.H[i] > 0) ?  1 : 0;
 			
-			net2.H[i] += 2 * (T)(net1.J[i] - net1.oldJ[i]) / params.y;
+			net2.H[i] += 2 * T(T(net1.J[i]) - T(net1.oldJ[i])) / params.y;
 			net2.J[i] = (net2.H[i] > 0) ? 1 : 0;
 		}
 		return;
@@ -437,32 +445,74 @@ namespace RSGD
 			net1.H[i] += params.lambda*(net2.H[i] - 2 * net1.J[i] + 1);
 			net1.J[i] = (net1.H[i] > 0) ? 1 : 0;
 
-			net2.H[i] += 2 * (T)(net1.J[i] - net1.oldJ[i]) / params.y;
+			net2.H[i] += 2 * T(T(net1.J[i]) - T(net1.oldJ[i])) / params.y;
 			net2.J[i] = (net2.H[i] > 0) ? 1 : 0;
 		}
 		return;
 	}
 
-	template<typename T> int* compute_output(T **input, const int &Nrow, const int &Ncol, T **weigths, const int &M, const int &K, const int &N)
+	int* read_weights(const std::string &filename, int &K, int &N, bool bin)
 	{
-		int *out = new int[Nrow], res;
+		int *W = nullptr;
+		std::ifstream is;
+		if(bin)
+		{
+			is.open(filename, std::ios::binary);
+			if( !is ) {std::cerr << "Weights file not found! Given : " << filename << std::endl; exit(1);}
+			is.read((char*)&K, sizeof(int));
+			is.read((char*)&N, sizeof(int));
+			W = new int[K * N];
+			std::for_each(W, W + K*N, [&is](int &val){is.read((char*)&val, sizeof(int));});
+			
+			is.close();
+		}
+		else
+		{
+			std::string row;
+			is.open(filename);
+			if(!is){std::cerr << "Weights file not found! Given : " << filename << std::endl; exit(1);}
 
-		return out;
+			is >> K;
+			is >> N;
+			W = new int[K * N];
+
+			std::for_each(W, W + K*N, [&is](int &val){ is >> val; });
+			is.close();
+		}
+		return W;
 	}
 
-	template<typename T, class Mag> int* compute_output(T **input, const int &Nrow, const int &Ncol, T** weights, const int &M, const int &K, const int &N)
+	template<typename T> void save_weights(const std::string &filename, const NetNK<T> &net, const int &seed, const int &y, const int &batch, const int &max_epochs, const std::string formula, const T &eta, const T &lambda, const T &gamma, const T &eta_factor, const T &lambda_factor, const T &gamma_step)
 	{
-		int *out = new int[Nrow], res;
-
-		return out;
+		std::ofstream os(filename);
+		os << "seed: " << seed <<  ", nrep: " << y << ", batch: " << batch << ", max_epochs: " << max_epochs <<  ", formula:" << formula << std::endl;
+		os << "eta: " << eta << ", lambda: " << lambda << ", gamma:" << gamma << ", eta_factor:" << eta_factor << ", lambda_factor: " << lambda_factor << ", gamma_step: "<< gamma_step << std::endl;
+		os << "K: " << net.K << ", N: " << net.N << std::endl;
+		std::for_each(net.J, net.J + (net.N)*(net.K), [&os](const int &j){os << j << "\t";});
+			os << std::endl;
+		
+		os << "END" << std::endl;
+		os.close();
+		return;
 	}
 
+	void save_weights(const std::string &filename, int *W, const int &K, const int &N)
+	{
+		std::ofstream os(filename, std::ios::out | std::ios::binary);
+		os.write( (const char *) &K, sizeof( int ));
+		os.write( (const char *) &N, sizeof( int ));
+		
 
+		for(int i = 0; i < K; ++i)
+			for(int j = 0; j < N; ++j)
+				os.write( (const char *) &W[i * N + j], sizeof( int ));
+		os.close();
+	}
 
-	template<typename T> T* RSGD(const Patterns<T> &pattern, const int &K, parameters<T> &params, const int &batch, const std::string &formula, const int &seed, const int &max_epochs, const bool &init_equal, const bool &waitcenter, const bool &center, std::string outfile, bool quiet)
+	template<typename T> int* RSGD(const Patterns<T> &pattern, const int &K, parameters<T> &params, const int &batch, const std::string &formula, const int &seed, const int &max_epochs, const bool &init_equal, const bool &waitcenter, const bool &center, std::string outfile, bool quiet)
 	{
 		bool ok = false;
-		int N = pattern.Ncol, M = pattern.Nrow, errc, sub_epochs, epoch = 0, *shuffle_idx = new int[params.y], minerr, m_errs = std::numeric_limits<int>::max(), *errs = new int[params.y], *dist = new int[params.y], *minerrs = new int[params.y], minerrc = std::numeric_limits<int>::max();
+		int N = pattern.Ncol, M = pattern.Nrow, errc, sub_epochs, epoch, *shuffle_idx = new int[params.y], minerr, m_errs = std::numeric_limits<int>::max(), *errs = new int[params.y], *dist = new int[params.y], *minerrs = new int[params.y], minerrc;
 		T mean_errs = (T)0., mean_dist = (T)0.;
 		PatternPermutation *p_perm = new PatternPermutation[params.y];
 		NetNK<T> *nets = new NetNK<T>[params.y], netc(N, K);
@@ -477,13 +527,41 @@ namespace RSGD
 		if (params.lambda == 0 && waitcenter){	std::cout << "Warning : lambda = " << params.lambda << ", waitcenter = \n" << waitcenter << std::endl; exit(1);}
 		if (init_equal && batch >= M){std::cout << "Warning : batch = " << batch << ", M = " << M << ", init_equal = " << init_equal << std::endl; exit(1);}
 		
-		std::srand(seed);
-		std::mt19937 eng(std::rand());
+		std::random_device rd;
+		std::mt19937 eng(rd());
 		std::bernoulli_distribution binary_dist;
 
 		if(center || init_equal)
 		{
 			std::generate(netc.H, netc.H + netc.size, [&binary_dist, &eng]{return (binary_dist(eng)) ? (T)1. : -(T)1.;});
+			//netc.H[0]=-1;
+			//netc.H[1]=1;
+			//netc.H[2]=1;
+			//netc.H[3]=-1;
+			//netc.H[4]=-1;
+			//netc.H[5]=1;
+			//netc.H[6]=-1;
+			//netc.H[7]=1;
+			//netc.H[8]=-1;
+			//netc.H[9]=1;
+			//netc.H[10]=1;
+			//netc.H[11]=1;
+			//netc.H[12]=1;
+			//netc.H[13]=-1;
+			//netc.H[14]=-1;
+			//netc.H[15]=1;
+			//netc.H[16]=1;
+			//netc.H[17]=1;
+			//netc.H[18]=-1;
+			//netc.H[19]=-1;
+			//netc.H[20]=-1;
+			//netc.H[21]=1;
+			//netc.H[22]=1;
+			//netc.H[23]=-1;
+			//netc.H[24]=-1;
+			//netc.H[25]=-1;
+			//netc.H[26]=1;
+
 			std::memset(netc.DeltaH, 0, sizeof(T)*netc.size);
 			std::transform(netc.H, netc.H + netc.size, netc.J, [](const T &i){return (i > 0) ? 1 : 0;});
 			std::memcpy(netc.oldJ, netc.J, sizeof(int)*netc.size);
@@ -491,19 +569,21 @@ namespace RSGD
 
 		for(int i = 0; i < params.y; ++i) 
 		{
-			switch((int)init_equal)
+			if(init_equal) nets[i] = netc;
+			else
 			{
-				case true:
-					nets[i] = netc;
-				break;
-				case false:
-				{
-					std::generate(nets[i].H, nets[i].H + nets[i].size, [&binary_dist, &eng]{return (binary_dist(eng)) ? (T)1. : -(T)1.;});
-					std::memset(nets[i].DeltaH, 0, sizeof(T)*nets[i].size);
-					std::transform(nets[i].H, nets[i].H + nets[i].size, nets[i].J, [](const T &n){return (n > 0) ? 1 : 0;});
-					std::memcpy(nets[i].oldJ, nets[i].J, sizeof(int)*nets[i].size);
-				} break;
+				std::generate(nets[i].H, nets[i].H + nets[i].size, [&binary_dist, &eng]{return (binary_dist(eng)) ? (T)1. : -(T)1.;});
+				std::memset(nets[i].DeltaH, 0, sizeof(T)*nets[i].size);
+				std::transform(nets[i].H, nets[i].H + nets[i].size, nets[i].J, [](const T &n){return (n > 0) ? 1 : 0;});
+				std::memcpy(nets[i].oldJ, nets[i].J, sizeof(int)*nets[i].size);
 			}
+			//for(int j = 0; j < netc.size; ++j)
+			//{
+			//	nets[i].H[j] = (binary_dist(eng)) ? (T)1. : -(T)1.;
+			//	nets[i].DeltaH[i] = (T)0.;
+			//	nets[i].J[j] = (nets[i].H[j] > 0) ? 1 : 0;
+			//	nets[i].oldJ[j] = nets[i].J[j];
+			//}
 		}
 
 		if(!center) netc = mean_net(nets, params.y, N, K);
@@ -515,7 +595,7 @@ namespace RSGD
 			errs[i] = compute_errs(nets[i], pattern);
 			dist[i] = netc - nets[i];
 			p_perm[i] = PatternPermutation(1, M, batch);
-			std::shuffle(p_perm[i].MM, p_perm[i].MM + p_perm[i].M, eng);
+			std::random_shuffle(p_perm[i].MM, p_perm[i].MM + p_perm[i].M);
 			minerrs[i] = errs[i];
 			minerr = (errc < errs[i]) ? errc : errs[i];
 			m_errs = (errs[i] < m_errs) ? errs[i] : m_errs;
@@ -535,37 +615,32 @@ namespace RSGD
 				os << std::endl;
 			}
 			os << epoch << "\t" << errc << "\t" << std::min(errc, m_errs) << "\t";
-			std::copy(errs, errs + params.y, std::ostream_iterator<int>(os, "\t"));
+			std::for_each(errs, errs + params.y - 1, [&os](const int &i){os << i << "\t";}); os << errs[params.y-1];
 			os << std::setprecision(3) << params.lambda << "\t" << std::setprecision(3) << params.gamma << "\t";
-			std::copy(dist, dist + params.y, std::ostream_iterator<int>(os, "\t"));
+			std::for_each(dist, dist + params.y - 1, [&os](const int &i){os << i << "\t";}); os << dist[params.y-1];
 		}
-		switch((int)!quiet)
+		if (!quiet)
 		{
-			case false:
-			break;
-			case true:
-			{
-				std::cout << "ep: " << epoch << " lambda: " << std::setprecision(3) << params.lambda << " gamma: " << std::setprecision(3) << params.gamma << " eta: " << params.eta << std::endl;
-				std::cout << "\terrc " << errc << " [" << errc << "]" << std::endl;
-				std::cout << "\terrs " << m_errs << " [";
-				std::copy(errs, errs + params.y, std::ostream_iterator<int>(std::cout, ","));
-				std::cout << "] (mean = " << std::setprecision(3) << mean_errs / params.y << ")" << std::endl;
-				std::cout << "\tdist = [";
-				std::copy(dist, dist + params.y, std::ostream_iterator<int>(std::cout, ","));
-				std::cout << "] (mean = " << std::setprecision(3) << mean_dist / params.y << ")" << std::endl;
-			}break;
+			std::cout << "ep: " << epoch << " lambda: " << std::setprecision(3) << params.lambda << " gamma: " << std::setprecision(3) << params.gamma << " eta: " << params.eta << std::endl;
+			std::cout << "\terrc " << errc << " [" << errc << "]" << std::endl;
+			std::cout << "\terrs " << m_errs << " [";
+			std::for_each(errs, errs + params.y - 1, [](const int &i){std::cout << i << ",";}); std::cout << errs[params.y-1];
+			std::cout << "] (mean = " << std::setprecision(3) << mean_errs / params.y << ")" << std::endl;
+			std::cout << "\tdist = [";
+			std::for_each(dist, dist + params.y - 1, [](const int &i){std::cout << i << ",";}); std::cout << dist[params.y-1];
+			std::cout << "] (mean = " << std::setprecision(3) << mean_dist / params.y << ")" << std::endl;
 		}
-
 		sub_epochs = (int)(T(M + batch -1) / batch);
-		if( (ok = (errc == 0)) || (!waitcenter && (minerr == 0))) epoch = 0;
+		if( ok = (errc == 0) || (!waitcenter && (minerr == 0))) epoch = 0;
 
 		while(!ok && epoch < max_epochs)
 		{
 			++epoch;
-//#pragma omp parallel for reduction(+:nets[:params.y]) private(shuffle_idx, eng)
 			for(int i = 0; i < sub_epochs; ++i)
 			{
-				std::shuffle(shuffle_idx, shuffle_idx + params.y, eng);
+
+				std::random_shuffle(shuffle_idx, shuffle_idx + params.y);
+
 				for(int j = 0; j < params.y; ++j)
 				{
 					std::memcpy(nets[shuffle_idx[j]].oldJ, nets[shuffle_idx[j]].J, sizeof(int)*nets[shuffle_idx[j]].size);
@@ -596,30 +671,31 @@ namespace RSGD
 			if(outfile != "")
 			{
 				os << epoch << "\t" << errc << "\t" << std::min(errc, m_errs) << "\t";
-				std::copy(errs, errs + params.y, std::ostream_iterator<int>(os, "\t"));
+				std::for_each(errs, errs + params.y - 1, [&os](const int &i){os << i << "\t";}); os << errs[params.y-1];
 				os << std::setprecision(3) << params.lambda << "\t" << std::setprecision(3) << params.gamma << "\t";
-				std::copy(dist, dist + params.y, std::ostream_iterator<int>(os, "\t"));
+				std::for_each(dist, dist + params.y - 1, [&os](const int &i){os << i << "\t";}); os << dist[params.y-1];
 			}
-			switch((int)!quiet)
+			if (!quiet)
 			{
-				case false:
-				break;
-				case true:
-				{
-					std::cout << "ep: " << epoch << " lambda: " << std::setprecision(3) << params.lambda << " gamma: " << std::setprecision(3) << params.gamma << " eta: " << params.eta << std::endl;
-					std::cout << "\terrc " << errc << " [" << errc << "]" << std::endl;
-					std::cout << "\terrs " << m_errs << " [";
-					std::copy(errs, errs + params.y, std::ostream_iterator<int>(std::cout, ","));
-					std::cout << "] (mean = " << std::setprecision(3) << mean_errs / params.y << ")" << std::endl;
-					std::cout << "\tdist = [";
-					std::copy(dist, dist + params.y, std::ostream_iterator<int>(std::cout, ","));
-					std::cout << "] (mean = " << std::setprecision(3) << mean_dist / params.y << ")" << std::endl;
-				}break;
+				std::cout << "ep: " << epoch << " lambda: " << std::setprecision(3) << params.lambda << " gamma: " << std::setprecision(3) << params.gamma << " eta: " << params.eta << std::endl;
+				std::cout << "\terrc: " << errc << " [" << errc << "]" << std::endl;
+				std::cout << "\terrs: " << m_errs << " [";
+				std::for_each(errs, errs + params.y - 1, [](const int &i){std::cout << i << ",";}); std::cout << errs[params.y-1];
+				std::cout << "] (mean = " << std::setprecision(3) << mean_errs / params.y << ")" << std::endl;
+				std::cout << "\tdist = [";
+				std::for_each(dist, dist + params.y - 1, [](const int &i){std::cout << i << ",";}); std::cout << dist[params.y-1];
+				std::cout << "] (mean = " << std::setprecision(3) << mean_dist / params.y << ")" << std::endl;
 			}
-			++params;
+			update(params);
 		}
 		if(outfile != "") os.close();
-		std::cout << ((!quiet && ok) ? "SOLVED\n" : (!quiet && !ok) ? "FAILED\n" : "\n");
+		if (ok)
+		{
+			std::cout << "SOLVED\n";
+			if (outfile != "") 	save_weights(outfile, netc.J, netc.K, netc.N);
+		}
+		else
+			std::cout<< "FAILED\n";
 
 		delete[] errs;
 		delete[] dist;
@@ -627,55 +703,76 @@ namespace RSGD
 		delete[] shuffle_idx;
 		delete[] p_perm;
 		delete[] nets;
-		return netc.H; // which H matrix return???
+
+		return netc.J;
 	}
 
 
-	template<typename T> inline T* train(const std::string &patternsfile, int K, int y, int batch, int max_epochs, T eta, T lambda, T gamma, T eta_factor, T lambda_factor, T gamma_step, bool waitcenter, bool init_equal, bool center, std::string formula, bool quiet, std::string outfile)
+	template<typename T> int* train(const std::string &patternsfile, int K, int y, int batch, int max_epochs, T eta, T lambda, T gamma, T eta_factor, T lambda_factor, T gamma_step, std::string formula, std::string outfile, bool waitcenter, bool init_equal, bool center)
 	{
 		Patterns<T> pattern(patternsfile);
 		check_binary(pattern);
 		parameters<T> params(y, eta, lambda, gamma, eta_factor, lambda_factor, gamma_step);
-		return RSGD(pattern, K, params, batch, formula, 202, max_epochs, init_equal, waitcenter, center, outfile, quiet);
+		return RSGD(pattern, K, params, batch, formula, 202, max_epochs, init_equal, waitcenter, center, outfile, false);
 	}
 
-	template<typename T> inline T* train(const Patterns<T> &pattern, int K, int y, int batch, int max_epochs, T eta, T lambda, T gamma, T eta_factor, T lambda_factor, T gamma_step, bool waitcenter, bool init_equal, bool center, std::string formula, bool quiet, std::string outfile)
+	template<typename T> int* train(const Patterns<T> &pattern, int K, int y, int batch, int max_epochs, T eta, T lambda, T gamma, T eta_factor, T lambda_factor, T gamma_step, std::string formula, std::string outfile, bool waitcenter, bool init_equal, bool center)
 	{
 		parameters<T> params(y, eta, lambda, gamma, eta_factor, lambda_factor, gamma_step);
-		return RSGD(pattern, K, params, batch, formula, 202, max_epochs, init_equal, waitcenter, center, outfile, quiet);
+		return RSGD(pattern, K, params, batch, formula, 202, max_epochs, init_equal, waitcenter, center, outfile, false);
 	}
 
-	template<typename T> int* test(const Patterns<T> &patterns, T *weights, const int &K, const int &N)
+	template<typename T> int* test(const Patterns<T> &pattern, int *weights, const int &K, const int &N)
 	{
-		int *results = new int[patterns.Nrow]; 
-		std::transform(	patterns.input, patterns.input + patterns.Nrow,
-						results, [&weights, &K, &N](const T *input)
-						{
-							return 0;//compute_output(input, weights, K, N);
-						});
+		int dot, sum, h_out, *results = new int[pattern.Nrow];
+
+		for(int i = 0; i < pattern.Nrow; ++i)
+		{
+			h_out = 0;
+			for(int j = 0; j < K; ++j)
+			{
+				dot = 0; sum = 0;
+				for(int k = 0; k < N; ++k)
+				{
+					dot += pattern.input[i][k] * weights[j*N + k];
+					sum += pattern.input[i][k] + weights[j*N + k];
+				}
+
+				h_out += ((4 * dot - 2 * sum + N) > 0) ? 1 : -1;
+			}
+			results[i] = (h_out > 0) ? 1 : -1;
+		}
 		return results;
 	}
 
 	template<typename T> int* test(const std::string &ifile, const std::string &wfile)
 	{
-		Patterns<T> patterns(ifile);
-		check_binary(patterns);		
+		Patterns<T> pattern(ifile);
+		check_binary(pattern);		
 
 		int 	K, 
 				N,
-				*results = new int[patterns.Nrow];
+				*weights = read_weights(wfile, K, N);
 
-		T 		*weights = nullptr;//read_weights(wfile, K, N),
-
-		std::transform(	patterns.input, patterns.input + patterns.Nrow,
-						results, [&weights, &K, &N](const T *input)
-						{
-							return 0;//compute_output(input, weights, K, N);
-						});
-
-		return results;
+		return test(pattern, weights, K, N);
 	}
 
+	template<typename T> int compute_output(T *input,  int *weights, const int &K, const int &N)
+	{
+		int dot = 0, sum = 0, h_out = 0;
+
+		for(int j = 0; j < K; ++j)
+		{
+			for(int k = 0; k < N; ++k)
+			{
+				dot += input[k] * weights[j*N + k];
+				sum += input[k] + weights[j*N + k];
+			}
+
+			h_out += ((4 * dot - 2 * sum + N) > 0) ? 1 : -1;
+		}
+		return (h_out > 0) ? 1 : -1;
+	}
 
 } // end of namespace RSGD
 
@@ -761,4 +858,5 @@ template<typename T> void parse_test_args(int argc, char *argv[], std::string &t
 	argparse.get<std::string>("oArg", output_file);
 	return;
 }
+
 

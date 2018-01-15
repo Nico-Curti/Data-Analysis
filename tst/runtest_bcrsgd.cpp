@@ -1,37 +1,48 @@
-#include "ReplicatedSGD.hpp" //#include "classifier.hpp"
+#include "classifier.hpp"
 #include "score_coef.hpp"
 
 int main(int argc, char *argv[])
 {
 	int hidden_layer = 3,
-	    n_rep = 7,
-	    batch = 5,
-	    max_epochs = 1000;
-	float 	eta = 2.f,
-			lambda = .1f,
-			gamma = std::numeric_limits<float>::infinity(),
-			step_eta = 1.f,
-			step_lambda = 1.f,
-			step_gamma = 1.f;
-	std::string trainfile = "tst/pattern/train_fbp.dat",
-				testfile = "tst/pattern/test_fbp.dat",
-				formula = "simple";
+		y = 3,
+		batch = 2,
+		max_epochs = 4;
 
-	Patterns<float> train(trainfile);
-	Patterns<float> test(testfile);
-	/*-------------------------------------*/
+	double eta = 2.0,
+		   lambda = 0.75,
+		   gamma = 0.05,
+		   eta_factor = 1.0,
+		   lambda_factor = 1.0,
+		   gamma_step = 0.001;
+/*
+	std::string formula = "simple",
+				trainfile = "tst/pattern/train_sgd.dat",
+				testfile = "tst/pattern/test_sgd.dat",
+				output = "tst/pattern/results.dat";
 
-	//ReplicatedSGD<double> rsgd;
-	//rsgd.train(	train,
-	//			);
-	//int *label_predict = rsgd.test(test);
+	Patterns<double> train(trainfile);
+	Patterns<double> test(testfile);
+	
 
-	float *weights = RSGD::train(train, hidden_layer, n_rep);
-	int *label_predict = RSGD::test(test, weights, hidden_layer, test.Ncol);
-	auto score_rsgd = score::perfs(test.output, label_predict, test.Nout);
+	ReplicatedSGD<double> sgd;
+	sgd.train<MagP64<double>>(	input, 
+								hidden_layer, 
+								y, 
+								batch, 
+								max_epochs, 
+								eta, 
+								lambda, 
+								gamma, 
+								eta_factor, 
+								lambda_factor, 
+								gamma_step,
+								formula);
 
-	std::cout << "Prediction RSGD:" << std::endl;
-	for(const auto &i : score_rsgd)
+	int *label_predict = sgd.test(test);
+	auto score_sgd = score::perfs(test.output, label_predict, test.Nout);
+
+	std::cout << "Prediction SGD:" << std::endl;
+	for(const auto &i : score_sgd)
 		std::cout << i.first << " : " << i.second << std::endl;
 
 	if(os::dir_exists("tst/res"))
@@ -41,7 +52,8 @@ int main(int argc, char *argv[])
 		for(int i = 0; i < test.Nrow; ++i) os << test.output[i] << "\t" << label_predict[i] << std::endl;
 		os.close();
 	}
-
+-------------------------------------*/
 	return 0;
 }
+
 
