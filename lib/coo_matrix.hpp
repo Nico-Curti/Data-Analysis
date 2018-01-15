@@ -206,13 +206,13 @@ template<typename T> inline bool coo_matrix<T>::operator!=(const coo_matrix<T> &
 template<typename T> inline coo_matrix<T> coo_matrix<T>::transpose()
 {
 	coo_matrix<T> t_mat = *this;
-	std::transform(this->index->begin(), this->index->end(), t_mat.index->begin(), [&this->Ncols, &this->Nrows](const int &idx){return (idx % this->Ncols) * this->Nrows + idx / this->Ncols;});
+	std::transform(this->index->begin(), this->index->end(), t_mat.index->begin(), [this](const int &idx){return (idx % this->Ncols) * this->Nrows + idx / this->Ncols;});
 	return t_mat;
 }
 
 template<typename T> inline void coo_matrix<T>::t()
 {
-	std::transform(this->index->begin(), this->index->end(), this->index->begin(), [&this->Ncols, &this->Nrows](const int &idx){return (idx % this->Ncols) * this->Nrows + idx / this->Ncols;});
+	std::transform(this->index->begin(), this->index->end(), this->index->begin(), [this](const int &idx){return (idx % this->Ncols) * this->Nrows + idx / this->Ncols;});
 	return;
 }
 
