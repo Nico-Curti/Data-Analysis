@@ -13,22 +13,22 @@ endif
 
 ifeq ($(OS), Windows_NT)
 	MKDIR_P = mkdir $(subst /,\,$(OUT)) > nul 2>&1 || (exit 0)
+	INSTALL = ./install.ps1
 else
 	MKDIR_P = mkdir -p $(OUT) 
+	INSTALL = ./install.sh
 endif
 
-all: 	dir_tree \
-		fstat \
-		cross_val \
-		neural_net \
-		pca \
-		bayes_cls \
-		clustering \
-		kabsch \
-		genetic \
-		gridsearch \
-		fbp \
-		rsgd 
+all: 	install \
+		plots
+
+install: 	install.sh \
+		 	install.ps1
+		$(INSTALL)
+
+plots:		Snakefile
+
+		snakemake
 
 fbp:		$(TST)/runtest_bcrfbp.cpp \
 			$(HPP)/ReplicatedFBP.hpp \
