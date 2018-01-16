@@ -456,3 +456,225 @@ struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, ReplicatedFBP<
 	}
 
 };
+
+
+//ReplicatedSGD
+template<class Cls> 
+struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, ReplicatedSGD<typename Cls::type>>::value>::type>
+{
+
+	const Patterns<T> &pattern, int K, int y, int batch, int max_epochs, T eta, T lambda, T gamma, T eta_factor, T lambda_factor, T gamma_step, std::string formula, bool waitcenter, bool init_equal, bool center
+	using T = typename Cls::type;
+	std::tuple<	std::function<int()>, // num_layers
+				std::function<int()>, // n_rep
+				std::function<int()>, // batch
+				std::function<int()>, // max_epochs
+				std::function<T()>, // eta 
+				std::function<T()>, // lambda
+				std::function<T()>, // gamma 
+				std::function<T()>, // eta_factor
+				std::function<T()>, // lambda_factor
+				std::function<T()>, // gamma_step
+				std::function<std::string()>, // formula
+				std::function<bool>, // waitcenter
+				std::function<bool>, // init_equal
+				std::function<bool>, // center
+				std::function<int()> // seed
+				> func;
+
+	bool waitcenter, init_equal, center;
+	int num_layers, y, batch, max_epochs, seed;
+	T eta, lambda, gamma, eta_factor, lambda_factor, gamma_step;
+	std::string formula;
+	
+	hyperparams()
+	{
+		this->func = std::make_tuple(
+									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 10) + 1;}, // num_layers
+									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 10) + 1;}, // n_rep
+									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * pattern.Nrows) + 1;}, // batch
+									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 5000) + 500;}, // max_epochs
+									 [&](){return static_cast<T>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX)) * 100;}, // eta
+									 [&](){return static_cast<T>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX)) * 100;}, // lambda
+									 [&](){return static_cast<T>(std::rand());}, // gamma
+									 [&](){return static_cast<T>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX));}, // eta_factor
+									 [&](){return static_cast<T>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX));}, // lambda_factor
+									 [&](){return static_cast<T>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX));}, // gamma_step									 
+							 		 [&](){ float var = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX); 
+									 	   return (var < 0.25f) ? "simple" : ((var < 0.5f) ? "hard" : ((var < 0.75f) ? "corrected" : "continuous" ));}, // formula			 
+							 		 [&](){ float var = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX); 
+									 	   return (var < 0.5f) ? true : false;}, // waitcenter
+									 [&](){ float var = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX); 
+									 	   return (var < 0.5f) ? true : false;}, // init_equal
+									 [&](){ float var = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX); 
+									 	   return (var < 0.5f) ? true : false;}, // center
+									 [&](){return static_cast<int>(std::rand());} // seed
+									 );
+	}
+
+	
+	hyperparams& operator=(const hyperparams &p)
+	{
+		this->num_layers = p.num_layers;
+		this->y = p.y;
+		this->batch = p.batch;
+		this->max_epochs = p.max_epochs;
+		this->eta = p.eta;
+		this->lambda = p.lambda;
+		this->gamma = p.gamma;
+		this->eta_factor = p.eta_factor;
+		this->lambda_factor = p.lambda_factor;
+		this->gamma_step = p.gamma_step;
+		this->formula = p.formula;
+		this->waitcenter = p.waitcenter;
+		this->init_equal = p.init_equal;
+		this->center = p.center;
+		this->seed = p.seed; 
+		return *this;
+	}
+
+	~hyperparams() = default;
+
+	inline void operator()(const unsigned int &s) // rn generator
+	{
+		std::srand(s);
+		this->num_layers = std::get<0>(this->func)();
+		this->y = std::get<1>(this->func)();
+		this->batch = std::get<2>(this->func)();
+		this->max_epochs = std::get<3>(this->func)();
+		this->eta = std::get<4>(this->func)();
+		this->lambda = std::get<5>(this->func)();
+		this->gamma = std::get<6>(this->func)();
+		this->eta_factor = std::get<7>(this->func)();
+		this->lambda_factor = std::get<8>(this->func)();
+		this->gamma_step = std::get<9>(this->func)();
+		this->formula = std::get<10>(this->func)();
+		this->waitcenter = std::get<11>(this->func)();
+		this->init_equal = std::get<12>(this->func)();
+		this->center = std::get<13>(this->func)();
+		this->seed = std::get<14>(this->func)();
+		return;
+	}
+
+	inline void operator!(void) // mutation operator
+	{
+		int pos = static_cast<int>(static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * (std::tuple_size<decltype(this->func)>::value - 1);
+		switch(pos)
+		{
+			case 0: this->num_layers = std::get<0>(this->func)();
+			break;
+			case 1: this->y = std::get<1>(this->func)();
+			break;
+			case 2: this->batch = std::get<2>(this->func)();
+			break;
+			case 3: this->max_epochs = std::get<3>(this->func)();
+			break;
+			case 4: this->eta = std::get<4>(this->func)();
+			break;
+			case 5: this->lambda = std::get<5>(this->func)();
+			break;
+			case 6: this->gamma = std::get<6>(this->func)();
+			break;
+			case 7: this->eta_factor = std::get<7>(this->func)();
+			break;
+			case 8: this->lambda_factor = std::get<8>(this->func)();
+			break;
+			case 9: this->gamma_step = std::get<9>(this->func)();
+			break;
+			case 10: this->formula = std::get<10>(this->func)();
+			break;
+			case 11: this->waitcenter = std::get<11>(this->func)();
+			break;
+			case 12: this->init_equal = std::get<12>(this->func)();
+			break;
+			case 13: this->center = std::get<13>(this->func)();
+			break;
+			case 14: this->seed = std::get<14>(this->func)();
+			break;
+		}
+		return;
+	}
+
+	inline hyperparams operator+(const hyperparams &p) // cross over operator
+	{
+		hyperparams res;
+		int pos = static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * (std::tuple_size<decltype(this->func)>::value + 1));
+		switch(pos)
+		{
+			case 0: res =  hyperparams(p.num_layers, p.y, p.batch, p.max_epochs, p.eta, p.lambda, p.gamma, p.eta_factor, p.lambda_factor, p.gamma_step, p.formula, p.waitcenter, p.init_equal, p.center, p.seed);
+			break;
+			case 1: res =  hyperparams(this->p.num_layers, p.y, p.batch, p.max_epochs, p.eta, p.lambda, p.gamma, p.eta_factor, p.lambda_factor, p.gamma_step, p.formula, p.waitcenter, p.init_equal, p.center, p.seed);
+			break;
+			case 2: res =  hyperparams(this->p.num_layers, this->p.y, p.batch, p.max_epochs, p.eta, p.lambda, p.gamma, p.eta_factor, p.lambda_factor, p.gamma_step, p.formula, p.waitcenter, p.init_equal, p.center, p.seed);
+			break;
+			case 3: res =  hyperparams(this->p.num_layers, this->p.y, this->p.batch, p.max_epochs, p.eta, p.lambda, p.gamma, p.eta_factor, p.lambda_factor, p.gamma_step, p.formula, p.waitcenter, p.init_equal, p.center, p.seed);
+			break;
+			case 4: res =  hyperparams(this->p.num_layers, this->p.y, this->p.batch, this->p.max_epochs, p.eta, p.lambda, p.gamma, p.eta_factor, p.lambda_factor, p.gamma_step, p.formula, p.waitcenter, p.init_equal, p.center, p.seed);
+			break; 
+			case 5: res =  hyperparams(this->p.num_layers, this->p.y, this->p.batch, this->p.max_epochs, this->p.eta, p.lambda, p.gamma, p.eta_factor, p.lambda_factor, p.gamma_step, p.formula, p.waitcenter, p.init_equal, p.center, p.seed);
+			break;
+			case 6: res =  hyperparams(this->p.num_layers, this->p.y, this->p.batch, this->p.max_epochs, this->p.eta, this-->p.lambda, p.gamma, p.eta_factor, p.lambda_factor, p.gamma_step, p.formula, p.waitcenter, p.init_equal, p.center, p.seed);
+			break;
+			case 7: res =  hyperparams(this->p.num_layers, this->p.y, this->p.batch, this->p.max_epochs, this->p.eta, this-->p.lambda, this->p.gamma, p.eta_factor, p.lambda_factor, p.gamma_step, p.formula, p.waitcenter, p.init_equal, p.center, p.seed);
+			break;
+			case 8: res =  hyperparams(this->p.num_layers, this->p.y, this->p.batch, this->p.max_epochs, this->p.eta, this-->p.lambda, this->p.gamma, this->p.eta_factor, p.lambda_factor, p.gamma_step, p.formula, p.waitcenter, p.init_equal, p.center, p.seed);
+			break;
+			case 9: res =  hyperparams(this->p.num_layers, this->p.y, this->p.batch, this->p.max_epochs, this->p.eta, this-->p.lambda, this->p.gamma, this->p.eta_factor, this->p.lambda_factor, p.gamma_step, p.formula, p.waitcenter, p.init_equal, p.center, p.seed);
+			break;
+			case 10: res = hyperparams(this->p.num_layers, this->p.y, this->p.batch, this->p.max_epochs, this->p.eta, this-->p.lambda, this->p.gamma, this->p.eta_factor, this->p.lambda_factor, this->p.gamma_step, p.formula, p.waitcenter, p.init_equal, p.center, p.seed);
+			break;
+			case 11: res = hyperparams(this->p.num_layers, this->p.y, this->p.batch, this->p.max_epochs, this->p.eta, this-->p.lambda, this->p.gamma, this->p.eta_factor, this->p.lambda_factor, this->p.gamma_step, this->p.formula, p.waitcenter, p.init_equal, p.center, p.seed);
+			break;
+			case 12: res = hyperparams(this->p.num_layers, this->p.y, this->p.batch, this->p.max_epochs, this->p.eta, this-->p.lambda, this->p.gamma, this->p.eta_factor, this->p.lambda_factor, this->p.gamma_step, this->p.formula, this->p.waitcenter, p.init_equal, p.center, p.seed);
+			break;
+			case 13: res = hyperparams(this->p.num_layers, this->p.y, this->p.batch, this->p.max_epochs, this->p.eta, this-->p.lambda, this->p.gamma, this->p.eta_factor, this->p.lambda_factor, this->p.gamma_step, this->p.formula, this->p.waitcenter, this->p.init_equal, p.center, p.seed);
+			break;
+			case 14: res = hyperparams(this->p.num_layers, this->p.y, this->p.batch, this->p.max_epochs, this->p.eta, this-->p.lambda, this->p.gamma, this->p.eta_factor, this->p.lambda_factor, this->p.gamma_step, this->p.formula, this->p.waitcenter, this->p.init_equal, this->p.center, p.seed);
+			break;
+			case 15: res = hyperparams(this->p.num_layers, this->p.y, this->p.batch, this->p.max_epochs, this->p.eta, this-->p.lambda, this->p.gamma, this->p.eta_factor, this->p.lambda_factor, this->p.gamma_step, this->p.formula, this->p.waitcenter, this->p.init_equal, this->p.center, this->p.seed);
+			break;
+		}		
+		return res;
+	}
+
+	inline void get_name(std::ostream &os, char sep = '\t')
+	{
+		COUTNAME(os, num_layers, sep);
+		COUTNAME(os, y, sep);
+		COUTNAME(os, batch, sep); 
+		COUTNAME(os, max_epochs sep); 
+		COUTNAME(os, eta, sep);
+		COUTNAME(os, lambda, sep);
+		COUTNAME(os, gamma, sep); 
+		COUTNAME(os, eta_factor, sep);
+		COUTNAME(os, lambda_factor, sep);
+		COUTNAME(os, gamma_step, sep); 
+		COUTNAME(os, formula, sep);
+		COUTNAME(os, waitcenter, sep);
+		COUTNAME(os, init_equal, sep); 
+		COUTNAME(os, center, sep);
+		COUTNAME(os, seed, sep);
+		return;
+	}
+	friend std::ostream& operator<<(std::ostream &os, const hyperparams &p)
+	{
+		COUTVAL(os, p.num_layers, '\t');
+		COUTVAL(os, p.y, '\t');
+		COUTVAL(os, p.batch, '\t'); 
+		COUTVAL(os, p.max_epochs, '\t'); 
+		COUTVAL(os, p.eta, '\t');
+		COUTVAL(os, p.lambda, '\t');
+		COUTVAL(os, p.gamma, '\t'); 
+		COUTVAL(os, p.eta_factor, '\t');
+		COUTVAL(os, p.lambda_factor, '\t');
+		COUTVAL(os, p.gamma_step, '\t'); 
+		COUTVAL(os, p.formula, '\t');
+		COUTVAL(os, p.waitcenter, '\t');
+		COUTVAL(os, p.init_equal, '\t'); 
+		COUTVAL(os, p.center, '\t');
+		COUTVAL(os, p.seed, '\t');
+
+		return os;
+	}
+
+};
