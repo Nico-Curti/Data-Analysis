@@ -462,8 +462,6 @@ struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, ReplicatedFBP<
 template<class Cls> 
 struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, ReplicatedSGD<typename Cls::type>>::value>::type>
 {
-
-	const Patterns<T> &pattern, int K, int y, int batch, int max_epochs, T eta, T lambda, T gamma, T eta_factor, T lambda_factor, T gamma_step, std::string formula, bool waitcenter, bool init_equal, bool center
 	using T = typename Cls::type;
 	std::tuple<	std::function<int()>, // num_layers
 				std::function<int()>, // n_rep
