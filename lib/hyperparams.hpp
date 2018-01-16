@@ -490,7 +490,8 @@ struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, ReplicatedSGD<
 		this->func = std::make_tuple(
 									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 10) + 1;}, // num_layers
 									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 10) + 1;}, // n_rep
-									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * pattern.Nrows) + 1;}, // batch
+									 //TOFIX batch
+									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 2) + 1;}, // batch
 									 [&](){return static_cast<int>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 5000) + 500;}, // max_epochs
 									 [&](){return static_cast<T>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX)) * 100;}, // eta
 									 [&](){return static_cast<T>(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX)) * 100;}, // lambda
@@ -640,7 +641,7 @@ struct hyperparams<Cls, typename std::enable_if<std::is_same<Cls, ReplicatedSGD<
 		COUTNAME(os, num_layers, sep);
 		COUTNAME(os, y, sep);
 		COUTNAME(os, batch, sep); 
-		COUTNAME(os, max_epochs sep); 
+		COUTNAME(os, max_epochs, sep); 
 		COUTNAME(os, eta, sep);
 		COUTNAME(os, lambda, sep);
 		COUTNAME(os, gamma, sep); 
