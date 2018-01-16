@@ -137,9 +137,9 @@ public:
 	ReplicatedSGD();
 	~ReplicatedSGD();
 
-	void inline train(const Patterns<T> &);
+	void inline train(const Patterns<T> &, const int &num_layers = 1, const int &y = 1, const int &batch = 5, const int &max_epochs = 1000, const T &eta = (T)2., const T &lambda = (T).1, const T &gamma = std::numeric_limits<T>::infinity(), const T &eta_factor = (T)1., const T &lambda_factor = (T)1., const T &gamma_step = (T).01, std::string formula = "simple", bool waitcenter = false, bool equal = true, bool center = false, int seed = 202, std::string outfile = "", bool quiet = false);
 	void inline train(const Patterns<T> &, const hyperparams<ReplicatedSGD> &);
-	void inline cv_train(const Patterns<T> &, const std::vector<int> &);
+	void inline cv_train(const Patterns<T> &, const std::vector<int> &, const int &num_layers = 1, const int &y = 1, const int &batch = 5, const int &max_epochs = 1000, const T &eta = (T)2., const T &lambda = (T).1, const T &gamma = std::numeric_limits<T>::infinity(), const T &eta_factor = (T)1., const T &lambda_factor = (T)1., const T &gamma_step = (T).01, std::string formula = "simple", bool waitcenter = false, bool equal = true, bool center = false, int seed = 202, std::string outfile = "", bool quiet = false);
 	void inline cv_train(const Patterns<T> &, const std::vector<int> &, const hyperparams<ReplicatedSGD> &);
 
 	inline int* test(const Patterns<T> &);
@@ -149,7 +149,7 @@ public:
 
 #include "ReplicatedSGD.hpp"
 
-// ReplicatedFBP Classifier
+// ReplicatedSGD Classifier
 template<typename T> ReplicatedSGD<T>::ReplicatedSGD()
 {
 	this->num_layers = 0;
@@ -162,8 +162,66 @@ template<typename T> ReplicatedSGD<T>::~ReplicatedSGD()
 		delete[] this->weights;
 }
 
+template<typename T> inline void ReplicatedSGD<T>::train(const Patterns<T> &data, const int &num_layers, const int &y, const int &batch, const int &max_epochs, const T &eta, const T &lambda, const T &gamma, const T &eta_factor, const T &lambda_factor, const T &gamma_step, std::string formula, bool waitcenter, bool equal, bool center, int seed, std::string outfile, bool quiet)
+{
+	this->num_layers = num_layers;
+	this->input_size = data.Ncol;
+	this->weights = RSGD::train<T>(data, num_layers, y, batch, max_epochs, eta, lambda, gamma, eta_factor, lambda_factor, gamma_step, formula, waitcenter, equal, center, seed, outfile, quiet);
+	return;
+}
+
+template<typename T> inline void ReplicatedSGD<T>::cv_train(const Patterns<T> &data, const std::vector<int> &idx, const int &num_layers, const int &y, const int &batch, const int &max_epochs, const T &eta, const T &lambda, const T &gamma, const T &eta_factor, const T &lambda_factor, const T &gamma_step, std::string formula, bool waitcenter, bool equal, bool center, int seed, std::string outfile, bool quiet)
+{
+	this->num_layers = num_layers;
+	this->input_size = data.Ncol;
+	Patterns<T> train;
+	train.Nrow = (int)idx.size();
+	train.Ncol = data.Ncol;
+	train.Nout = (int)idx.size();
+	train.output = new int[train.Nout];
+	train.input = new T*[train.Nrow];
+	std::generate(train.input, train.input + train.Nrow, [&data](){return new T[data.Ncol];});
+	for(int i = 0; i < (int)idx.size(); ++i)
+	{
+		std::memcpy(train.input[i], data.input[idx[i]], sizeof(T)*train.Ncol);
+		train.output[i] = data.output[idx[i]];
+	}
+	this->weights = RSGD::train<T>(data, num_layers, y, batch, max_epochs, eta, lambda, gamma, eta_factor, lambda_factor, gamma_step, formula, waitcenter, equal, center, seed, outfile, quiet);
+	return;
+}
+
+template<typename T>inline void ReplicatedSGD<T>::train(const Patterns<T> &data, const hyperparams<ReplicatedSGD> &params)
+{
+	this->num_layers = num_layers;
+	this->input_size = data.Ncol;
+	this->weights = RSGD::train<T>(data, params.num_layers, params.y, params.batch, params.max_epochs, params.eta, params.lambda, params.gamma, params.eta_factor, params.lambda_factor, params.gamma_step, params.formula, params.waitcenter, params.equal, params.center, params.seed);
+	return;
+}
+
+template<typename T> inline void ReplicatedSGD<T>::cv_train(const Patterns<T> &data, const std::vector<int> &idx, const hyperparams<ReplicatedSGD> &params)
+{
+	this->cv_train(data, idx, params.num_layers, params.y, params.batch, params.max_epochs, params.eta, params.lambda, params.gamma, params.eta_factor, params.lambda_factor, params.gamma_step, params.formula, params.waitcenter, params.equal, params.center, params.seed);
+}
+
+template<typename T> inline int* ReplicatedSGD<T>::test(const Patterns<T> &test)
+{
+	return RSGD::test<T>(test, this->weights, this->num_layers, this->input_size);
+}
+template<typename T> inline int* ReplicatedSGD<T>::cv_test(const Patterns<T> &test, const std::vector<int> &idx)
+{
+	int *results = new int[idx.size()]; 
+	for(int i = 0; i < (int)idx.size(); ++i)
+		results[i] = RSGD::compute_output(test.input[idx[i]], this->weights, this->num_layers, this->input_size);
+	return results;
+}
+template<typename T> inline int ReplicatedSGD<T>::predict(T *input)
+{
+	return RSGD::compute_output(input, this->weights, this->num_layers, this->input_size);
+}
 
 
+
+//ReplicatedFBP
 template<typename T> class ReplicatedFBP
 {
 	int input_size,
@@ -203,7 +261,7 @@ template<typename T>template<class Mag> inline void ReplicatedFBP<T>::train(cons
 {
 	this->num_layers = num_layers;
 	this->input_size = data.Ncol;
-	this->weights = FBP::train<T, Mag>(data, num_layers, seed, max_iters, randfact, damping, accuracy1, accuracy2, fprotocol, protocol_size, quiet, output);
+	this->weights = RFBP::train<T, Mag>(data, num_layers, seed, max_iters, randfact, damping, accuracy1, accuracy2, fprotocol, protocol_size, quiet, output);
 	return;
 }
 template<typename T>template<class Mag> inline void ReplicatedFBP<T>::cv_train(const Patterns<T> &data, const std::vector<int> &idx, const int &num_layers, const int &max_iters, const T &randfact, const T &damping, const std::string &accuracy1, const std::string &accuracy2, const std::string &fprotocol, int protocol_size, int seed, bool quiet, std::string output)
@@ -222,14 +280,14 @@ template<typename T>template<class Mag> inline void ReplicatedFBP<T>::cv_train(c
 		std::memcpy(train.input[i], data.input[idx[i]], sizeof(T)*train.Ncol);
 		train.output[i] = data.output[idx[i]];
 	}
-	this->weights = FBP::train<T, Mag>(train, num_layers, seed, max_iters, randfact, damping, accuracy1, accuracy2, fprotocol, protocol_size, quiet, output);
+	this->weights = RFBP::train<T, Mag>(train, num_layers, seed, max_iters, randfact, damping, accuracy1, accuracy2, fprotocol, protocol_size, quiet, output);
 	return;
 }
 template<typename T>template<class Mag> inline void ReplicatedFBP<T>::train(const Patterns<T> &data, const hyperparams<ReplicatedFBP> &params)
 {
 	this->num_layers = num_layers;
 	this->input_size = data.Ncol;
-	this->weights = FBP::train<T, Mag>(data, params.num_layers, params.seed, params.max_iters, params.randfact, params.damping, params.accuracy1, params.accuracy2, params.fprotocol, params.protocol_size);
+	this->weights = RFBP::train<T, Mag>(data, params.num_layers, params.seed, params.max_iters, params.randfact, params.damping, params.accuracy1, params.accuracy2, params.fprotocol, params.protocol_size);
 	return;
 }
 template<typename T>template<class Mag> inline void ReplicatedFBP<T>::cv_train(const Patterns<T> &data, const std::vector<int> &idx, const hyperparams<ReplicatedFBP> &params)
@@ -238,18 +296,18 @@ template<typename T>template<class Mag> inline void ReplicatedFBP<T>::cv_train(c
 }
 template<typename T> inline int* ReplicatedFBP<T>::test(const Patterns<T> &test)
 {
-	return FBP::test<T>(test, this->weights, this->num_layers, this->input_size);
+	return RFBP::test<T>(test, this->weights, this->num_layers, this->input_size);
 }
 template<typename T> inline int* ReplicatedFBP<T>::cv_test(const Patterns<T> &test, const std::vector<int> &idx)
 {
 	int *results = new int[idx.size()]; 
 	for(int i = 0; i < (int)idx.size(); ++i)
-		results[i] = FBP::compute_output(test.input[idx[i]], this->weights, this->num_layers, this->input_size);
+		results[i] = RFBP::compute_output(test.input[idx[i]], this->weights, this->num_layers, this->input_size);
 	return results;
 }
 template<typename T> inline int ReplicatedFBP<T>::predict(T *input)
 {
-	return FBP::compute_output(input, this->weights, this->num_layers, this->input_size);
+	return RFBP::compute_output(input, this->weights, this->num_layers, this->input_size);
 }
 
 
