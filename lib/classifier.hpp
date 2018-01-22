@@ -129,8 +129,8 @@ public:
 
 template<typename T> class ReplicatedSGD
 {
-	T *weights;
-	int num_layers,
+	int *weights,
+		num_layers,
 		input_size;
 public:
 	using type = T;

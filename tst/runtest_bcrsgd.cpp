@@ -25,18 +25,18 @@ int main(int argc, char *argv[])
 	
 
 	ReplicatedSGD<double> sgd;
-	sgd.train<MagP64<double>>(	input, 
-								hidden_layer, 
-								y, 
-								batch, 
-								max_epochs, 
-								eta, 
-								lambda, 
-								gamma, 
-								eta_factor, 
-								lambda_factor, 
-								gamma_step,
-								formula);
+	sgd.train(	train, 
+				hidden_layer, 
+				y, 
+				batch, 
+				max_epochs, 
+				eta, 
+				lambda, 
+				gamma, 
+				eta_factor, 
+				lambda_factor, 
+				gamma_step,
+				formula);
 
 	int *label_predict = sgd.test(test);
 	auto score_sgd = score::perfs(test.output, label_predict, test.Nout);
