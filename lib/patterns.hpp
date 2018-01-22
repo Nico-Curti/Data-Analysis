@@ -99,12 +99,14 @@ template<typename T> Patterns<T>::Patterns(const std::string &patternsfile, bool
 		std::getline(is, row);
 		token = split(row, "\t");
 		this->Nout = (int)token.size();
-		if(!isdigit(token[0][0]))	this->output = lbl2num(token);
-		else
+		if(std::isdigit(token[0][0]) || (token[0].size() > 1 && (token[0][0] == '-' || token[0][0] == '+'))) 
 		{
 			this->output = new int[this->Nout];
 			std::transform(token.begin(), token.end(), output, [](const std::string &val){return std::stoi(val);});
 		}
+		else
+			this->output = lbl2num(token);
+
 		// read the first pattern line
 		std::getline(is, row);
 		token = split(row, "\t");

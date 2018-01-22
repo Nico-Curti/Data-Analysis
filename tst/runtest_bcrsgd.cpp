@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 		   eta_factor = 1.0,
 		   lambda_factor = 1.0,
 		   gamma_step = 0.001;
-/*
+
 	std::string formula = "simple",
 				trainfile = "tst/pattern/train_sgd.dat",
 				testfile = "tst/pattern/test_sgd.dat",
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 		for(int i = 0; i < test.Nrow; ++i) os << test.output[i] << "\t" << label_predict[i] << std::endl;
 		os.close();
 	}
--------------------------------------*/
+
 	return 0;
 }
 

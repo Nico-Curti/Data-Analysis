@@ -2,11 +2,11 @@
 
 int main(int argc, char *argv[])
 {
-	int num_layers = 3,
-		*sizes = new int[num_layers],
-		epochs = 100,
+	int hidden_layers = 0,
+		*hidden_sizes = new int[hidden_layers],
+		epochs = 50,
 		mini_batch_size = 2;
-	sizes[0] = 3; sizes[1] = 4; sizes[2] = 2;
+		hidden_sizes[0] = 0;
 	float eta = .8f, lambda = .0f;
 	std::string pattern = "tst/pattern/train_nn.dat",
 				testfile = "tst/pattern/test_nn.dat",
@@ -22,8 +22,12 @@ int main(int argc, char *argv[])
 
 	std::cout << "input vector\ttrue\tpredict" << std::endl;
 	for(int i = 0; i < test.Nout; ++i)
-		std::cout << "test of (" << test.input[i][0] << "," << test.input[i][1] << "," << test.input[i][2] << "," << test.input[i][3] << ")"
-				  << "\t" << test.output[i] << "\t" << lbl_predict_perceptron[i] << std::endl;
+	{
+		std::cout << "test of (";
+		for(int j = 0; j < test.Ncol - 1; ++j)
+			std::cout << test.input[i][j] << ",";
+		std::cout<< test.input[i][test.Ncol - 1] << ")" << "\t" << test.output[i] << "\t" << lbl_predict_perceptron[i] << std::endl;
+	}
 
 	std::cout << "Performances : " << 
 				float( std::count_if(test.output, test.output + test.Nout,
@@ -48,14 +52,18 @@ int main(int argc, char *argv[])
 	std::cout << std::endl << std::endl << "NeuralNetwork classifier" << std::endl << std::endl;
 
 	NeuralNetwork<float> nn;
-	nn.train(training, sizes, num_layers, CrossEntropyCost, epochs, mini_batch_size, eta, lambda, 123);
-	//nn.save(wfile);
+	nn.train(training, hidden_sizes, hidden_layers, CrossEntropyCost, epochs, mini_batch_size, eta, lambda, 123);
+	nn.save(wfile);
 	int * lbl_predict_nn = nn.test(test);
 
 	std::cout << "input vector\ttrue\tpredict" << std::endl;
 	for(int i = 0; i < test.Nout; ++i)
-		std::cout << "test of (" << test.input[i][0] << "," << test.input[i][1] << "," << test.input[i][2] << "," << test.input[i][2] << ")"
-				  << "\t" << test.output[i] << "\t" << lbl_predict_nn[i] << std::endl;
+	{
+		std::cout << "test of (";
+		for(int j = 0; j < test.Ncol - 1; ++j)
+			std::cout << test.input[i][j] << ",";
+		std::cout<< test.input[i][test.Ncol - 1] << ")" << "\t" << test.output[i] << "\t" << lbl_predict_perceptron[i] << std::endl;
+	}
 
 	std::cout << "Performances : " << 
 				float( std::count_if(test.output, test.output + test.Nout,
