@@ -534,33 +534,6 @@ namespace RSGD
 		if(center || init_equal)
 		{
 			std::generate(netc.H, netc.H + netc.size, [&binary_dist, &eng]{return (binary_dist(eng)) ? (T)1. : -(T)1.;});
-			//netc.H[0]=-1;
-			//netc.H[1]=1;
-			//netc.H[2]=1;
-			//netc.H[3]=-1;
-			//netc.H[4]=-1;
-			//netc.H[5]=1;
-			//netc.H[6]=-1;
-			//netc.H[7]=1;
-			//netc.H[8]=-1;
-			//netc.H[9]=1;
-			//netc.H[10]=1;
-			//netc.H[11]=1;
-			//netc.H[12]=1;
-			//netc.H[13]=-1;
-			//netc.H[14]=-1;
-			//netc.H[15]=1;
-			//netc.H[16]=1;
-			//netc.H[17]=1;
-			//netc.H[18]=-1;
-			//netc.H[19]=-1;
-			//netc.H[20]=-1;
-			//netc.H[21]=1;
-			//netc.H[22]=1;
-			//netc.H[23]=-1;
-			//netc.H[24]=-1;
-			//netc.H[25]=-1;
-			//netc.H[26]=1;
 
 			std::memset(netc.DeltaH, 0, sizeof(T)*netc.size);
 			std::transform(netc.H, netc.H + netc.size, netc.J, [](const T &i){return (i > 0) ? 1 : 0;});
