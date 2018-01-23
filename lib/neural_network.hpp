@@ -98,8 +98,8 @@ inline void NeuralNetwork<T>::train(const Patterns<T> &data, const hyperparams<N
 template<typename T> 
 template<typename Up> 
 void NeuralNetwork<T>::train(const Patterns<T> &data, 
-							 int *sizes, 
-							 const int &num_layers, 
+							 int *hidden_sizes, 
+							 const int &hidden_layers, 
 							 Up up, 
 							 const int &epochs, 
 							 const int &mini_batch_size, 
@@ -111,12 +111,13 @@ void NeuralNetwork<T>::train(const Patterns<T> &data,
 		**nabla_w, **delta_nabla_w,
 		**nabla_b, **delta_nabla_b;
 	// initialization
-	this->num_layers = num_layers + 2;
+	this->num_layers = hidden_layers + 2;
 	this->sizes 	= new int[this->num_layers];
-	std::transform(sizes, sizes + num_layers, this->sizes + 1, [](const T &val){return val;});
+	std::transform(hidden_sizes, hidden_sizes + hidden_layers, this->sizes + 1, [](const T &val){return val;});
 	this->sizes[0]  = data.Ncol;
 	std::unordered_set<int> unique(data.output, data.output + data.Nout, data.Nout*sizeof(int));
 	this->sizes[this->num_layers - 1] = (int)unique.size();
+
 
 	this->biases  	= new T*[this->num_layers - 1]; 
 	nabla_b 		= new T*[this->num_layers - 1]; 
@@ -125,7 +126,6 @@ void NeuralNetwork<T>::train(const Patterns<T> &data,
 	this->weights 	= new T*[this->num_layers - 1]; 
 	nabla_w 		= new T*[this->num_layers - 1]; 
 	delta_nabla_w 	= new T*[this->num_layers - 1];
-
 	for (int i = 0; i < this->num_layers - 1; ++i)
 	{
 		this->biases[i] 	= new T[this->sizes[i + 1]]; 
@@ -139,7 +139,32 @@ void NeuralNetwork<T>::train(const Patterns<T> &data,
 
 		std::generate(this->biases[i],  this->biases[i]  + this->sizes[i + 1],[]{return static_cast<T>(rand()) / static_cast<T>(RAND_MAX);});
 		std::generate(this->weights[i], this->weights[i] + this->sizes[i] * this->sizes[i + 1], []{return static_cast<T>(rand()) / static_cast<T>(RAND_MAX);});
+
 	}
+	//this->biases[0][1] = -1.22363086;
+//	//this->biases[0][0] = 0.26126199;
+//	//this->biases[0][2] = -0.11668016;
+//	//this->biases[0][3] = 0.42849846;
+//	//this->biases[1][0] = 0.4635173;
+//	//this->biases[1][1] = -0.54431186;
+//
+//	//this->weights[0][0] = 0.75638639;
+//	//this->weights[0][1] = -0.70799737;
+//	//this->weights[0][2] = -0.46334466;
+//	//this->weights[0][3] = -0.88191277;
+//	//this->weights[0][4] = -0.52307343;
+//	//this->weights[0][5] = 1.35898807;
+//	//this->weights[0][6] = -0.2599581;
+//	//this->weights[0][7] = -0.10235441;
+//
+	//this->weights[1][0] = 0.19030077;
+	//this->weights[1][1] = 0.18520836;
+	//this->weights[1][2] = 0.19684286;
+	//this->weights[1][3] = -0.62511548;
+	//this->weights[1][4] = 0.41484186;
+	//this->weights[1][5] = -0.88737718;
+	//this->weights[1][6] = -0.34211414;
+	//this->weights[1][7] = 0.75695548;
 
 	this->SGD(	data,
 				nabla_w,
@@ -239,9 +264,12 @@ void NeuralNetwork<T>::SGD(	const Patterns<T> &training,
 	
 	for (int j = 0; j < epochs; ++j)
 	{
-		std::shuffle(rand_idx, rand_idx + training.Nrow, std::mt19937(std::rand()));
+		//RAND SPENTO
+
+		//std::shuffle(rand_idx, rand_idx + training.Nrow, std::mt19937(std::rand()));
 		for (int i = 0; i < training.Nrow; ++i)
-			mini_batch[(int)(i / mini_batch_size)][i % mini_batch_size] = rand_idx[i];
+			mini_batch[(int)(i / mini_batch_size)][i % mini_batch_size] = i;
+			//mini_batch[(int)(i / mini_batch_size)][i % mini_batch_size] = rand_idx[i];
 		
 		std::for_each(mini_batch, mini_batch + mini_batch_number,
 					  [&training, &mini_batch_size, &eta, &lambda, &up, nabla_w, nabla_b, delta_nabla_w, delta_nabla_b, this]
@@ -249,7 +277,10 @@ void NeuralNetwork<T>::SGD(	const Patterns<T> &training,
 					  {
 					  	this->update_mini_batch(training, nabla_w, nabla_b, delta_nabla_w, delta_nabla_b, batch, mini_batch_size, eta, lambda, up);
 					  });
+
 	}
+
+
 	for(int i = 0; i < mini_batch_number; ++i) delete[] mini_batch[i];
 	delete[] mini_batch;
 	delete[] rand_idx;
@@ -277,7 +308,7 @@ void NeuralNetwork<T>::update_mini_batch(const Patterns<T> &training,
 		std::memset(nabla_b[i], (T)0, sizeof(T)*this->sizes[i+1]);
 		std::memset(nabla_w[i], (T)0, sizeof(T)*this->sizes[i]*this->sizes[i+1]);
 	}
-
+	//std::cout<<"\n----------------------\n";
 	for (int i = 0; i < mini_batch_size; ++i)
 	{
 		NeuralNetwork::backprop(training, 
@@ -346,6 +377,11 @@ void NeuralNetwork<T>::backprop(const Patterns<T> &training,
 					   {
 					   	return z + bias;
 					   });
+		//DEBUG
+		//std::cout<<"zs \n";
+		//for(int j = 0; j<this->sizes[i]; ++j)
+		//	std::cout<< zs[i-1][j]<< " ";
+		//std::cout<<std::endl;
 		std::transform(zs[i-1], zs[i-1] + this->sizes[i],
 					   activations[i], 
 					   [&](const T &z)
@@ -353,9 +389,11 @@ void NeuralNetwork<T>::backprop(const Patterns<T> &training,
 					   	return (T)1. / ((T)1. + exp(-z));
 					   });
 	}
+	//std::cin.get();
 
 	// backward pass
 	T *delta = cost(zs[this->num_layers - 2], activations[this->num_layers - 1], training.output[mini_batch_ii], this->sizes[this->num_layers - 1]);
+	
 	std::memcpy(delta_nabla_b[num_layers - 2], delta, sizeof(T)*this->sizes[this->num_layers - 1]);
 	delta_nabla_w[this->num_layers - 2] = VecVec(activations[this->num_layers - 2], delta, this->sizes[this->num_layers - 2], this->sizes[this->num_layers - 1]);
 	for (int l = 2; l < num_layers; ++l)
@@ -510,13 +548,13 @@ template<typename T> void NeuralNetwork<T>::save(const std::string &filename, bo
 			//save weights matrix
 			for (int i = 0; i < this->num_layers - 1; ++i)
 			{
-				std::copy(this->weights, this->weights + this->sizes[i] * this->sizes[i + 1] - 1, std::ostream_iterator<T>(os, "\t"));
+				std::copy(this->weights[i], this->weights[i] + this->sizes[i] * this->sizes[i + 1] - 1, std::ostream_iterator<T>(os, "\t"));
 				os << this->weights[i][this->sizes[i] * this->sizes[i + 1] - 1] << std::endl;
 			}
 			//save biases matrix
 			for (int i = 0; i < this->num_layers - 1; ++i)
 			{
-				std::copy(this->biases, this->biases + this->sizes[i + 1] - 1, std::ostream_iterator<T>(os, "\t"));
+				std::copy(this->biases[i], this->biases[i] + this->sizes[i + 1] - 1, std::ostream_iterator<T>(os, "\t"));
 				os << this->biases[i][this->sizes[i + 1] - 1] << std::endl;
 			}
 		}break;

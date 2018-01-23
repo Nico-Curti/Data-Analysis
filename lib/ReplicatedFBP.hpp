@@ -252,7 +252,7 @@ template<typename T, class Mag, class Input> using patt = typename std::enable_i
 template<typename T, class Mag, class Input> using file = typename std::enable_if<std::is_same<Input, std::string>::value, Input>::type*;
 
 
-namespace FBP
+namespace RFBP
 {
 	template<typename T, class Mag> T 	 theta_node_update_approx(MagVec<Mag>, Mag &, T *, MagVec<Mag>, Mag &, const Params<T, Mag> &, const int &, const int &);
 	template<typename T, class Mag> T 	 theta_node_update_accurate(MagVec<Mag>, Mag &, T *, MagVec<Mag>, Mag &, const Params<T, Mag> &, const int &, const int &);
@@ -1178,7 +1178,7 @@ template<typename T> void FocusingProtocol<T>::FreeScoping(const Vec2<T> &list)
 
 
 
-namespace FBP
+namespace RFBP
 {
 
 	template<typename T, class Mag> T theta_node_update_approx(MagVec<Mag> m, Mag &M, T *xi, MagVec<Mag> u, Mag &U, const Params<T, Mag> &params, const int &nxi, const int &nm)

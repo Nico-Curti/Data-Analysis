@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 		   eta_factor = 1.0,
 		   lambda_factor = 1.0,
 		   gamma_step = 0.001;
-/*
+
 	std::string formula = "simple",
 				trainfile = "tst/pattern/train_sgd.dat",
 				testfile = "tst/pattern/test_sgd.dat",
@@ -25,18 +25,18 @@ int main(int argc, char *argv[])
 	
 
 	ReplicatedSGD<double> sgd;
-	sgd.train<MagP64<double>>(	input, 
-								hidden_layer, 
-								y, 
-								batch, 
-								max_epochs, 
-								eta, 
-								lambda, 
-								gamma, 
-								eta_factor, 
-								lambda_factor, 
-								gamma_step,
-								formula);
+	sgd.train(	train, 
+				hidden_layer, 
+				y, 
+				batch, 
+				max_epochs, 
+				eta, 
+				lambda, 
+				gamma, 
+				eta_factor, 
+				lambda_factor, 
+				gamma_step,
+				formula);
 
 	int *label_predict = sgd.test(test);
 	auto score_sgd = score::perfs(test.output, label_predict, test.Nout);
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 		for(int i = 0; i < test.Nrow; ++i) os << test.output[i] << "\t" << label_predict[i] << std::endl;
 		os.close();
 	}
--------------------------------------*/
+
 	return 0;
 }
 

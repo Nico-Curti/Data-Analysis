@@ -71,8 +71,8 @@ namespace RSGD
 
 	template<typename T> int* RSGD(const Patterns<T> &, const int &, const int &, parameters<T> &, const int &, const std::string &, const int &, const int &, const bool &, const bool &, const bool &, std::string outfile = "", bool quiet = false);	
 
-	template<typename T> int* train(const std::string &, int K = 1, int y = 1, int batch = 5, int max_epochs = 1000, T eta = (T)2., T lambda = (T).1, T gamma = std::numeric_limits<T>::infinity(), T eta_factor = (T)1., T lambda_factor = (T)1., T gamma_step = (T).01, std::string formula = "simple", bool waitcenter = false, bool equal = true, bool center = false, int seed = 202, std::string outfile = "");
-	template<typename T> int* train(const Patterns<T> &, int K = 1, int y = 1, int batch = 5, int max_epochs = 1000, T eta = (T)2., T lambda = (T).1, T gamma = std::numeric_limits<T>::infinity(), T eta_factor = (T)1., T lambda_factor = (T)1., T gamma_step = (T).01, std::string formula = "simple", bool waitcenter = false, bool equal = true, bool center = false, int seed = 202, std::string outfile = "");
+	template<typename T> int* train(const std::string &, const int &K = 1, const int &y = 1, const int &batch = 5, const int &max_epochs = 1000, const T &eta = (T)2., const T &lambda = (T).1, const T &gamma = std::numeric_limits<T>::infinity(), const T &eta_factor = (T)1., const T &lambda_factor = (T)1., const T &gamma_step = (T).01, std::string formula = "simple", bool waitcenter = false, bool equal = true, bool center = false, int seed = 202, std::string outfile = "", bool quiet = false);
+	template<typename T> int* train(const Patterns<T> &, const int &K = 1, const int &y = 1, const int &batch = 5, const int &max_epochs = 1000, const T &eta = (T)2., const T &lambda = (T).1, const T &gamma = std::numeric_limits<T>::infinity(), const T &eta_factor = (T)1., const T &lambda_factor = (T)1., const T &gamma_step = (T).01, std::string formula = "simple", bool waitcenter = false, bool equal = true, bool center = false, int seed = 202, std::string outfile = "", bool quiet = false);
 
 	template<typename T> int* test(const Patterns<T> &, int *, const int &, const int &);
 	template<typename T> int* test(std::string &, std::string &);
@@ -534,33 +534,6 @@ namespace RSGD
 		if(center || init_equal)
 		{
 			std::generate(netc.H, netc.H + netc.size, [&binary_dist, &eng]{return (binary_dist(eng)) ? (T)1. : -(T)1.;});
-			//netc.H[0]=-1;
-			//netc.H[1]=1;
-			//netc.H[2]=1;
-			//netc.H[3]=-1;
-			//netc.H[4]=-1;
-			//netc.H[5]=1;
-			//netc.H[6]=-1;
-			//netc.H[7]=1;
-			//netc.H[8]=-1;
-			//netc.H[9]=1;
-			//netc.H[10]=1;
-			//netc.H[11]=1;
-			//netc.H[12]=1;
-			//netc.H[13]=-1;
-			//netc.H[14]=-1;
-			//netc.H[15]=1;
-			//netc.H[16]=1;
-			//netc.H[17]=1;
-			//netc.H[18]=-1;
-			//netc.H[19]=-1;
-			//netc.H[20]=-1;
-			//netc.H[21]=1;
-			//netc.H[22]=1;
-			//netc.H[23]=-1;
-			//netc.H[24]=-1;
-			//netc.H[25]=-1;
-			//netc.H[26]=1;
 
 			std::memset(netc.DeltaH, 0, sizeof(T)*netc.size);
 			std::transform(netc.H, netc.H + netc.size, netc.J, [](const T &i){return (i > 0) ? 1 : 0;});
@@ -708,18 +681,18 @@ namespace RSGD
 	}
 
 
-	template<typename T> int* train(const std::string &patternsfile, int K, int y, int batch, int max_epochs, T eta, T lambda, T gamma, T eta_factor, T lambda_factor, T gamma_step, std::string formula, bool waitcenter, bool init_equal, bool center, int seed, std::string outfile)
+	template<typename T> int* train(const std::string &patternsfile, const int &K, const int &y, const int &batch, const int &max_epochs, const T &eta, const T &lambda, const T &gamma, const T &eta_factor, const T &lambda_factor, const T &gamma_step, std::string formula, bool waitcenter, bool init_equal, bool center, int seed, std::string outfile, bool quiet)
 	{
 		Patterns<T> pattern(patternsfile);
 		check_binary(pattern);
 		parameters<T> params(y, eta, lambda, gamma, eta_factor, lambda_factor, gamma_step);
-		return RSGD(pattern, K, params, batch, formula, seed, max_epochs, init_equal, waitcenter, center, outfile, false);
+		return RSGD(pattern, K, params, batch, formula, seed, max_epochs, init_equal, waitcenter, center, outfile, quiet);
 	}
 
-	template<typename T> int* train(const Patterns<T> &pattern, int K, int y, int batch, int max_epochs, T eta, T lambda, T gamma, T eta_factor, T lambda_factor, T gamma_step, std::string formula, bool waitcenter, bool init_equal, bool center, int seed, std::string outfile)
+	template<typename T> int* train(const Patterns<T> &pattern, const int &K, const int &y, const int &batch, const int &max_epochs, const T &eta, const T &lambda, const T &gamma, const T &eta_factor, const T &lambda_factor, const T &gamma_step, std::string formula, bool waitcenter, bool init_equal, bool center, int seed, std::string outfile, bool quiet)
 	{
 		parameters<T> params(y, eta, lambda, gamma, eta_factor, lambda_factor, gamma_step);
-		return RSGD(pattern, K, params, batch, formula, seed, max_epochs, init_equal, waitcenter, center, outfile, false);
+		return RSGD(pattern, K, params, batch, formula, seed, max_epochs, init_equal, waitcenter, center, outfile, quiet);
 	}
 
 	template<typename T> int* test(const Patterns<T> &pattern, int *weights, const int &K, const int &N)
