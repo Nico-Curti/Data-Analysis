@@ -23,20 +23,20 @@ def f(x, **kwargs):
     
 
 sep = os.sep
-runtest = ["runtest_nn", "runtest_bayes_cls", "runtest_clustering", "runtest_pca", "runtest_fbp"]#, "runtest_rsgd"]
+runtest = ["runtest_nn", "runtest_bayes_cls", "runtest_clustering", "runtest_pca", "runtest_fbp", "runtest_rsgd"]
 classify = ["diagqda", "qda", "perceptron", "neuralnetwork", "pca"]
 cluster = ["kmean", "densityclustering"]
-deep = ["rfbp"]#, "rsgd"]
+deep = ["rfbp", "rsgd"]
 
-if platform.system() == "Windows":
-    extension = "exe"
-    build = "powershell .\\build.ps1"
-elif platform.system() == "Linux" or platform.system()[:6] == "CYGWIN":
-    extension = ""
-    build = 'bash -c "./build.sh"'
-else:
-    print("Unsupported OS")
-    sys.exit(1)
+#if platform.system() == "Windows":
+#    extension = "exe"
+#    build = "powershell .\\build.ps1"
+#elif platform.system() == "Linux" or platform.system()[:6] == "CYGWIN":
+#    extension = ""
+#    build = 'bash -c "./build.sh"'
+#else:
+#    print("Unsupported OS")
+#    sys.exit(1)
 
 with(suppress(OSError)):
     os.makedirs(os.path.join("tst", "res")) 
@@ -44,16 +44,16 @@ with(suppress(OSError)):
 
 rule all:
     input:
-        exe          = expand(os.path.join("bin", "{res}." + extension), res=runtest),
+        #exe          = expand(os.path.join("bin", "{res}." + extension), res=runtest),
         imgs_cls     = expand(os.path.join("plt", "{res}.png"), res=classify),
         imgs_cluster = expand(os.path.join("plt", "{res}.png"), res=cluster),
         imgs_deep    = expand(os.path.join("plt", "{res}.png"), res=deep),
 
-rule build_program:
-    output:
-        exe = expand(os.path.join("bin", "{program}." + extension), program = runtest)
-    shell:
-        build
+#rule build_program:
+#    output:
+#        exe = expand(os.path.join("bin", "{program}." + extension), program = runtest)
+#    shell:
+#        build
 
 rule run_exec:
     input:

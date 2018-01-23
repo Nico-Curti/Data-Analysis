@@ -24,7 +24,7 @@ all: 	install \
 
 install: 	install.sh \
 		 	install.ps1
-		$(INSTALL)
+		$(INSTALL) -y
 
 plots:		Snakefile
 

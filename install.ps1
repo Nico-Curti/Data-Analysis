@@ -1,6 +1,5 @@
 # For the right Permission
 # Set-ExecutionPolicy Bypass -Scope Process -Force;
-
 Write-Host "Installing Data-Analysis dependecies:"
 Write-Host "- cmake"
 Write-Host "- g++ (> 4.9)"
@@ -10,7 +9,7 @@ Write-Host "- Python3 (snakemake)"
 
 If( $args[1] -eq $null ) # specify path to install programs
 {
-    $path2out = toolchain
+    $path2out = "toolchain"
 }
 Else
 {
@@ -38,7 +37,7 @@ If( -Not (Get-Command cmake -ErrorAction SilentlyContinue) ) # cmake not install
         Write-Host unzip $out_dir
         Expand-Archive $out_dir -DestinationPath cmake
         $env:PATH = $env:PATH + ";$PWD\cmake\$out\bin\"
-        Write-Host '$env:PATH = $env:PATH'" + `";$PWD\cmake\$out\bin\`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        -join('$env:PATH = $env:PATH', " + `";$PWD\cmake\$out\bin\`"") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
         Remove-Item $out_dir -Force -Recurse -ErrorAction SilentlyContinue
     }
     Else
@@ -59,7 +58,8 @@ If( -Not (Get-Command cmake -ErrorAction SilentlyContinue) ) # cmake not install
             Write-Host unzip $out_dir
             Expand-Archive $out_dir -DestinationPath cmake
             $env:PATH = $env:PATH + ";$PWD\cmake\$out\bin\"
-            Write-Host '$env:PATH = $env:PATH'" + `";$PWD\cmake\$out\bin\`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+
+            -join('$env:PATH = $env:PATH', " + `";$PWD\cmake\$out\bin\`"") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
             Remove-Item $out_dir -Force -Recurse -ErrorAction SilentlyContinue
         }
     }
@@ -72,8 +72,15 @@ Else
 
 ## install gcc new version for OpenMP 4. support
 Write-Host "C++ compiler identification (g++ version greater than 4.9)"
-$gcc = Get-Command g++ | Select-Object -ExpandProperty Definition
-$version = & g++ "--version"
+$gcc = Get-Command g++ -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Definition
+If( $gcc -eq $null)
+{
+    $version = ""
+}
+Else
+{
+    $version = & g++ "--version"
+}
 If( $gcc -eq $null ) # g++ not found
 {
     Write-Host g++ not installed
@@ -88,11 +95,11 @@ If( $gcc -eq $null ) # g++ not found
         ./usr/bin/pacman -S --noconfirm --needed base-devel mingw-w64-i686-toolchain #mingw-w64-x86_64-toolchain
         
         $env:PATH = $env:PATH + ";$PWD\mingw32\bin\"
-        Write-Host '$env:PATH = $env:PATH'" + `";$PWD\mingw32\bin\`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        -join('$env:PATH = $env:PATH', " + `";$PWD\mingw32\bin\`"") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
         $env:CC = "$PWD\mingw32\bin\gcc.exe"
-        Write-Host '$env:CC'" = `"$PWD\mingw32\bin\gcc.exe`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        -join('$env:CC', " = $PWD\mingw32\bin\gcc.exe") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
         $env:CXX = "$PWD\mingw32\bin\g++.exe"
-        Write-Host '$env:CXX'" = `"$PWD\mingw32\bin\g++.exe`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        -join('$env:CXX', " = $PWD\mingw32\bin\g++.exe") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
         
     }
     Else
@@ -113,11 +120,11 @@ If( $gcc -eq $null ) # g++ not found
             ./usr/bin/pacman -S --noconfirm --needed base-devel mingw-w64-i686-toolchain #mingw-w64-x86_64-toolchain
             
             $env:PATH = $env:PATH + ";$PWD\mingw32\bin\"
-            Write-Host '$env:PATH = $env:PATH'" + `";$PWD\mingw32\bin\`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+            -join('$env:PATH = $env:PATH', " + `";$PWD\mingw32\bin\`"") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
             $env:CC = "$PWD\mingw32\bin\gcc.exe"
-            Write-Host '$env:CC'" = `"$PWD\mingw32\bin\gcc.exe`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+            -join('$env:CC', " = $PWD\mingw32\bin\gcc.exe") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
             $env:CXX = "$PWD\mingw32\bin\g++.exe"
-            Write-Host '$env:CXX'" = `"$PWD\mingw32\bin\g++.exe`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+            -join('$env:CXX', " = $PWD\mingw32\bin\g++.exe") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
         }
     }
 }
@@ -135,13 +142,13 @@ ElseIf( $version.split(' ')[6].split('.')[0] -lt 4 ) # version too old
         ./usr/bin/pacman -S --noconfirm --needed base-devel mingw-w64-i686-toolchain #mingw-w64-x86_64-toolchain
         $gcc = $gcc.Substring(0, $gcc.Length - 8)
         $env:PATH = $env:PATH + ";$PWD\mingw32\bin\"
-        Write-Host '$env:PATH = $env:PATH'" + `";$PWD\mingw32\bin\`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        -join('$env:PATH = $env:PATH', " + `";$PWD\mingw32\bin\`"") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
         $env:PATH = $env:PATH - ";$gcc"
-        Write-Host '$env:PATH = $env:PATH'" - `";$gcc`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        -join('$env:PATH = $env:PATH', " - `";$gcc`"") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
         $env:CC = "$PWD\mingw32\bin\gcc.exe"
-        Write-Host '$env:CC'" = `"$PWD\mingw32\bin\gcc.exe`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        -join('$env:CC', " = $PWD\mingw32\bin\gcc.exe") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
         $env:CXX = "$PWD\mingw32\bin\g++.exe"
-        Write-Host '$env:CXX'" = `"$PWD\mingw32\bin\g++.exe`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        -join('$env:CXX', " = $PWD\mingw32\bin\g++.exe") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
     }
     Else
     {
@@ -161,13 +168,13 @@ ElseIf( $version.split(' ')[6].split('.')[0] -lt 4 ) # version too old
             ./usr/bin/pacman -S --noconfirm --needed base-devel mingw-w64-i686-toolchain #mingw-w64-x86_64-toolchain
             $gcc = $gcc.Substring(0, $gcc.Length - 8)
             $env:PATH = $env:PATH + ";$PWD\mingw32\bin\"
-            Write-Host '$env:PATH = $env:PATH'" + `";$PWD\mingw32\bin\`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+            -join('$env:PATH = $env:PATH', " + `";$PWD\mingw32\bin\`"") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
             $env:PATH = $env:PATH - ";$gcc"
-            Write-Host '$env:PATH = $env:PATH'" - `";$gcc`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+            -join('$env:PATH = $env:PATH', " - `";$gcc`"") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
             $env:CC = "$PWD\mingw32\bin\gcc.exe"
-            Write-Host '$env:CC'" = `"$PWD\mingw32\bin\gcc.exe`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+            -join('$env:CC', " = $PWD\mingw32\bin\gcc.exe") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
             $env:CXX = "$PWD\mingw32\bin\g++.exe"
-            Write-Host '$env:CXX'" = `"$PWD\mingw32\bin\g++.exe`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+            -join('$env:CXX', " = $PWD\mingw32\bin\g++.exe") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
         }
     }
 }
@@ -199,7 +206,7 @@ If( $choco -eq $null )
         }
         Else
         {
-            Write-Host Chocolatey will be install in C:\ProgramData\chocoportable
+            Write-Host Chocolatey will be installed in C:\ProgramData\chocoportable
             # Set directory for installation - Chocolatey does not lock
             # down the directory if not the default
             $InstallDir='C:\ProgramData\chocoportable'
@@ -234,7 +241,8 @@ If( $sub -eq $null) # not installed
         Remove-Item Sublime%20Text%20Build%203143%20x64.zip -Force -Recurse -ErrorAction SilentlyContinue
         
         Write-Host Add of alias sublime to powershell configuration
-        Set-Alias sublime "./sublimetext3/subl.exe"
+        'Set-Alias sublime "./sublimetext3/subl.exe"' | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
+        
     }
     Else
     {
@@ -253,7 +261,7 @@ If( $sub -eq $null) # not installed
             Remove-Item Sublime%20Text%20Build%203143%20x64.zip -Force -Recurse -ErrorAction SilentlyContinue
             
             Write-Host Add of alias sublime to powershell configuration
-            Set-Alias sublime "./sublimetext3/subl.exe"
+            'Set-Alias sublime "./sublimetext3/subl.exe"' | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
         }
     }
 }
@@ -276,7 +284,7 @@ If( -Not (Get-Command ninja -ErrorAction SilentlyContinue) ) # cmake not install
         Write-Host unzip $out_dir
         Expand-Archive $out_dir -DestinationPath ninja
         $env:PATH = $env:PATH + ";$PWD\ninja\"
-        Write-Host '$env:PATH = $env:PATH'" + `";$PWD\ninja\`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+        -join('$env:PATH = $env:PATH', " + `";$PWD\ninja\`"") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
         Remove-Item $out_dir -Force -Recurse -ErrorAction SilentlyContinue
     }
     Else
@@ -296,7 +304,7 @@ If( -Not (Get-Command ninja -ErrorAction SilentlyContinue) ) # cmake not install
             Write-Host unzip $out_dir
             Expand-Archive $out_dir -DestinationPath ninja
             $env:PATH = $env:PATH + ";$PWD\ninja\"
-            Write-Host '$env:PATH = $env:PATH'" + `";$PWD\ninja\`"" -NoNewline | Out-File "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append
+            -join('$env:PATH = $env:PATH', " + `";$PWD\ninja\`"") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
             Remove-Item $out_dir -Force -Recurse -ErrorAction SilentlyContinue
         }
     }
