@@ -1,11 +1,29 @@
 #pragma once
 #include <memory> // std::unique_ptr
+#include <chrono> // std::high_resolution_clock
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
 #include "fstat.hpp"
 #include "score_coef.hpp"
 #include "cv_classifier.hpp"
 
 namespace grid_search
 {
+	void printProgress (const double &now, const double &total, const std::chrono::high_resolution_clock::time_point &start_time)
+	{
+	    int val = (int) (now/total * 100);
+	    int lpad = (int) (now/total * PBWIDTH);
+	    printf ("\r%3d%% [%.*s%*s] %d/%d [%.3f sec]", 
+	    		val, 
+	    		lpad, 
+	    		PBSTR, 
+	    		PBWIDTH - lpad, 
+	    		"",
+	    		(int)now,
+	    		(int)total,
+	    		(double)std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - start_time).count());
+	    fflush (stdout);
+	}
 	// NEED:
 	// Overload operator + for crossover
 	// Overload operator ! for mutation
@@ -34,6 +52,7 @@ namespace grid_search
 		std::srand(seed);
 		for(int i = 0; i < n_population; ++i) population[i](static_cast<unsigned int>(std::rand())); // change to generate
 		std::ofstream os;
+		auto start_time = std::chrono::high_resolution_clock::now();
 		switch(int(log == ""))
 		{
 			case 0: // create log
@@ -44,6 +63,13 @@ namespace grid_search
 				os << std::endl;
 			} break;
 			case 1:
+			break;
+		}
+		switch((int)quiet)
+		{
+			case 0: std::cout << "Optimization Progress:\t";
+			break;
+			case 1: // silence
 			break;
 		}
 		for(int i = 0; i < max_iter; ++i) // loop over number of iterations
@@ -86,7 +112,7 @@ namespace grid_search
 
 			switch((int)quiet)
 			{
-				case 0: std::cout << "( it " << i << " ) Best = " << fitness[best] << " over " << data.Nout << " samples" << std::endl;
+				case 0: printProgress((double)fitness[best], (double)(data.Nout), start_time);//std::cout << "( it " << i << " ) Best = " << fitness[best] << " over " << data.Nout << " samples" << std::endl;
 				break;
 				case 1: // silence
 				break;

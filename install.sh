@@ -18,6 +18,8 @@ pushd $HOME
 mkdir -p $path2out
 cd $path2out
 
+source ~/.bashrc
+
 echo "Looking for packages..."
 echo "C++ compiler identification (g++ version greater than 4.9)"
 
@@ -163,7 +165,6 @@ function install # $1 program name, $2 url, $3 confirm
 			rm -rf "$OUT_DIR"*
 			IFS="-" read -ra OUT_DIR <<< "$OUT"
 			mv ${OUT} $OUT_DIR
-			source ~/.bashrc
 			export PATH=$PATH:$PWD/$OUT_DIR/bin
 			echo export PATH='$PATH':$PWD/$OUT_DIR/bin >> ~/.bashrc
 		else
@@ -196,7 +197,6 @@ function install # $1 program name, $2 url, $3 confirm
 				rm -rf "$OUT_DIR"*
 				IFS="-" read -ra OUT_DIR <<< "$OUT"
 				mv ${OUT} $OUT_DIR
-				source ~/.bashrc
 				export PATH=$PATH:$PWD/$OUT_DIR/bin
 				echo export PATH='$PATH':$PWD/$OUT_DIR/bin >> ~/.bashrc
 			fi
@@ -220,12 +220,12 @@ if [ "$PROG" == "" ]; then
 		wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
 		chmod ugo+x Miniconda3-latest-Linux-x86_64.sh 
 		bash ./Miniconda3-latest-Linux-x86_64.sh -b
-		source ~/.bashrc
-		export PATH=~/miniconda3/bin:$PATH 
 		conda update conda -y
 		conda config --add channels bioconda
 		pip install -U numpy matplotlib seaborn networkx scikit-learn pandas snakemake graphviz
 		rm ./Miniconda3-latest-Linux-x86_64.sh
+		export PATH=~/miniconda3/bin:$PATH 
+		echo export PATH=~/miniconda3/bin:~/miniconda3/Scripts:~/miniconda3/Library/bin:~/miniconda3/Library/usr/bin:~/miniconda3/Library/mingw-w64/bin:$PATH >> ~/.bashrc
 	else
 		read -p "Do you want install it? [y/n] " CONFIRM
 		if [ "$CONFIRM" == "n" ] || [ "$CONFIRM" == "N" ]; then
@@ -235,12 +235,12 @@ if [ "$PROG" == "" ]; then
 			wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
 			chmod ugo+x Miniconda3-latest-Linux-x86_64.sh 
 			bash ./Miniconda3-latest-Linux-x86_64.sh -b
-			source ~/.bashrc
-			export PATH=~/miniconda3/bin:$PATH 
 			conda update conda -y
 			conda config --add channels bioconda
 			pip install -U numpy matplotlib seaborn networkx scikit-learn pandas snakemake graphviz
 			rm ./Miniconda3-latest-Linux-x86_64.sh
+			export PATH=~/miniconda3/bin:$PATH 
+			echo export PATH=~/miniconda3/bin:~/miniconda3/Scripts:~/miniconda3/Library/bin:~/miniconda3/Library/usr/bin:~/miniconda3/Library/mingw-w64/bin:$PATH >> ~/.bashrc
 		fi
 	fi
 elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then

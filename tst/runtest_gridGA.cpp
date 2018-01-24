@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 																	K,
 																	seed,
 																	8, // number of thread to use for parallel GA
-																	false,
+																	true,
 																	genetic_out);
 
 	delete[] sizes;

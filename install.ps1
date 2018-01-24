@@ -368,10 +368,12 @@ Else
         Start-BitsTransfer -Source "https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe"
 
         Write-Host Miniconda3 will be install and it will set as default python
-        start /wait "" Miniconda3-latest-Windows-x86_64.exe /InstallationType=JustMe /RegisterPython=1 /S /D=%UserProfile%\Miniconda3
+        start /wait "" Miniconda3-latest-Windows-x86_64.exe /InstallationType=JustMe /RegisterPython=0 /S /D=%UserProfile%\Miniconda3
         conda update conda -y
         conda config --add channels bioconda
         pip install seaborn pandas ipython numpy matplotlib snakemake scikit-learn graphviz
+        $env:PATH = $env:PATH + ";$env:UserProfile\miniconda3;$env:UserProfile\miniconda3\Scripts;$env:UserProfile\miniconda3\Library\bin;$env:UserProfile\miniconda3\Library\usr\bin;$env:UserProfile\miniconda3\Library\mingw-w64\bin;"
+        -join('$env:PATH = $env:PATH', " + `";$env:UserProfile\miniconda3;$env:UserProfile\miniconda3\Scripts;$env:UserProfile\miniconda3\Library\bin;$env:UserProfile\miniconda3\Library\usr\bin;$env:UserProfile\miniconda3\Library\mingw-w64\bin;`"") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
     }
     Else
     {
@@ -385,10 +387,12 @@ Else
         Start-BitsTransfer -Source "https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe"
 
         Write-Host Miniconda3 will be install and it will set as default python
-        start /wait "" Miniconda3-latest-Windows-x86_64.exe /InstallationType=JustMe /RegisterPython=1 /S /D=%UserProfile%\Miniconda3
+        start /wait "" Miniconda3-latest-Windows-x86_64.exe /InstallationType=JustMe /RegisterPython=0 /S /D=%UserProfile%\Miniconda3
         conda update conda -y
         conda config --add channels bioconda
         pip install seaborn pandas ipython numpy matplotlib snakemake scikit-learn graphviz
+        $env:PATH = $env:PATH + ";$env:UserProfile\miniconda3;$env:UserProfile\miniconda3\Scripts;$env:UserProfile\miniconda3\Library\bin;$env:UserProfile\miniconda3\Library\usr\bin;$env:UserProfile\miniconda3\Library\mingw-w64\bin;"
+        -join('$env:PATH = $env:PATH', " + `";$env:UserProfile\miniconda3;$env:UserProfile\miniconda3\Scripts;$env:UserProfile\miniconda3\Library\bin;$env:UserProfile\miniconda3\Library\usr\bin;$env:UserProfile\miniconda3\Library\mingw-w64\bin;`"") | Out-File -FilePath "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
     }
 }
 
