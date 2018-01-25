@@ -6,7 +6,7 @@
 #$env:CXX = "clang++.exe"
 
 Remove-Item build -Force -Recurse -ErrorAction SilentlyContinue
-New-Item -Path .\build -ItemType directory -Force
+New-Item -Path .\build -ItemType directory -Force > $null
 Set-Location build
 
 # cmake -T"LLVM-vs2015" -G "Visual Studio 15" "-DCMAKE_BUILD_TYPE=Release" ..

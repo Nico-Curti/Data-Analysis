@@ -23,6 +23,7 @@ source ~/.bashrc
 echo "Looking for packages..."
 echo "C++ compiler identification (g++ version greater than 4.9)"
 
+install_make=false
 ## install make
 #if [ ! -x make ]; then
 #	echo "installing temporary version of make"
@@ -34,7 +35,7 @@ echo "C++ compiler identification (g++ version greater than 4.9)"
 #	export PATH=$PATH:$PWD/tmp_make/usr/bin
 #	#echo export PATH='$PATH':$PWD/tmp_make/usr/bin >> ~/.bashrc
 #fi
-
+install_gcc=false
 ## install g++
 #if [ ! -x g++ ]; then
 #	echo "installing temporary version of g++"
@@ -69,14 +70,38 @@ echo "C++ compiler identification (g++ version greater than 4.9)"
 #	#echo export PATH='$PATH':$PWD/tmp_gcc/usr/bin >> ~/.bashrc
 #fi
 
+
+
 # install gcc new version for OpenMP 4.0 support
-if [ -x g++ ]; then GCCVER=$(gcc --version | awk '/gcc /{print $0;exit 0;}' | cut -d' ' -f 4 | cut -d'.' -f 1 ); fi
-#if [ "$GCCVER" == "" ]; then
-#	echo "Something went very wrong!!!"
-#	exit
-if [[ "$GCCVER" -lt "5" || install_gcc ]]; then
-	echo "gcc version too old or not installed"
+if [[ -x "/usr/bin/g++" ]]; then GCCVER=$(g++ --version | awk '/g++ /{print $0;exit 0;}' | cut -d' ' -f 4 | cut -d'.' -f 1 ); fi
+if [[ "$GCCVER" -lt "5" ]]; then
+	echo "g++ version too old or not installed"
 	if [ "$1" == "-y" ] || [ "$1" == "-Y" ] || [ "$1" == "yes" ]; then
+		# install tmp version of gcc
+		if [ -x "/usr/bin/gcc" ]; then
+			echo "Download a temporary version of gcc"
+			wget "ftp://ftp.gnu.org/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.gz"
+			tar xzf gcc-4.9.4.tar.gz
+			mv gcc-4.9.4 gcc-4.9.4-sources
+			cd gcc-4.9.4-sources
+			./contrib/download_prerequisites
+			cd ..
+			mkdir tmp_gcc
+			cd tmp_gcc
+			$PWD/../gcc-4.9.4-sources/configure --prefix=$HOME/gcc-4.9.4 --enable-languages=c,c++
+			make
+			make install
+			#rm -rf tmp_gcc gcc-4.9.4-sources
+			export CC=$HOME/gcc-4.9.4/bin/gcc
+			export CXX=$HOME/gcc-4.9.4/bin/g++
+			cd ..
+		else
+			echo "gcc compiler NOT FOUND!"
+			exit
+		fi
+
+
+		# install modern gcc
 		wget "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz"
 		tar xzf gcc-7.2.0.tar.gz
 		mv gcc-7.2.0 gcc-7.2.0-sources
@@ -85,19 +110,50 @@ if [[ "$GCCVER" -lt "5" || install_gcc ]]; then
 		cd ..
 		mkdir objdir
 		cd objdir
-		$PWD/../gcc-7.2.0-sources/configure --prefix=$HOME/gcc-7.2.0 --enable-languages=c,c++,fortran,go
+		$PWD/../gcc-7.2.0-sources/configure --prefix=$HOME/gcc-7.2.0 --enable-languages=c,c++
 		make
 		make install
-		rm -rf objdir gcc-7.2.0-sources
+		#rm -rf objdir gcc-7.2.0-sources
+		#if [[ "$GCCVER" -lt "5" ]] || $install_gcc; then
+		#	rm -rf ../tmp_gcc
+		#fi
 		export CC=$HOME/gcc-7.2.0/bin/gcc
 		export CXX=$HOME/gcc-7.2.0/bin/g++
 		echo "export CC=$HOME/gcc-7.2.0/bin/gcc" >> ~/.bashrc
 		echo "export CXX=$HOME/gcc-7.2.0/bin/g++" >> ~/.bashrc
+		export PATH=$PATH:$PWD/gcc-7.2.0/bin/
+		echo export PATH='$PATH':$PWD/gcc-7.2.0/bin/ >> ~/.bashrc
+		cd ..
+
 	else
 		read -p "Do you want install it? [y/n] " CONFIRM
 		if [ "$CONFIRM" == "n" ] || [ "$CONFIRM" == "N" ]; then
 			echo "Abort gcc installation"
 		else
+			# install tmp version of gcc
+			if [ -x "/usr/bin/gcc" ]; then
+				echo "Download a temporary version of gcc"
+				wget "ftp://ftp.gnu.org/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.gz"
+				tar xzf gcc-4.9.4.tar.gz
+				mv gcc-4.9.4 gcc-4.9.4-sources
+				cd gcc-4.9.4-sources
+				./contrib/download_prerequisites
+				cd ..
+				mkdir tmp_gcc
+				cd tmp_gcc
+				$PWD/../gcc-4.9.4-sources/configure --prefix=$HOME/gcc-4.9.4 --enable-languages=c,c++
+				make
+				make install
+				#rm -rf tmp_gcc gcc-4.9.4-sources
+				export CC=$HOME/gcc-4.9.4/bin/gcc
+				export CXX=$HOME/gcc-4.9.4/bin/g++
+				cd ..
+			else
+				echo "gcc compiler NOT FOUND!"
+				exit
+			fi
+
+			# install modern gcc
 			wget "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz"
 			tar xzf gcc-7.2.0.tar.gz
 			mv gcc-7.2.0 gcc-7.2.0-sources
@@ -106,20 +162,26 @@ if [[ "$GCCVER" -lt "5" || install_gcc ]]; then
 			cd ..
 			mkdir objdir
 			cd objdir
-			$PWD/../gcc-7.2.0-sources/configure --prefix=$HOME/gcc-7.2.0 --enable-languages=c,c++,fortran,go
+			$PWD/../gcc-7.2.0-sources/configure --prefix=$HOME/gcc-7.2.0 --enable-languages=c,c++
 			make
 			make install
-			rm -rf objdir gcc-7.2.0-sources
+			#rm -rf objdir gcc-7.2.0-sources
+			#if [[ "$GCCVER" -lt "5" ]] || $install_gcc; then
+			#	rm -rf ../tmp_gcc
+			#fi
 			export CC=$HOME/gcc-7.2.0/bin/gcc
 			export CXX=$HOME/gcc-7.2.0/bin/g++
 			echo "export CC=$HOME/gcc-7.2.0/bin/gcc" >> ~/.bashrc
 			echo "export CXX=$HOME/gcc-7.2.0/bin/g++" >> ~/.bashrc
+			export PATH=$PATH:$PWD/gcc-7.2.0/bin/
+			echo export PATH='$PATH':$PWD/gcc-7.2.0/bin/ >> ~/.bashrc
+			cd ..
 		fi
 	fi
 else
 	echo "gcc already installed"
 fi
-
+exit
 
 if [[ "$(which 7zip)" == "" ]]; then
 	wget https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2
