@@ -2,6 +2,8 @@
 
 # For the right Permission
 # Set-ExecutionPolicy Bypass -Scope CurrentUser
+$cmake_version = "3.10.1"
+$ninja_version = "1.8.2"
 
 Write-Host "Installing Data-Analysis dependecies:"
 Write-Host "- cmake"
@@ -34,11 +36,12 @@ Write-Host "Looking for packages..."
 Write-Host "CMAKE identification"
 If( -Not (Get-Command cmake -ErrorAction SilentlyContinue) ){ # cmake not installed
     Write-Host CMAKE not FOUND
-    If( $args[0] -eq "-y" -Or $args[0] -eq "-Y" -Or $args[0] -eq "yes" ){ install_cmake "https://cmake.org/files/v3.10/cmake-3.10.1-win64-x64.zip" "." $true }
+    $up_version = $cmake_version.Substring(0, $cmake_version.Length - 2)
+    If( $args[0] -eq "-y" -Or $args[0] -eq "-Y" -Or $args[0] -eq "yes" ){ install_cmake "https://cmake.org/files/v$up_version/cmake-$cmake_version-win64-x64.zip" "." $true }
     Else{
         $CONFIRM = Read-Host -Prompt "Do you want install it? [y/n]"
         If($CONFIRM -eq "N" -Or $CONFIRM -eq "n"){ Write-Host Abort CMAKE installation }
-        Else{ install_cmake "https://cmake.org/files/v3.10/cmake-3.10.1-win64-x64.zip" "." $true }
+        Else{ install_cmake "https://cmake.org/files/v$up_ver/cmake-$cmake_ver-win64-x64.zip" "." $true }
     }
 }
 Else{ Write-Host CMAKE FOUND }
@@ -149,11 +152,11 @@ Else{ Write-Host SublimeText3 already installed }
 Write-Host ninja identification
 If( -Not (Get-Command ninja -ErrorAction SilentlyContinue) ){ # ninja not installed
     Write-Host ninja not FOUND
-    If( $args[0] -eq "-y" -Or $args[0] -eq "-Y" -Or $args[0] -eq "yes" ){ install_ninja "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip" "." $true }
+    If( $args[0] -eq "-y" -Or $args[0] -eq "-Y" -Or $args[0] -eq "yes" ){ install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-win.zip" "." $true }
     Else{
         $CONFIRM = Read-Host -Prompt "Do you want install it? [y/n]"
         If($CONFIRM -eq 'N' -Or $CONFIRM -eq 'n') { Write-Host Abort }
-        Else{ install_ninja "." $true }
+        Else{ install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-win.zip" "." $true }
     }
 }
 Else{ Write-Host ninja FOUND }
