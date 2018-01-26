@@ -62,7 +62,7 @@ If($pyver -like "*3.*" -Or $pyver -like "*Anaconda 3.*") {# right version 3. so 
         If( $args[0] -eq "-y" -Or $args[0] -eq "-Y" -Or $args[0] -eq "yes" ) {
             conda update conda -y
             conda config --add channels bioconda
-            pip install seaborn pandas ipython numpy matplotlib snakemake graphviz spyder
+            pip install seaborn, pandas, ipython, numpy, matplotlib, snakemake, graphviz, spyder
         }
         Else{
             $CONFIRM = Read-Host -Prompt "Do you want install snakemake and other dependecies? [y/n]"
@@ -70,7 +70,7 @@ If($pyver -like "*3.*" -Or $pyver -like "*Anaconda 3.*") {# right version 3. so 
             Else{
                 conda update conda -y
                 conda config --add channels bioconda
-                pip install seaborn pandas ipython numpy matplotlib snakemake graphviz spyder
+                pip install seaborn, pandas, ipython, numpy, matplotlib, snakemake, graphviz, spyder
             }
         }
     }
@@ -84,11 +84,11 @@ ElseIf($pyver -like "*2.*" -Or $pyver -like "*Anaconda 2.*") {
 }
 Else{
     Write-Host "Python not FOUND" -ForegroundColor Red
-    If( $args[0] -eq "-y" -Or $args[0] -eq "-Y" -Or $args[0] -eq "yes" ) { install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe" $true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder}
+    If( $args[0] -eq "-y" -Or $args[0] -eq "-Y" -Or $args[0] -eq "yes" ) { install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe" $true seaborn, pandas, ipython, numpy, matplotlib, snakemake, graphviz, spyder}
     Else{
         $CONFIRM = Read-Host -Prompt "Do you want install snakemake and other dependecies? [y/n]"
         If($CONFIRM -eq 'N' -Or $CONFIRM -eq 'n') { Write-Host "Abort" -ForegroundColor Red }
-        Else { install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe" $true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder}
+        Else { install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe" $true seaborn, pandas, ipython, numpy, matplotlib, snakemake, graphviz, spyder}
     }
 }
 
@@ -115,7 +115,7 @@ ElseIf( $version.split(' ')[6].split('.')[0] -lt 4 ){ # version too old
         Else{ 
             install_g++ "." $true 
             $env:PATH = $env:PATH - ";$gcc"
-            -join('$env:PATH = $env:PATH', " - `";$gcc`"") | Out-File -FilePath "$env:UserProfile\$Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
+            -join('$env:PATH = $env:PATH', " - `";$gcc`"") | Out-File -FilePath "$Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Append -Encoding ASCII
         }
     }
 }
