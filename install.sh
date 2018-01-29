@@ -1,6 +1,10 @@
 #!/bin/bash
 source ~/.bashrc
 
+# prerequisites:
+# - g++
+# - make
+
 red=`tput setaf 1`
 green=`tput setaf 2`
 yellow=`tput setaf 3`
@@ -17,8 +21,8 @@ echo "- Ninja"
 source ./shell_utils/bash/install_ninja.sh
 echo "- g++ (> 4.9)"
 source ./shell_utils/bash/install_g++.sh
-echo "- make"
-source ./shell_utils/bash/install_make.sh
+#echo "- make"
+#source ./shell_utils/bash/install_make.sh
 echo "- Python3 (snakemake)"
 source ./shell_utils/bash/install_python.sh
 
@@ -31,12 +35,18 @@ mkdir -p $path2out
 cd $path2out
 
 echo "Looking for packages..."
-# mkdir -p var/lib/dpkg/updates
-# touch var/lib/dpkg/status
-# mkdir ./var/lib/dpkg/info
-# touch ./var/lib/dpkg/info/format
-# echo 1 >> ./var/lib/dpkg/info/format
-# dpkg --force-not-root --root=$HOME/tmp_gcc --log ./log.dpkg --install make_4.1-6_amd64.deb
+# Debian installer for make and g++
+#mkdir tmp_make
+#cd tmp_make
+#apt-get download make
+#mkdir -p ./var/lib/dpkg/updates
+#mkdir -p ./var/lib/dpkg/info
+#mkdir -p ./var/lib/dpkg/triggers
+#touch ./var/lib/dpkg/status
+#touch ./var/lib/dpkg/available
+#touch ./var/lib/dpkg/info/format
+#echo 1 >> ./var/lib/dpkg/info/format
+#dpkg --force-not-root --root=$HOME/tmp_make --log ./log.dpkg --no-triggers --install make_4.1-6_amd64.deb
 
 # CMAKE Installer
 echo "CMAKE identification"
@@ -58,11 +68,11 @@ if [ ! -x "unzip" ]; then
 	echo "7zip identification"
 	if [ ! -x "7za" ]; then
 		echo ${red}7zip not FOUND
-		if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_7zip;
+		if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_7zip "https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2" "." true;
 		else
 			read -p "Do you want install it? [y/n] " confirm
 			if [ "$CONFIRM" == "n" ] || [ "$CONFIRM" == "N" ]; then echo ${red}"Abort";
-			else install_7zip;
+			else install_7zip "https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2" "." true;
 			fi
 		fi
 	else echo ${green}"7zip FOUND";
@@ -80,7 +90,22 @@ if [ ! -x "ninja" ]; then
 		else install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true;
 		fi
 	fi
-else echo ${green}"CMAKE FOUND";
+else echo ${green}"Ninja-build FOUND";
+fi
+
+# g++ Installer (new version for OpenMP 4.0 support)
+echo "g++ (> 4.9) identification"
+if [[ -x "/usr/bin/g++" ]]; then GCCVER=$(g++ --version | awk '/g++ /{print $0;exit 0;}' | cut -d' ' -f 4 | cut -d'.' -f 1 ); fi
+if [[ "$GCCVER" -lt "5" ]]; then
+	echo ${red}g++ version too old or not installed
+	if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_g++ "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz" "." true;
+	else
+		read -p "Do you want install it? [y/n] " confirm
+		if [ "$CONFIRM" == "n" ] || [ "$CONFIRM" == "N" ]; then echo ${red}"Abort";
+		else install_g++ "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz" "." true;
+		fi
+	fi
+else echo ${green}"g++ FOUND";
 fi
 
 # Python3 Installer

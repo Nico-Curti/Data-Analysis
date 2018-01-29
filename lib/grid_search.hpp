@@ -13,7 +13,7 @@ namespace grid_search
 	{
 	    int val = (int) (now/total * 100);
 	    int lpad = (int) (now/total * PBWIDTH);
-	    printf ("\r%3d%% [%.*s%*s] %d/%d [%.3f sec]", 
+	    printf ("\rOptimization Progress:\t%3d%% [%.*s%*s] %d/%d [%.3f sec]", 
 	    		val, 
 	    		lpad, 
 	    		PBSTR, 
@@ -67,7 +67,11 @@ namespace grid_search
 		}
 		switch((int)quiet)
 		{
-			case 0: std::cout << "Optimization Progress:\t";
+			case 0: std::cout << "Grid search algorithm (#population = " << n_population 
+														<< "; max iterations = " << max_iter 
+														<< "; elite rate = " << elit_rate 
+														<< "; mutation rate = " << mutation_rate 
+														<< ")" << std::endl;
 			break;
 			case 1: // silence
 			break;
