@@ -146,3 +146,8 @@ else
 	fi
 else echo ${green}"Python3 FOUND";
 fi
+
+popd
+
+echo ${yellow}"Build Data-Analysis with cmake-ninja"
+sh ./build.sh
