@@ -9,7 +9,7 @@ $Documents = [Environment]::GetFolderPath('MyDocuments')
 Write-Host "Installing Data-Analysis dependecies:" -ForegroundColor Yellow
 Write-Host "- cmake"
 . ".\shell_utils\pwsh\install_cmake.ps1"
-Write-Host "- Python3 (snakemake)"
+Write-Host "- (Conda)Python3 and snakemake"
 . ".\shell_utils\pwsh\install_python.ps1"
 Write-Host "- g++ (> 4.9)"
 Write-Host "- make"
@@ -51,10 +51,10 @@ Else{ Write-Host "cmake FOUND" -ForegroundColor Green}
 
 
 # Miniconda3 Installer
-Write-Host "Python3 identification"
+Write-Host "(Conda)Python3 identification"
 If( -Not (Get-Command python -ErrorAction SilentlyContinue) ){ $pyver = "" }
 Else {  $pyver = python -c "import sys; print(sys.version)" }# python version
-If($pyver -like "*3.*" -Or $pyver -like "*Anaconda 3.*") {# right version 3. so install snakemake
+If($pyver -like "*Miniconda 3.*" -Or $pyver -like "*Anaconda 3.*") {# right version 3. so install snakemake
     Write-Host "Python3 FOUND" -ForegroundColor Green
     Write-Host "snakemake identification"
     If( -Not (Get-Command snakemake -ErrorAction SilentlyContinue) ) {
@@ -76,11 +76,12 @@ If($pyver -like "*3.*" -Or $pyver -like "*Anaconda 3.*") {# right version 3. so 
     }
     Else { Write-Host "snakemake FOUND" -ForegroundColor Green}
 }
-ElseIf($pyver -like "*2.*" -Or $pyver -like "*Anaconda 2.*") {
+ElseIf($pyver -like "*Miniconda 2.*" -Or $pyver -like "*Anaconda 2.*") {
     Write-Host "The Python version found is too old for snakemake" -ForegroundColor Red
     Write-Host "Please set a new version of Python as default" -ForegroundColor Red
     Write-Host "OR" -ForegroundColor Red
     Write-Host "Uninstall the current version and re-run this script for a Python3 installation" -ForegroundColor Red
+    exit
 }
 Else{
     Write-Host "Python not FOUND" -ForegroundColor Red

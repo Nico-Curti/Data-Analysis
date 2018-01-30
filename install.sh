@@ -19,12 +19,12 @@ echo "- 7zip"
 source ./shell_utils/bash/install_7zip.sh
 echo "- Ninja"
 source ./shell_utils/bash/install_ninja.sh
+echo "- (Conda)Python3 (snakemake)"
+source ./shell_utils/bash/install_python.sh
 echo "- g++ (> 4.9)"
-source ./shell_utils/bash/install_g++.sh
+#source ./shell_utils/bash/install_g++.sh
 #echo "- make"
 #source ./shell_utils/bash/install_make.sh
-echo "- Python3 (snakemake)"
-source ./shell_utils/bash/install_python.sh
 
 
 if [ "$2" == "" ]; then	path2out="toolchain"; else path2out=$2; fi
@@ -93,42 +93,40 @@ if [ ! -x "ninja" ]; then
 else echo ${green}"Ninja-build FOUND";
 fi
 
-# g++ Installer (new version for OpenMP 4.0 support)
-echo "g++ (> 4.9) identification"
-if [[ -x "/usr/bin/g++" ]]; then GCCVER=$(g++ --version | awk '/g++ /{print $0;exit 0;}' | cut -d' ' -f 4 | cut -d'.' -f 1 ); fi
-if [[ "$GCCVER" -lt "5" ]]; then
-	echo ${red}g++ version too old or not installed
-	if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_g++ "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz" "." true;
-	else
-		read -p "Do you want install it? [y/n] " confirm
-		if [ "$CONFIRM" == "n" ] || [ "$CONFIRM" == "N" ]; then echo ${red}"Abort";
-		else install_g++ "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz" "." true;
-		fi
-	fi
-else echo ${green}"g++ FOUND";
-fi
-
 # Python3 Installer
 echo "Python3 and snakemake identification"
 if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then
 	echo ${green}"Python FOUND"
-	echo "snakemake identification"
-	if [ ! -x "snakemake" ]
-		echo ${red}"snakemake not FOUND"
-		if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then
-			conda update conda -y
-			conda config --add channels bioconda
-            pip install seaborn pandas ipython numpy matplotlib snakemake graphviz spyder
-        else
-        	read -p "Do you want install it? [y/n] " confirm
-        	if [ "$CONFIRM" == "n" ] || [ "$CONFIRM" == "N" ]; then echo ${red}"Abort";
-        	else
+	Conda=$(which python)
+	if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then 
+		echo ${green}"conda FOUND";
+		echo "snakemake identification"
+		if [ ! -x "snakemake" ]
+			echo ${red}"snakemake not FOUND"
+			if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then
 				conda update conda -y
 				conda config --add channels bioconda
 	            pip install seaborn pandas ipython numpy matplotlib snakemake graphviz spyder
-	        fi
-	    fi
-	else echo ${green}"snakemake FOUND"
+	        else
+	        	read -p "Do you want install it? [y/n] " confirm
+	        	if [ "$CONFIRM" == "n" ] || [ "$CONFIRM" == "N" ]; then echo ${red}"Abort";
+	        	else
+					conda update conda -y
+					conda config --add channels bioconda
+		            pip install seaborn pandas ipython numpy matplotlib snakemake graphviz spyder
+		        fi
+		    fi
+		else echo ${green}"snakemake FOUND"
+		fi
+	else 
+		echo ${red}"conda NOT FOUND";
+		if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe" true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder;
+		else
+			read -p "Do you want install it? [y/n] " confirm
+			if [ "$CONFIRM" == "n" ] || [ "$CONFIRM" == "N" ]; then echo ${red}"Abort";
+			else install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe" true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder;
+			fi
+		fi
 	fi
 elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
 	echo ${red}"The Python version found is too old for snakemake"
@@ -144,7 +142,31 @@ else
 		else install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe" true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder;
 		fi
 	fi
-else echo ${green}"Python3 FOUND";
+else echo ${green}"(Conda)Python3 and snakemake FOUND";
+fi
+
+# g++ Installer (new version for OpenMP 4.0 support)
+echo "g++ (> 4.9) identification"
+if [[ -x "/usr/bin/g++" ]]; then GCCVER=$(g++ --version | awk '/g++ /{print $0;exit 0;}' | cut -d' ' -f 4 | cut -d'.' -f 1 ); fi
+ if [[ "$GCCVER" -lt "5" ]] && [ ! -z "$GCCVER" ]; then
+	echo ${red}g++ version too old
+	if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_g++ "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz" "." true;
+	else
+		read -p "Do you want install it? [y/n] " confirm
+		if [ "$CONFIRM" == "n" ] || [ "$CONFIRM" == "N" ]; then echo ${red}"Abort";
+		else install_g++ "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz" "." true;
+		fi
+	fi
+elif [ -z "$GCCVER" ]; then
+	if [ -x "conda" ]; then
+		conda install -y -c conda-forge isl=0.17.1
+		conda install -y -c creditx gcc-7
+		conda install -y -c gouarin libgcc-7
+	else
+		echo ${red}"g++ available only with conda"
+		exit
+	fi
+else echo ${green}"g++ FOUND";
 fi
 
 popd
