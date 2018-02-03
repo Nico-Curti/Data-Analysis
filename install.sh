@@ -1,10 +1,6 @@
 #!/bin/bash
 source ~/.bashrc
 
-# prerequisites:
-# - g++
-# - make
-
 red=`tput setaf 1`
 green=`tput setaf 2`
 yellow=`tput setaf 3`
@@ -22,9 +18,6 @@ source ./shell_utils/bash/install_ninja.sh
 echo "- (Conda)Python3 (snakemake)"
 source ./shell_utils/bash/install_python.sh
 echo "- g++ (> 4.9)"
-#source ./shell_utils/bash/install_g++.sh
-#echo "- make"
-#source ./shell_utils/bash/install_make.sh
 
 
 if [ "$2" == "" ]; then	path2out="toolchain"; else path2out=$2; fi
@@ -35,18 +28,6 @@ mkdir -p $path2out
 cd $path2out
 
 echo "Looking for packages..."
-# Debian installer for make and g++
-#mkdir tmp_make
-#cd tmp_make
-#apt-get download make
-#mkdir -p ./var/lib/dpkg/updates
-#mkdir -p ./var/lib/dpkg/info
-#mkdir -p ./var/lib/dpkg/triggers
-#touch ./var/lib/dpkg/status
-#touch ./var/lib/dpkg/available
-#touch ./var/lib/dpkg/info/format
-#echo 1 >> ./var/lib/dpkg/info/format
-#dpkg --force-not-root --root=$HOME/tmp_make --log ./log.dpkg --no-triggers --install make_4.1-6_amd64.deb
 
 # CMAKE Installer
 echo "CMAKE identification"
@@ -162,6 +143,7 @@ elif [ -z "$GCCVER" ]; then
 		conda install -y -c conda-forge isl=0.17.1
 		conda install -y -c creditx gcc-7
 		conda install -y -c gouarin libgcc-7
+		conda install -y -c anaconda make
 	else
 		echo ${red}"g++ available only with conda"
 		exit

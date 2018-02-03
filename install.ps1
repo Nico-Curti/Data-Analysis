@@ -78,10 +78,12 @@ If($pyver -like "*Miniconda 3.*" -Or $pyver -like "*Anaconda 3.*") {# right vers
 }
 ElseIf($pyver -like "*Miniconda 2.*" -Or $pyver -like "*Anaconda 2.*") {
     Write-Host "The Python version found is too old for snakemake" -ForegroundColor Red
-    Write-Host "Please set a new version of Python as default" -ForegroundColor Red
-    Write-Host "OR" -ForegroundColor Red
-    Write-Host "Uninstall the current version and re-run this script for a Python3 installation" -ForegroundColor Red
-    exit
+    If( $args[0] -eq "-y" -Or $args[0] -eq "-Y" -Or $args[0] -eq "yes" ) { install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe" $true seaborn, pandas, ipython, numpy, matplotlib, snakemake, graphviz, spyder}
+    Else{
+        $CONFIRM = Read-Host -Prompt "Do you want install a new version of Python, snakemake and other dependecies? [y/n]"
+        If($CONFIRM -eq 'N' -Or $CONFIRM -eq 'n') { Write-Host "Abort" -ForegroundColor Red }
+        Else { install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe" $true seaborn, pandas, ipython, numpy, matplotlib, snakemake, graphviz, spyder}
+    }
 }
 Else{
     Write-Host "Python not FOUND" -ForegroundColor Red
