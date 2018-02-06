@@ -487,7 +487,7 @@ else
 fi # close python installer
 
 
-popd
+popd > /dev/null
 
 echo ${yellow}"Build Data-Analysis"${reset}
 sh ./build.sh
