@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# $2 = -y
+# $3 = installation path from root
+
 source ~/.bashrc
 
 project="Data-Analysis"
@@ -36,7 +40,7 @@ printf "  - ninja-build\n"
 source ./shell_utils/bash/install_7zip.sh
 source ./shell_utils/bash/install_ninja.sh
 
-if [ "$2" == "" ]; then path2out="toolchain"; else path2out=$2; fi
+if [ "$3" == "" ]; then path2out="toolchain"; else path2out=$3; fi
 printf ${green}"Installation path : "~/$path2out"\n"${reset}
 
 pushd $HOME > /dev/null
@@ -56,7 +60,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
         if [ $(which snakemake) != "" ]; then echo ${green}"FOUND"${reset};
         else
             echo ${red}"NOT FOUND"${reset}
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ]; then
                 conda update conda -y > /dev/null
                 conda config --add channels bioconda > /dev/null
                 yes | pip install seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null
@@ -77,7 +81,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
         fi
         if [[ "$GCCVER" -lt "5" ]]; then
             echo ${red}sufficient version NOT FOUND${reset}
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ]; then
                 conda install -y -c conda-forge isl=0.17.1 > /dev/null
                 conda install -y -c creditx gcc-7 > /dev/null
                 conda install -y -c gouarin libgcc-7 > /dev/null
@@ -96,7 +100,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
         if [ $(which cmake) != "" ];then echo ${green}"FOUND"${reset};
         else
             echo ${red}"NOT FOUND"${reset}
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then conda install -y -c anaconda cmake  > /dev/null
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ]; then conda install -y -c anaconda cmake  > /dev/null
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -108,7 +112,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
         if [ $(which ninja) != "" ]; then echo ${green}"FOUND"${reset};
         else
             echo ${red}"NOT FOUND"${reset}
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then conda install -y -c anaconda ninja > /dev/null
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ]; then conda install -y -c anaconda ninja > /dev/null
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -120,7 +124,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
         if [ $(which make) != "" ]; then echo ${green}"FOUND"${reset};
         else
             echo ${red}"NOT FOUND"${reset}
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then conda install -y -c anaconda make > /dev/null
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ]; then conda install -y -c anaconda make > /dev/null
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -131,7 +135,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
 
     else # conda not found
         echo ${red}"NOT FOUND"${reset};
-        if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_python $url_python true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
+        if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ]; then install_python $url_python true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
         else
             read -p "Do you want install it? [y/n] " confirm
             if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -145,7 +149,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
         fi
         if [[ "$GCCVER" -lt "5" ]] && [ ! -z "$GCCVER" ]; then # found a gcc too old
             echo ${red}version too old${reset}
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_g++ $url_gcc "." true > /dev/null;
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ]; then install_g++ $url_gcc "." true > /dev/null;
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -157,7 +161,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
             Conda=$(which python)
             printf "Conda identification: "
             if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then echo ${green}"FOUND"${reset}; # CONDA INSTALLER FOUND
-                if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then
+                if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then
                     conda install -y -c conda-forge isl=0.17.1 > /dev/null
                     conda install -y -c creditx gcc-7 > /dev/null
                     conda install -y -c gouarin libgcc-7 > /dev/null
@@ -183,7 +187,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
             Conda=$(which python)
             printf "Conda identification: "
             if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then echo ${green}"FOUND"${reset}; # CONDA INSTALLER FOUND
-                if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then conda install -y -c anaconda make > /dev/null
+                if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then conda install -y -c anaconda make > /dev/null
                 else
                     read -p "Do you want install it? [y/n] " confirm
                     if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -200,7 +204,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
             Conda=$(which python)
             printf "Conda identification: "
             if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then echo ${green}"FOUND"${reset}; # CONDA INSTALLER FOUND
-                if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then conda install -y -c anaconda cmake > /dev/null
+                if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then conda install -y -c anaconda cmake > /dev/null
                 else
                     read -p "Do you want install it? [y/n] " confirm
                     if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -208,7 +212,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
                     fi
                 fi
             else
-                if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then install_cmake $url_cmake "." true > /dev/null;
+                if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then install_cmake $url_cmake "." true > /dev/null;
                 else
                     read -p "Do you want install it? [y/n] " confirm
                     if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -224,7 +228,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
             Conda=$(which python)
             printf "Conda identification: "
             if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then echo ${green}"FOUND"${reset}; # CONDA INSTALLER FOUND
-                if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then conda install -y -c anaconda ninja > /dev/null
+                if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then conda install -y -c anaconda ninja > /dev/null
                 else
                     read -p "Do you want install it? [y/n] " confirm
                     if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -232,7 +236,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
                     fi
                 fi
             else
-                if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then
+                if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then
                     if [ $(which unzip) != "" ] || [ $(which 7za) != "" ]; then
                         install_ninja $url_ninja "." true > /dev/null;
                     elif [ $(which unzip) == "" ] || [ $(which 7za) == "" ]; then
@@ -256,7 +260,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
     fi # end conda not found
 elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then   
     echo ${red}"The Python version found is too old for snakemake"${reset}
-    if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_python $url_python true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
+    if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ]; then install_python $url_python true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
     else
         read -p "Do you want install it? [y/n] " confirm
         if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -270,7 +274,7 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
     fi
     if [[ "$GCCVER" -lt "5" ]] && [ ! -z "$GCCVER" ]; then # found a gcc too old
         echo ${red}g++ version too old${reset}
-        if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_g++ $url_gcc "." true > /dev/null;
+        if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ]; then install_g++ $url_gcc "." true > /dev/null;
         else
             read -p "Do you want install it? [y/n] " confirm
             if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -282,7 +286,7 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
         Conda=$(which python)
         printf "Conda identification: "
         if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then echo ${green}"FOUND"${reset}; # CONDA INSTALLER FOUND
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then
                 conda install -y -c conda-forge isl=0.17.1 > /dev/null
                 conda install -y -c creditx gcc-7 > /dev/null
                 conda install -y -c gouarin libgcc-7 > /dev/null
@@ -308,7 +312,7 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
         Conda=$(which python)
         printf "Conda identification: "
         if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then echo ${green}"FOUND"${reset}; # CONDA INSTALLER FOUND
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then conda install -y -c anaconda make > /dev/null
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then conda install -y -c anaconda make > /dev/null
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -325,7 +329,7 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
         Conda=$(which python)
         printf "Conda identification: "
         if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then echo ${green}"FOUND"${reset}; # CONDA INSTALLER FOUND
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then conda install -y -c anaconda cmake > /dev/null
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then conda install -y -c anaconda cmake > /dev/null
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -333,7 +337,7 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
                 fi
             fi
         else
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then install_cmake $url_cmake "." true > /dev/null;
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then install_cmake $url_cmake "." true > /dev/null;
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -349,7 +353,7 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
         Conda=$(which python)
         printf "Conda identification: "
         if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then echo ${green}"FOUND"${reset}; # CONDA INSTALLER FOUND
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then conda install -y -c anaconda ninja > /dev/null
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then conda install -y -c anaconda ninja > /dev/null
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -357,7 +361,7 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
                 fi
             fi
         else
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then
                 if [ $(which unzip) != "" ] || [ $(which 7za) != "" ]; then
                     install_ninja $url_ninja "." true > /dev/null;
                 elif [ $(which unzip) == "" ] || [ $(which 7za) == "" ];then
@@ -380,7 +384,7 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
     fi
 else
     echo ${red}"NOT FOUND"
-    if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_python $url_python true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
+    if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ]; then install_python $url_python true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
     else
         read -p "Do you want install it? [y/n] " confirm
         if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -391,7 +395,7 @@ else
     if [[ -x "/usr/bin/g++" ]]; then GCCVER=$(g++ --version | awk '/g++ /{print $0;exit 0;}' | cut -d' ' -f 4 | cut -d'.' -f 1 ); fi
         if [[ "$GCCVER" -lt "5" ]] && [ ! -z "$GCCVER" ]; then # found a gcc too old
             echo ${red}g++ version too old${reset}
-        if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_g++ $url_gcc "." true > /dev/null;
+        if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ]; then install_g++ $url_gcc "." true > /dev/null;
         else
             read -p "Do you want install it? [y/n] " confirm
             if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -403,7 +407,7 @@ else
         Conda=$(which python)
         printf "Conda identification: "
         if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then echo ${green}"FOUND"${reset}; # CONDA INSTALLER FOUND
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then
                 conda install -y -c conda-forge isl=0.17.1 > /dev/null
                 conda install -y -c creditx gcc-7 > /dev/null
                 conda install -y -c gouarin libgcc-7 > /dev/null
@@ -429,7 +433,7 @@ else
         Conda=$(which python)
         printf "Conda identification: "
         if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then echo ${green}"FOUND"${reset}; # CONDA INSTALLER FOUND
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then conda install -y -c anaconda make > /dev/null
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then conda install -y -c anaconda make > /dev/null
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort";
@@ -447,7 +451,7 @@ else
         Conda=$(which python)
         printf "Conda identification: "
         if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then echo ${green}"FOUND"${reset}; # CONDA INSTALLER FOUND
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then conda install -y -c anaconda cmake > /dev/null
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then conda install -y -c anaconda cmake > /dev/null
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -455,7 +459,7 @@ else
                 fi
             fi
         else
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then install_cmake $url_cmake "." true > /dev/null;
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then install_cmake $url_cmake "." true > /dev/null;
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -471,7 +475,7 @@ else
         Conda=$(which python)
         printf "Conda identification: "
         if echo $Conda | grep -q "miniconda" || echo $Conda | grep -q "anaconda"; then echo ${green}"FOUND"${reset}; # CONDA INSTALLER FOUND
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then conda install -y -c anaconda ninja > /dev/null
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then conda install -y -c anaconda ninja > /dev/null
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
@@ -479,7 +483,7 @@ else
                 fi
             fi
         else
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then
+            if [ "$2" == "-y" ] || [ "$2" == "-Y" ] || [ "$2" == "yes" ];then
                 if [ $(which unzip) != "" ] || [ $(which 7za) != "" ]; then
                     install_ninja $url_ninja "." true > /dev/null;
                 elif [ $(which unzip) == "" ] || [ $(which 7za) == "" ];then
