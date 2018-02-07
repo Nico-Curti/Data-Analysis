@@ -8,4 +8,4 @@ before_build:
   - cd C:\projects\data_analysis
 
 build_script:
-  - powershell "install.ps1 -y"
+  - powershell -Command "& '.\install.ps1 ' '-y'"
