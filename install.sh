@@ -178,7 +178,7 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
                 fi
             else
                 echo ${red}"g++ available only with conda"${reset}
-                exit
+                exit 1
             fi
         else echo ${green}"FOUND"${reset};
         fi
@@ -303,7 +303,7 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
             fi
         else
             echo ${red}"g++ available only with conda"${reset}
-            exit
+            exit 1
         fi
     else echo ${green}"FOUND"${reset};
     fi
@@ -424,7 +424,7 @@ else
             fi
         else
             echo ${red}"g++ available only with conda"${reset}
-            exit
+            exit 1
         fi
     else echo ${green}"FOUND";
     fi

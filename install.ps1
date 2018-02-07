@@ -82,7 +82,11 @@ if(($pyver -like "*Miniconda*" -Or $pyver -like "*Anaconda*") -And ($pyver -like
         If( $args[0] -eq "-y" -Or $args[0] -eq "-Y" -Or $args[0] -eq "yes" ) {
             Start-Transcript -Append -Path $log
             conda update conda -y
+            Stop-Transcript
+            Start-Transcript -Append -Path $log
             conda config --add channels bioconda
+            Stop-Transcript
+            Start-Transcript -Append -Path $log
             pip install seaborn, pandas, ipython, numpy, matplotlib, snakemake, graphviz, spyder
             Stop-Transcript
         }
@@ -92,7 +96,12 @@ if(($pyver -like "*Miniconda*" -Or $pyver -like "*Anaconda*") -And ($pyver -like
             Else{
                 Start-Transcript -Append -Path $log
                 conda update conda -y 
+                Stop-Transcript
+                Start-Transcript -Append -Path $log
+                Stop-Transcript
                 conda config --add channels bioconda
+                Stop-Transcript
+                Start-Transcript -Append -Path $log
                 pip install seaborn, pandas, ipython, numpy, matplotlib, snakemake, graphviz, spyder
                 Stop-Transcript
             }
