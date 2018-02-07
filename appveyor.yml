@@ -1,43 +1,11 @@
 image: Visual Studio 2017
 clone_folder: c:\projects\data_analysis
-configuration: Release
-
-environment:
-    matrix:
-    - platform: cygwin64
-      COMPILER: cygwin
-      CYGWIN_NOWINPATH: yes
-      CYGSH: C:\cygwin64\bin\bash -c
-    #- platform: clang-cl
-    #  COMPILER: clang
-    #  MSVC_SETUP_PATH: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
-    #  MSVC_SETUP_ARG: x64
-    #  CLANG_URL: http://releases.llvm.org/5.0.0/LLVM-5.0.0-win64.exe
-    #  CC: clang-cl.exe
-    #  CXX: clang-cl.exe
 
 install:
-  - if [%COMPILER%]==[clang] cinst cmake ninja
-  - if [%COMPILER%]==[clang] SET "PATH=C:\Program Files\CMake\bin;%PATH%"
-  - if [%COMPILER%]==[clang] SET "PATH=C:\Program Files\LLVM\bin;%PATH%"
-  - if [%COMPILER%]==[clang] call "%MSVC_SETUP_PATH%" %MSVC_SETUP_ARG%
-  - if [%COMPILER%]==[cygwin] SET "PATH=C:\cygwin64\bin;C:\cygwin64\usr\bin;%PATH%"
-  - if [%COMPILER%]==[cygwin] SET "PATH=%PATH:C:\Program Files\Git\usr\bin;=%"
   - git submodule -q update --init --recursive
-  - cd C:\projects\
-  - mkdir cygwin-downloads
-  - ps: if($env:COMPILER -eq "cygwin") { Invoke-WebRequest https://cygwin.com/setup-x86_64.exe -OutFile C:\projects\cygwin-setup.exe }
-  - if [%COMPILER%]==[cygwin] C:\projects\cygwin-setup.exe --quiet-mode --no-shortcuts --no-startmenu --no-desktop --upgrade-also --root C:\cygwin64 --local-package-dir C:\projects\cygwin-downloads --packages gcc-g++,cmake
-  - if [%COMPILER%]==[clang] appveyor DownloadFile %CLANG_URL% -FileName llvm-installer.exe
-  - if [%COMPILER%]==[clang] START /WAIT llvm-installer.exe /S /D=C:\"Program Files\LLVM"
 
 before_build:
   - cd C:\projects\data_analysis
-  - mkdir build
-  - cd build
 
 build_script:
-  - if [%COMPILER%]==[cygwin] %CYGSH% 'cmake -G "Unix Makefiles" "-DCMAKE_BUILD_TYPE=%configuration%" ..
-  - if [%COMPILER%]==[cygwin] %CYGSH% 'cmake --build .'
-  - if [%COMPILER%]==[clang] cmake -G "Ninja" "-DCMAKE_BUILD_TYPE=%configuration%" ..
-  - if [%COMPILER%]==[clang] cmake --build .
+  - powershell "install.ps1 -y"

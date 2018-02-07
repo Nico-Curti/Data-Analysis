@@ -1,43 +1,6 @@
-language: cpp
-
 os:
   - linux
   - osx
-
-compiler:
-  - gcc
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-6
-      - g++-6
-      - cmake
-      - ninja-build
-
-before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew update                                                                               ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew cask uninstall oclint                                                                ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install gcc                                                                          ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew link --overwrite gcc                                                                 ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install ninja                                                                        ;fi
-
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget --no-check-certificate http://cmake.org/files/v3.8/cmake-3.8.0-Linux-x86_64.tar.gz   ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar -xzf cmake-3.8.0-Linux-x86_64.tar.gz                                                  ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export PATH=$PWD/cmake-3.8.0-Linux-x86_64/bin:$PATH                                       ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CXX="g++-6" CC="gcc-6"                                                             ;fi
-
-install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then export CC=/usr/local/bin/gcc-7                                                            ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then export CXX=/usr/local/bin/g++-7                                                           ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then export CMAKE_C_COMPILER=${CC}                                                             ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then export CMAKE_CXX_COMPILER=${CXX}                                                          ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then export CMAKE_LINKER=clang++                                                               ;fi
-
-  - mkdir build && cd build
-
+  
 script:
-  - cmake -G "Ninja" "-DCMAKE_BUILD_TYPE=Release" ..
-  - cmake --build .
+  - ./install.sh -y

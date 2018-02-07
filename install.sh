@@ -1,14 +1,31 @@
 #!/bin/bash
 source ~/.bashrc
 
+project="Data-Analysis"
+
 red=`tput setaf 1`
 green=`tput setaf 2`
 yellow=`tput setaf 3`
 reset=`tput sgr0`
 cmake_version="3.10.1"
+cmake_up_version="$(echo $cmake_version | cut -d'.' -f 1,2)"
 ninja_version="1.8.2"
 
-printf ${yellow}"Installing Data-Analysis dependecies:\n"${reset}
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    url_python="https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh"
+    url_cmake="https://cmake.org/files/v$cmake_up_version/cmake-$cmake_version-Darwin-x86_64.tar.gz"
+    url_ninja="https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-mac.zip"
+    url_gcc="ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz"
+    url_7zip="https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2"
+else
+    url_python="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    url_cmake="https://cmake.org/files/v$cmake_up_version/cmake-$cmake_version-Linux-x86_64.tar.gz"
+    url_ninja="https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip"
+    url_gcc="ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz"
+    url_7zip="https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2"
+fi
+
+printf ${yellow}"Installing $project dependecies:\n"${reset}
 printf "  - (Conda)Python3 (snakemake)\n"
 source ./shell_utils/bash/install_python.sh
 printf "  - g++ (> 4.9)\n"
@@ -114,11 +131,11 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
 
     else # conda not found
         echo ${red}"NOT FOUND"${reset};
-        if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_python "https://repo.continuum.io/miniconda/Miniconda3-latestLinux-x86_64.sh" true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
+        if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_python $url_python true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
         else
             read -p "Do you want install it? [y/n] " confirm
             if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
-            else install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
+            else install_python $url_python true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
             fi
         fi # close install python
         printf "g++ (> 4.9) identification: "
@@ -128,11 +145,11 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
         fi
         if [[ "$GCCVER" -lt "5" ]] && [ ! -z "$GCCVER" ]; then # found a gcc too old
             echo ${red}version too old${reset}
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_g++ "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz" "." true > /dev/null;
+            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_g++ $url_gcc "." true > /dev/null;
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
-                else install_g++ "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz" "." true > /dev/null;
+                else install_g++ $url_gcc "." true > /dev/null;
                 fi
             fi
         elif [ -z "$GCCVER" ]; then # g++ not FOUND
@@ -191,11 +208,11 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
                     fi
                 fi
             else
-                if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then install_cmake "https://cmake.org/files/v$up_version/cmake-$cmake_version-Linux-x86_64.tar.gz" "." true > /dev/null;
+                if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then install_cmake $url_cmake "." true > /dev/null;
                 else
                     read -p "Do you want install it? [y/n] " confirm
                     if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
-                    else install_cmake "https://cmake.org/files/v$up_version/cmake-$cmake_version-Linux-x86_64.tar.gz" "." true > /dev/null;
+                    else install_cmake $url_cmake "." true > /dev/null;
                     fi
                 fi
             fi
@@ -217,20 +234,20 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
             else
                 if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then
                     if [ $(which unzip) != "" ] || [ $(which 7za) != "" ]; then
-                        install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true > /dev/null;
+                        install_ninja $url_ninja "." true > /dev/null;
                     elif [ $(which unzip) == "" ] || [ $(which 7za) == "" ]; then
-                        install_7zip "https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2" "." true > /dev/null;
-                        install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true > /dev/null;
+                        install_7zip $url_7zip "." true > /dev/null;
+                        install_ninja $url_ninja "." true > /dev/null;
                     fi
                 else
                     read -p "Do you want install it? [y/n] " confirm
                     if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
                     else 
                         if [ $(which unzip) != "" ] || [ $(which 7za) != "" ]; then
-                            install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true > /dev/null;
+                            install_ninja $url_ninja "." true > /dev/null;
                         elif [ $(which unzip) == "" ] || [ $(which 7za) == "" ]; then
-                            install_7zip "https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2" "." true > /dev/null;
-                            install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true > /dev/null;
+                            install_7zip $url_7zip "." true > /dev/null;
+                            install_ninja $url_ninja "." true > /dev/null;
                         fi
                     fi
                 fi
@@ -239,11 +256,11 @@ if [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "3" ]; then # ri
     fi # end conda not found
 elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then   
     echo ${red}"The Python version found is too old for snakemake"${reset}
-    if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
+    if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_python $url_python true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
     else
         read -p "Do you want install it? [y/n] " confirm
         if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
-        else install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
+        else install_python $url_python true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
         fi
     fi # close install python
     printf "g++ (> 4.9) identification: "
@@ -253,11 +270,11 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
     fi
     if [[ "$GCCVER" -lt "5" ]] && [ ! -z "$GCCVER" ]; then # found a gcc too old
         echo ${red}g++ version too old${reset}
-        if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_g++ "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz" "." true > /dev/null;
+        if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_g++ $url_gcc "." true > /dev/null;
         else
             read -p "Do you want install it? [y/n] " confirm
             if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
-            else install_g++ "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz" "." true > /dev/null;
+            else install_g++ $url_gcc "." true > /dev/null;
             fi
         fi
     elif [ -z "$GCCVER" ]; then # g++ not FOUND
@@ -316,11 +333,11 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
                 fi
             fi
         else
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then install_cmake "https://cmake.org/files/v$up_version/cmake-$cmake_version-Linux-x86_64.tar.gz" "." true > /dev/null;
+            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then install_cmake $url_cmake "." true > /dev/null;
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
-                else install_cmake "https://cmake.org/files/v$up_version/cmake-$cmake_version-Linux-x86_64.tar.gz" "." true > /dev/null;
+                else install_cmake $url_cmake "." true > /dev/null;
                 fi
             fi
         fi
@@ -342,20 +359,20 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
         else
             if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then
                 if [ $(which unzip) != "" ] || [ $(which 7za) != "" ]; then
-                    install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true > /dev/null;
+                    install_ninja $url_ninja "." true > /dev/null;
                 elif [ $(which unzip) == "" ] || [ $(which 7za) == "" ];then
-                    install_7zip "https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2" "." true > /dev/null;
-                    install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true > /dev/null;
+                    install_7zip $url_7zip "." true > /dev/null;
+                    install_ninja $url_ninja "." true > /dev/null;
                 fi
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
                 else 
                     if [ $(which unzip) != "" ] || [ $(which 7za) != "" ]; then
-                        install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true > /dev/null;
+                        install_ninja $url_ninja "." true > /dev/null;
                     elif [ $(which unzip) == "" ] || [ $(which 7za) == "" ];then
-                        install_7zip "https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2" "." true > /dev/null;
-                        install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true > /dev/null;
+                        install_7zip $url_7zip "." true > /dev/null;
+                        install_ninja $url_ninja "." true > /dev/null;
                     fi
                 fi
             fi
@@ -363,22 +380,22 @@ elif [ "$(python -c 'import sys;print(sys.version_info[0])')" -eq "2" ]; then
     fi
 else
     echo ${red}"NOT FOUND"
-    if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
+    if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_python $url_python true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
     else
         read -p "Do you want install it? [y/n] " confirm
         if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
-        else install_python "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
+        else install_python $url_python true seaborn pandas ipython numpy matplotlib snakemake graphviz spyder sklearn > /dev/null;
         fi
     fi # close install python
     printf "g++ (> 4.9) identification: "
     if [[ -x "/usr/bin/g++" ]]; then GCCVER=$(g++ --version | awk '/g++ /{print $0;exit 0;}' | cut -d' ' -f 4 | cut -d'.' -f 1 ); fi
         if [[ "$GCCVER" -lt "5" ]] && [ ! -z "$GCCVER" ]; then # found a gcc too old
             echo ${red}g++ version too old${reset}
-        if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_g++ "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz" "." true > /dev/null;
+        if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ]; then install_g++ $url_gcc "." true > /dev/null;
         else
             read -p "Do you want install it? [y/n] " confirm
             if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
-            else install_g++ "ftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz" "." true > /dev/null > /dev/null;
+            else install_g++ $url_gcc "." true > /dev/null > /dev/null;
             fi
         fi
     elif [ -z "$GCCVER" ]; then # g++ not FOUND
@@ -438,11 +455,11 @@ else
                 fi
             fi
         else
-            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then install_cmake "https://cmake.org/files/v$up_version/cmake-$cmake_version-Linux-x86_64.tar.gz" "." true > /dev/null;
+            if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then install_cmake $url_cmake "." true > /dev/null;
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
-                else install_cmake "https://cmake.org/files/v$up_version/cmake-$cmake_version-Linux-x86_64.tar.gz" "." true > /dev/null;
+                else install_cmake $url_cmake "." true > /dev/null;
                 fi
             fi
         fi
@@ -464,20 +481,20 @@ else
         else
             if [ "$3" == "-y" ] || [ "$3" == "-Y" ] || [ "$3" == "yes" ];then
                 if [ $(which unzip) != "" ] || [ $(which 7za) != "" ]; then
-                    install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true > /dev/null;
+                    install_ninja $url_ninja "." true > /dev/null;
                 elif [ $(which unzip) == "" ] || [ $(which 7za) == "" ];then
-                    install_7zip "https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2" "." true > /dev/null;
-                    install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true > /dev/null;
+                    install_7zip $url_7zip "." true > /dev/null;
+                    install_ninja $url_ninja "." true > /dev/null;
                 fi
             else
                 read -p "Do you want install it? [y/n] " confirm
                 if [ "$confirm" == "n" ] || [ "$confirm" == "N" ]; then echo ${red}"Abort"${reset};
                 else 
                     if [ $(which unzip) != "" ] || [ $(which 7za) != "" ]; then
-                        install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true > /dev/null;
+                        install_ninja $url_ninja "." true > /dev/null;
                     elif [ $(which unzip) == "" ] || [ $(which 7za) == "" ];then
-                        install_7zip "https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2" "." true > /dev/null;
-                        install_ninja "https://github.com/ninja-build/ninja/releases/download/v$ninja_version/ninja-linux.zip" "." true > /dev/null;
+                        install_7zip $url_7zip "." true > /dev/null;
+                        install_ninja $url_ninja "." true > /dev/null;
                     fi
                 fi
             fi
@@ -489,6 +506,6 @@ fi # close python installer
 
 popd > /dev/null
 
-echo ${yellow}"Build Data-Analysis"${reset}
+echo ${yellow}"Build $project"${reset}
 sh ./build.sh
 
