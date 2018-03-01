@@ -1,6 +1,9 @@
-# snakemake
-# snakemake --force clear
-# snakemake --dag | dot -Tpdf > pipe.pdf
+# snakemake                             # to run
+# snakemake --force clear               # to force rule
+# snakemake -n                          # check workflow
+# REMEMBER REMEMBER : pipe in powershell wraps the object into utf-16 char set (avoid it...evil!)
+# WIN32 :=  cmd /C "snakemake --dag | dot -Tpdf > workflow.pdf"
+# UNIX  :=  snakemake --dag | dot -Tpdf > workflow.pdf
 import numpy as np
 import pandas as pd
 import os
