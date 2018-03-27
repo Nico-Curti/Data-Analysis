@@ -22,32 +22,32 @@
 *-* 				:+:         :+:    :+:  :+:    :+:  :+:    :+:  :+:    :+:      :+:      :+:+:   :+:  :+:    :+: 								*-*
 *-* 				+:+         +:+    +:+  +:+         +:+    +:+  +:+             +:+      :+:+:+  +:+  +:+        								*-*
 *-* 				:#::+::#    +#+    +:+  +#+         +#+    +:+  +#++:++#++      +#+      +#+ +:+ +#+  :#:        								*-*
-*-* 				+#+         +#+    +#+  +#+         +#+    +#+         +#+      +#+      +#+  +#+#+#  +#+   +#+# 								*-*	
-*-* 				#+#         #+#    #+#  #+#    #+#  #+#    #+#  #+#    #+#      #+#      #+#   #+#+#  #+#    #+# 								*-*	
-*-* 				###          ########    ########    ########    ########   ###########  ###    ####   ########  								*-*	
-*-* 																																				*-*	
-*-* 																																				*-*	
-*-* 							:::::::::   ::::::::::  :::         :::::::::::  ::::::::::  :::::::::: 											*-*		
-*-* 							:+:    :+:  :+:         :+:             :+:      :+:         :+:        											*-*	
-*-* 							+:+    +:+  +:+         +:+             +:+      +:+         +:+        											*-*	
-*-* 							+#++:++#+   +#++:++#    +#+             +#+      +#++:++#    :#::+::#   											*-*		
-*-* 							+#+    +#+  +#+         +#+             +#+      +#+         +#+        											*-*				
-*-* 							#+#    #+#  #+#         #+#             #+#      #+#         #+#        											*-*		
-*-* 							#########   ##########  ##########  ###########  ##########  ###   													*-*			
-*-* 																																				*-*		
-*-* 																																				*-*					
-*-* 	:::::::::   :::::::::    ::::::::   :::::::::       :::       ::::::::       :::      :::::::::::  :::::::::::   ::::::::   ::::    ::: 	*-*	
-*-* 	:+:    :+:  :+:    :+:  :+:    :+:  :+:    :+:    :+: :+:    :+:    :+:    :+: :+:        :+:          :+:      :+:    :+:  :+:+:   :+: 	*-*	
-*-* 	+:+    +:+  +:+    +:+  +:+    +:+  +:+    +:+   +:+   +:+   +:+          +:+   +:+       +:+          +:+      +:+    +:+  :+:+:+  +:+ 	*-*	
-*-* 	+#++:++#+   +#++:++#:   +#+    +:+  +#++:++#+   +#++:++#++:  :#:         +#++:++#++:      +#+          +#+      +#+    +:+  +#+ +:+ +#+ 	*-*	
-*-* 	+#+         +#+    +#+  +#+    +#+  +#+         +#+     +#+  +#+   +#+#  +#+     +#+      +#+          +#+      +#+    +#+  +#+  +#+#+# 	*-*	
-*-* 	#+#         #+#    #+#  #+#    #+#  #+#         #+#     #+#  #+#    #+#  #+#     #+#      #+#          #+#      #+#    #+#  #+#   #+#+# 	*-*	
-*-* 	###         ###    ###   ########   ###         ###     ###   ########   ###     ###      ###      ###########   ########   ###    #### 	*-*	
+*-* 				+#+         +#+    +#+  +#+         +#+    +#+         +#+      +#+      +#+  +#+#+#  +#+   +#+# 								*-*
+*-* 				#+#         #+#    #+#  #+#    #+#  #+#    #+#  #+#    #+#      #+#      #+#   #+#+#  #+#    #+# 								*-*
+*-* 				###          ########    ########    ########    ########   ###########  ###    ####   ########  								*-*
+*-* 																																				*-*
+*-* 																																				*-*
+*-* 							:::::::::   ::::::::::  :::         :::::::::::  ::::::::::  :::::::::: 											*-*
+*-* 							:+:    :+:  :+:         :+:             :+:      :+:         :+:        											*-*
+*-* 							+:+    +:+  +:+         +:+             +:+      +:+         +:+        											*-*
+*-* 							+#++:++#+   +#++:++#    +#+             +#+      +#++:++#    :#::+::#   											*-*
+*-* 							+#+    +#+  +#+         +#+             +#+      +#+         +#+        											*-*
+*-* 							#+#    #+#  #+#         #+#             #+#      #+#         #+#        											*-*
+*-* 							#########   ##########  ##########  ###########  ##########  ###   													*-*
+*-* 																																				*-*
+*-* 																																				*-*
+*-* 	:::::::::   :::::::::    ::::::::   :::::::::       :::       ::::::::       :::      :::::::::::  :::::::::::   ::::::::   ::::    ::: 	*-*
+*-* 	:+:    :+:  :+:    :+:  :+:    :+:  :+:    :+:    :+: :+:    :+:    :+:    :+: :+:        :+:          :+:      :+:    :+:  :+:+:   :+: 	*-*
+*-* 	+:+    +:+  +:+    +:+  +:+    +:+  +:+    +:+   +:+   +:+   +:+          +:+   +:+       +:+          +:+      +:+    +:+  :+:+:+  +:+ 	*-*
+*-* 	+#++:++#+   +#++:++#:   +#+    +:+  +#++:++#+   +#++:++#++:  :#:         +#++:++#++:      +#+          +#+      +#+    +:+  +#+ +:+ +#+ 	*-*
+*-* 	+#+         +#+    +#+  +#+    +#+  +#+         +#+     +#+  +#+   +#+#  +#+     +#+      +#+          +#+      +#+    +#+  +#+  +#+#+# 	*-*
+*-* 	#+#         #+#    #+#  #+#    #+#  #+#         #+#     #+#  #+#    #+#  #+#     #+#      #+#          #+#      #+#    #+#  #+#   #+#+# 	*-*
+*-* 	###         ###    ###   ########   ###         ###     ###   ########   ###     ###      ###      ###########   ########   ###    #### 	*-*
 *-* 																																				*-*
 *-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**
 *-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**/
 
-template<typename T> struct MagP64 
+template<typename T> struct MagP64
 {
 	T mag;
 	MagP64() {};
@@ -86,7 +86,7 @@ namespace AtanhErf
 	template<typename T> inline T atanherf(const T&);
 }
 
-template<typename T> struct MagT64 
+template<typename T> struct MagT64
 {
 	T mag;
 	T mInf;
@@ -97,7 +97,7 @@ template<typename T> struct MagT64
 	MagT64<T>& operator=(const MagT64<T> &);
 
 	static inline std::string magformat();
-	
+
 	inline MagT64<T> operator%(const MagT64<T> &);
 	template<typename F> inline friend MagT64<F> operator-(const MagT64<F> &);
 	inline MagT64<T> operator+(const MagT64<T> &);
@@ -139,7 +139,7 @@ namespace Magnetization
 	template<typename T, class Mag, magP<T, Mag> = nullptr> inline Mag bar(const Mag &, const Mag &);
 	template<typename T, class Mag, magT<T, Mag> = nullptr> inline Mag bar(const Mag &, const Mag &);
 	template<typename T, class Mag> inline void copysign(Mag &, const T &);
-	template<class Mag> inline void copysign(Mag &, const Mag &);	
+	template<class Mag> inline void copysign(Mag &, const Mag &);
 	template<typename T, class Mag> inline T lr(const T &);
 	template<typename T, class Mag, magP<T, Mag> = nullptr> inline T log1pxy(const Mag &, const Mag &);
 	template<typename T, class Mag, magT<T, Mag> = nullptr> inline T log1pxy(const Mag &, const Mag &);
@@ -162,7 +162,7 @@ namespace Magnetization
 	template<typename T, class Mag, magT<T, Mag> = nullptr> inline Mag erfmix(const Mag &, const T &, const T &);
 	template<typename T, class Mag, magP<T, Mag> = nullptr> inline Mag exactmix(const Mag &, const Mag &, const Mag &);
 	template<typename T, class Mag, magT<T, Mag> = nullptr> inline Mag exactmix(const Mag &, const Mag &, const Mag &);
-	
+
 }
 
 					 using IVec = std::vector<int>;
@@ -224,8 +224,8 @@ public:
 template<typename T> class FocusingProtocol
 {
 public:
-	int Nrep;		// 
-	T 	*gamma, 	// distance parameters 
+	int Nrep;		//
+	T 	*gamma, 	// distance parameters
 	  	*n_rep, 	// (y) number of replicas
 	  	*beta; 		// 1/kT
 
@@ -268,7 +268,7 @@ namespace RFBP
 	template<typename T, class Mag> Mag  compute_q_bar(const Cavity_Message<T, Mag> &, const Params<T, Mag> &);
 	template<typename T, class Mag> T 	 compute_q(const Cavity_Message<T, Mag> &, const int &, const int &);
 	template<typename T, class Mag> void mags_symmetry(const Cavity_Message<T, Mag> &, T *);
-	
+
 	int** read_weights(const std::string &, int &, int &, bool bin = false);
 	template<typename T, class Mag> void save_weights(const std::string &, const Cavity_Message<T, Mag> &, const int &, const int &, const int &, const int &, const T &, const T &, const std::string &, const std::string &);
 	void save_weights(const std::string &, int **, const int &, const int &);
@@ -290,15 +290,15 @@ namespace RFBP
 
 /**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-***_**
 -**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**--**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**_**
-*_**																																														    *_**	
-*_**    :::::::::::  ::::    ::::   :::::::::   :::         ::::::::::  ::::    ::::   ::::::::::  ::::    :::  :::::::::::      :::      :::::::::::  :::::::::::   ::::::::   ::::    :::		*_**	 
-*_**        :+:      +:+:+: :+:+:+  :+:    :+:  :+:         :+:         +:+:+: :+:+:+  :+:         :+:+:   :+:      :+:        :+: :+:        :+:          :+:      :+:    :+:  :+:+:   :+:		*_**	 
-*_**        +:+      +:+ +:+:+ +:+  +:+    +:+  +:+         +:+         +:+ +:+:+ +:+  +:+         :+:+:+  +:+      +:+       +:+   +:+       +:+          +:+      +:+    +:+  :+:+:+  +:+		*_**	 
-*_**        +#+      +#+  +:+  +#+  +#++:++#+   +#+         +#++:++#    +#+  +:+  +#+  +#++:++#    +#+ +:+ +#+      +#+      +#++:++#++:      +#+          +#+      +#+    +:+  +#+ +:+ +#+		*_**	 
-*_**        +#+      +#+       +#+  +#+         +#+         +#+         +#+       +#+  +#+         +#+  +#+#+#      +#+      +#+     +#+      +#+          +#+      +#+    +#+  +#+  +#+#+#		*_**	 
-*_**        #+#      #+#       #+#  #+#         #+#         #+#         #+#       #+#  #+#         #+#   #+#+#      #+#      #+#     #+#      #+#          #+#      #+#    #+#  #+#   #+#+#		*_**	 
-*_**    ###########  ###       ###  ###         ##########  ##########  ###       ###  ##########  ###    ####      ###      ###     ###      ###      ###########   ########   ###    ####		*_**	 
-*_**																																															*_**			
+*_**																																														    *_**
+*_**    :::::::::::  ::::    ::::   :::::::::   :::         ::::::::::  ::::    ::::   ::::::::::  ::::    :::  :::::::::::      :::      :::::::::::  :::::::::::   ::::::::   ::::    :::		*_**
+*_**        :+:      +:+:+: :+:+:+  :+:    :+:  :+:         :+:         +:+:+: :+:+:+  :+:         :+:+:   :+:      :+:        :+: :+:        :+:          :+:      :+:    :+:  :+:+:   :+:		*_**
+*_**        +:+      +:+ +:+:+ +:+  +:+    +:+  +:+         +:+         +:+ +:+:+ +:+  +:+         :+:+:+  +:+      +:+       +:+   +:+       +:+          +:+      +:+    +:+  :+:+:+  +:+		*_**
+*_**        +#+      +#+  +:+  +#+  +#++:++#+   +#+         +#++:++#    +#+  +:+  +#+  +#++:++#    +#+ +:+ +#+      +#+      +#++:++#++:      +#+          +#+      +#+    +:+  +#+ +:+ +#+		*_**
+*_**        +#+      +#+       +#+  +#+         +#+         +#+         +#+       +#+  +#+         +#+  +#+#+#      +#+      +#+     +#+      +#+          +#+      +#+    +#+  +#+  +#+#+#		*_**
+*_**        #+#      #+#       #+#  #+#         #+#         #+#         #+#       #+#  #+#         #+#   #+#+#      #+#      #+#     #+#      #+#          #+#      #+#    #+#  #+#   #+#+#		*_**
+*_**    ###########  ###       ###  ###         ##########  ##########  ###       ###  ##########  ###    ####      ###      ###     ###      ###      ###########   ########   ###    ####		*_**
+*_**																																															*_**
 -**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**--**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**_**
 -**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**--**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**-**_**/
 
@@ -382,7 +382,7 @@ namespace Magnetization
 
 	template<typename T, class Mag> inline Mag arrow(const Mag &m, const T &x)
 	{ return mtanh<T, Mag>(x * std::atanh(m.mag));}
-	
+
 	template<typename T, typename std::enable_if<std::is_floating_point<T>::value, T>::type*> inline int sign0(const T &x)
 	{ return 1 - 2 * std::signbit(x);}
 	template<typename T, class Mag, magP<T, Mag>> inline int sign0(const Mag &x)
@@ -398,11 +398,11 @@ namespace Magnetization
 		return !std::isinf(ay) ? -std::fabs(ay)*(sign0(ay)*tx - 1) + lr<T, Mag>( ay) : (sign(tx) != sign(ay)) ? std::numeric_limits<T>::infinity() : (T)0.0;
 	}
 
-	template<typename T> inline T logmag2pp(const MagP64<T> &x) 
+	template<typename T> inline T logmag2pp(const MagP64<T> &x)
 	{ return std::log(((T)1. + x.mag) / (T)2.); }
 
 
-	template<typename T> inline T logmag2pm(const MagP64<T> &x) 
+	template<typename T> inline T logmag2pm(const MagP64<T> &x)
 	{ return std::log(((T)1. - x.mag) / (T)2.); }
 
 	template<typename T, class Mag, magP<T, Mag>> T logZ(const Mag &u0, Mag *u, const int &nu)
@@ -495,7 +495,7 @@ namespace Magnetization
 					}
 				}
 				else if (!std::isinf(ap) && std::isinf(am))
-				{				
+				{
 					if (sign(am) == sign(aH))
 					{
 						t1 = -sign(aH) * ap - std::fabs(ap);
@@ -550,17 +550,17 @@ namespace Magnetization
 
 template<typename T> MagP64<T>::MagP64(const T &x)
 { mag = x;}
-template<typename T> MagT64<T>::MagT64(const T &x, T m) 
+template<typename T> MagT64<T>::MagT64(const T &x, T m)
 { mag = (T)std::tanh(x); mInf = m; };
 
-template<typename T> MagP64<T>::MagP64(const MagP64<T> &m) 
+template<typename T> MagP64<T>::MagP64(const MagP64<T> &m)
 { this->mag = m.mag; }
-template<typename T> MagT64<T>::MagT64(const MagT64<T> &m) 
+template<typename T> MagT64<T>::MagT64(const MagT64<T> &m)
 { this->mag = m.mag; this->mInf = m.mInf;}
 
-template<typename T> inline std::string MagP64<T>::magformat() 
+template<typename T> inline std::string MagP64<T>::magformat()
 { return "plain"; };
-template<typename T> inline std::string MagT64<T>::magformat() 
+template<typename T> inline std::string MagT64<T>::magformat()
 { return "tanh"; };
 
 template<typename T> inline MagP64<T> MagP64<T>::operator+(const MagP64<T> &m)
@@ -581,34 +581,34 @@ template<typename T> inline MagT64<T> MagT64<T>::operator%(const MagT64<T> &m)
 	return std::isnan(tmp) ? MagT64<T>(std::numeric_limits<T>::infinity()) : MagT64<T>(std::atanh(this->mag) + std::atanh(m.mag)); // temporary solution of nan problem (see atanherf)
 }
 
-template<typename T> inline MagP64<T> operator-(const MagP64<T> &m) 
+template<typename T> inline MagP64<T> operator-(const MagP64<T> &m)
 { return MagP64<T>(-m.mag); }
-template<typename T> inline MagT64<T> operator-(const MagT64<T> &m) 
+template<typename T> inline MagT64<T> operator-(const MagT64<T> &m)
 { return MagT64<T>(-m.mag); }
 
-template<typename T> std::ostream& operator<<(std::ostream& os, const MagP64<T> &m) 
+template<typename T> std::ostream& operator<<(std::ostream& os, const MagP64<T> &m)
 { os << m.mag << " "; return os; }
-template<typename T> std::ostream& operator<<(std::ostream& os, const MagT64<T> &m) 
+template<typename T> std::ostream& operator<<(std::ostream& os, const MagT64<T> &m)
 { os << m.mag << " "; return os; }
 
-template<typename T> inline MagP64<T>& MagP64<T>::operator=(const MagP64<T> &m) 
+template<typename T> inline MagP64<T>& MagP64<T>::operator=(const MagP64<T> &m)
 { this->mag = m.mag; return *this; }
-template<typename T> inline MagT64<T>& MagT64<T>::operator=(const MagT64<T> &m) 
+template<typename T> inline MagT64<T>& MagT64<T>::operator=(const MagT64<T> &m)
 { this->mag = m.mag; this->mInf = m.mInf; return *this; }
 
-template<typename T> inline MagP64<T>& MagP64<T>::operator+=(const MagP64<T> &m) 
+template<typename T> inline MagP64<T>& MagP64<T>::operator+=(const MagP64<T> &m)
 { this->mag += m.mag; return *this; }
-template<typename T> inline MagT64<T>& MagT64<T>::operator+=(const MagT64<T> &m) 
+template<typename T> inline MagT64<T>& MagT64<T>::operator+=(const MagT64<T> &m)
 { this->mag += m.mag; return *this; }
 
-template<typename T> inline MagP64<T> MagP64<T>::operator/(const T &x) 
+template<typename T> inline MagP64<T> MagP64<T>::operator/(const T &x)
 { return MagP64<T>(this->mag / x); }
-template<typename T> inline MagT64<T> MagT64<T>::operator/(const T &x) 
+template<typename T> inline MagT64<T> MagT64<T>::operator/(const T &x)
 { return MagT64<T>(this->mag / x); }
 
-template<typename T> inline MagP64<T> operator/(const T &x, const MagP64<T> &m) 
+template<typename T> inline MagP64<T> operator/(const T &x, const MagP64<T> &m)
 { return MagP64<T>(x / m.mag); }
-template<typename T> inline MagT64<T> operator/(const T &x, const MagT64<T> &m) 
+template<typename T> inline MagT64<T> operator/(const T &x, const MagT64<T> &m)
 { return MagT64<T>(x / m.mag); }
 
 template<typename T> inline MagP64<T> MagP64<T>::operator/(const MagP64<T> &m)
@@ -616,9 +616,9 @@ template<typename T> inline MagP64<T> MagP64<T>::operator/(const MagP64<T> &m)
 template<typename T> inline MagT64<T> MagT64<T>::operator/(const MagT64<T> &m)
 { return MagT64<T>(this->mag / m.mag);}
 
-template<typename T> inline MagP64<T> MagP64<T>::operator*(const MagP64<T> &m) 
+template<typename T> inline MagP64<T> MagP64<T>::operator*(const MagP64<T> &m)
 { return MagP64<T>(this->mag * m.mag); }
-template<typename T> inline MagT64<T> MagT64<T>::operator*(const MagT64<T> &m) 
+template<typename T> inline MagT64<T> MagT64<T>::operator*(const MagT64<T> &m)
 {
 	T ax = std::atanh(this->mag), ay = std::atanh(m.mag), t1, t2;
 	t1 = (ax >= ay && ax >= -ay) ? 2 * ay : (ax >= ay && ax < -ay) ? -2 * ax : (ax < ay && ax >= -ay) ? 2 * ax : -2 * ay;
@@ -626,19 +626,19 @@ template<typename T> inline MagT64<T> MagT64<T>::operator*(const MagT64<T> &m)
 	return MagT64<T>((t1 + t2) / 2);
 }
 
-template<typename T> inline T MagP64<T>::operator*(const T &x) 
+template<typename T> inline T MagP64<T>::operator*(const T &x)
 { return this->mag * x; }
-template<typename T> inline T MagT64<T>::operator*(const T &x) 
+template<typename T> inline T MagT64<T>::operator*(const T &x)
 { return this->mag * x; }
 
-template<typename T> inline T operator*(const T &x, const MagP64<T> &m) 
+template<typename T> inline T operator*(const T &x, const MagP64<T> &m)
 { return m.mag * x; }
-template<typename T> inline T operator*(const T &x, const MagT64<T> &m) 
+template<typename T> inline T operator*(const T &x, const MagT64<T> &m)
 { return m.mag * std::atanh(x); }
 
-template<typename T> inline MagP64<T> MagP64<T>::operator-(const MagP64<T> &m) 
+template<typename T> inline MagP64<T> MagP64<T>::operator-(const MagP64<T> &m)
 { return MagP64<T>(this->mag - m.mag); }
-template<typename T> inline MagT64<T> MagT64<T>::operator-(const MagT64<T> &m) 
+template<typename T> inline MagT64<T> MagT64<T>::operator-(const MagT64<T> &m)
 { return MagT64<T>(this->mag - m.mag); }
 
 template<typename T> inline MagP64<T> MagP64<T>::operator-(const T &x)
@@ -651,14 +651,14 @@ template<typename T> inline MagP64<T> operator-(const T &x, const MagP64<T> &m)
 template<typename T> inline MagT64<T> operator-(const T &x, const MagT64<T> &m)
 { return MagT64<T>(x - m.mag);}
 
-template<typename T> inline bool MagP64<T>::operator==(const MagP64<T> &m) 
+template<typename T> inline bool MagP64<T>::operator==(const MagP64<T> &m)
 { return this->mag == m.mag; }
-template<typename T> bool MagT64<T>::operator==(const MagT64<T> &m) 
+template<typename T> bool MagT64<T>::operator==(const MagT64<T> &m)
 { return this->mag == m.mag; }
 
-template<typename T> inline bool MagP64<T>::operator!=(const MagP64<T> &m) 
+template<typename T> inline bool MagP64<T>::operator!=(const MagP64<T> &m)
 { return this->mag != m.mag; }
-template<typename T> inline bool MagT64<T>::operator!=(const MagT64<T> &m) 
+template<typename T> inline bool MagT64<T>::operator!=(const MagT64<T> &m)
 { return this->mag != m.mag; }
 
 
@@ -731,13 +731,13 @@ namespace AtanhErf
 
 
 //=============================================================================================================//
-//    _____   ___   _   _  _____  _____ __   __     ___  ___ _____  _____  _____   ___   _____  _____  _____   // 
-//   /  __ \ / _ \ | | | ||_   _||_   _|\ \ / /     |  \/  ||  ___|/  ___|/  ___| / _ \ |  __ \|  ___|/  ___|  // 
-//   | /  \// /_\ \| | | |  | |    | |   \ V /      | .  . || |__  \ `--. \ `--. / /_\ \| |  \/| |__  \ `--.   // 
-//   | |    |  _  || | | |  | |    | |    \ /       | |\/| ||  __|  `--. \ `--. \|  _  || | __ |  __|  `--. \  // 
-//   | \__/\| | | |\ \_/ / _| |_   | |    | |       | |  | || |___ /\__/ //\__/ /| | | || |_\ \| |___ /\__/ /  // 
-//    \____/\_| |_/ \___/  \___/   \_/    \_/       \_|  |_/\____/ \____/ \____/ \_| |_/ \____/\____/ \____/   // 
-//                                                                                                             // 
+//    _____   ___   _   _  _____  _____ __   __     ___  ___ _____  _____  _____   ___   _____  _____  _____   //
+//   /  __ \ / _ \ | | | ||_   _||_   _|\ \ / /     |  \/  ||  ___|/  ___|/  ___| / _ \ |  __ \|  ___|/  ___|  //
+//   | /  \// /_\ \| | | |  | |    | |   \ V /      | .  . || |__  \ `--. \ `--. / /_\ \| |  \/| |__  \ `--.   //
+//   | |    |  _  || | | |  | |    | |    \ /       | |\/| ||  __|  `--. \ `--. \|  _  || | __ |  __|  `--. \  //
+//   | \__/\| | | |\ \_/ / _| |_   | |    | |       | |  | || |___ /\__/ //\__/ /| | | || |_\ \| |___ /\__/ /  //
+//    \____/\_| |_/ \___/  \___/   \_/    \_/       \_|  |_/\____/ \____/ \____/ \_| |_/ \____/\____/ \____/   //
+//                                                                                                             //
 //=============================================================================================================//
 
 template<typename T, class Mag> void Cavity_Message<T, Mag>::error(const std::string &messages, const int &n)
@@ -807,7 +807,7 @@ template<typename T, class Mag> Cavity_Message<T, Mag>::Cavity_Message(const int
 	std::generate(this->weights, this->weights + this->M, 	[&k]{return new Mag*[k];});
 
 	Magnetization::zeros<T>(this->m_on, this->M);
-	
+
 	std::mt19937 generator(start);
 	std::uniform_real_distribution<T> distribution((T)0., (T)1.);
 
@@ -827,7 +827,7 @@ template<typename T, class Mag> Cavity_Message<T, Mag>::Cavity_Message(const int
 			this->weights[i][ii] = new Mag[this->N];
 			this->m_in[i][ii] = this->m_in[i][ii] % this->m_no[i][ii] % this->m_ni[i][ii];
 			std::generate(this->weights[i][ii], this->weights[i][ii] + this->N, [&x, &distribution, &generator]{return Magnetization::f2m<T, Mag>(x * (2 * distribution(generator) - 1));});
-		
+
 		}
 	}
 // have to find better solution!! (functional programming)
@@ -843,9 +843,9 @@ template<typename T, class Mag> Cavity_Message<T, Mag>::Cavity_Message(const int
 
 
 template<typename T, class Mag> Cavity_Message<T, Mag>::Cavity_Message(const Cavity_Message<T, Mag> &m)
-{ 
-	this->M = m.M; 
-	this->N = m.N; 
+{
+	this->M = m.M;
+	this->N = m.N;
 	this->K = m.K;
 	this->m_star_j 	= new Mag*[this->K];
 	this->m_j_star 	= new Mag*[this->K];
@@ -878,14 +878,14 @@ template<typename T, class Mag> Cavity_Message<T, Mag>::Cavity_Message(const Cav
 			this->weights[i][j] = new Mag[this->N];
 			std::memcpy(this->weights[i][j], m.weights[i][j], sizeof(Mag)*this->N);
 		}
-	} 
+	}
 }
 
 template<typename T, class Mag> Cavity_Message<T, Mag>& Cavity_Message<T, Mag>::operator=(const Cavity_Message<T, Mag> &m)
 {
 	if(this->K != 0)
 	{
-		for(int i = 0; i < this->K; ++i) 
+		for(int i = 0; i < this->K; ++i)
 		{
 			delete[] this->m_j_star[i];
 			delete[] this->m_star_j[i];
@@ -913,8 +913,8 @@ template<typename T, class Mag> Cavity_Message<T, Mag>& Cavity_Message<T, Mag>::
 
 		delete[] this->m_on;
 	}
-	this->M = m.M; 
-	this->N = m.N; 
+	this->M = m.M;
+	this->N = m.N;
 	this->K = m.K;
 	this->m_star_j = new Mag*[this->K];
 	this->m_j_star = new Mag*[this->K];
@@ -953,7 +953,7 @@ template<typename T, class Mag> Cavity_Message<T, Mag>::~Cavity_Message()
 {
 	if(this->K != 0)
 	{
-		for(int i = 0; i < this->K; ++i) 
+		for(int i = 0; i < this->K; ++i)
 		{
 			delete[] this->m_j_star[i];
 			delete[] this->m_star_j[i];
@@ -1120,7 +1120,7 @@ template<typename T> void FocusingProtocol<T>::PseudoReinforcement(const Vec<T> 
 	std::fill_n(this->beta, this->Nrep, std::numeric_limits<T>::infinity());
 	return;
 }
-	
+
 template<typename T> void FocusingProtocol<T>::PseudoReinforcement(const T &drho, T x)
 {
 	this->Nrep = int((1 - drho) / drho);
@@ -1133,7 +1133,7 @@ template<typename T> void FocusingProtocol<T>::PseudoReinforcement(const T &drho
 	step = 0;
 	std::generate(this->n_rep, this->n_rep + this->Nrep, [&drho, &x, &step]{return (T)1. + (T)std::pow(drho * step, (T)1. - (T)2. * x) / ((T)1. - drho * step++);});
 	std::fill_n(this->beta, this->Nrep, std::numeric_limits<T>::infinity());
-	return;		
+	return;
 }
 
 template<typename T> void FocusingProtocol<T>::FreeScoping(T **list, const int &nlist)
@@ -1236,9 +1236,9 @@ namespace RFBP
 			vh[i] = h[i].mag;
 			mu += vh[i] * xi[i];
 		}
-		sigma2 = std::inner_product(vh, vh + nxi, 
-									xi, (T)0., 
-									std::plus<T>(), 
+		sigma2 = std::inner_product(vh, vh + nxi,
+									xi, (T)0.,
+									std::plus<T>(),
 									[](const T &i, const T &j)
 									{
 										return ((T)1. - i * i) * (j * j);
@@ -1265,7 +1265,7 @@ namespace RFBP
 		T maxdiff = (T)0., *vh = new T[nm], **leftC = new T*[nm], **rightC = new T*[nm], z, vH, pm = (T)0., pp = (T)0., pz, p;
 		MagVec<Mag> h = new Mag[nm];
 		Vec<T> lC0, rC0;
-		
+
 		Mag old_m_on((T)0.), new_u((T)0.), mp((T)0.), mm((T)0.);
 		old_m_on = Magnetization::bar<T, Mag>(M, U);
 		vH = old_m_on.mag;
@@ -1281,12 +1281,12 @@ namespace RFBP
 		for (int i = 1; i < nm; ++i)
 		{
 			lC0.resize(0);
-			for (int j = 0; j < i + 1; ++j) 
-				lC0.push_back(leftC[i - 1][j]); 
+			for (int j = 0; j < i + 1; ++j)
+				lC0.push_back(leftC[i - 1][j]);
 
 			leftC[i][0] = lC0[0] * ((T)1. - (xi[i] * vh[i])) / (T)2.;
-			
-			for (int j = 1; j < i + 1; ++j) 
+
+			for (int j = 1; j < i + 1; ++j)
 				leftC[i][j] = lC0[j - 1] * ((T)1. + (xi[i] * vh[i])) / (T)2. + lC0[j] * ((T)1. - (xi[i] * vh[i])) / (T)2.;
 
 			leftC[i][i+1] = lC0[lC0.size() - 1] * ((T)1. + (xi[i] * vh[i])) / (T)2.;
@@ -1297,12 +1297,12 @@ namespace RFBP
 		for (int i = nm - 2; i >= 0; --i)
 		{
 			rC0.resize(0);
-			for (int j = 0; j < nm - i; ++j) 
-				rC0.push_back(rightC[i + 1][j]); 
+			for (int j = 0; j < nm - i; ++j)
+				rC0.push_back(rightC[i + 1][j]);
 
 			rightC[i][0] = rC0[0] * ((T)1. - (xi[i] * vh[i])) / (T)2.;
-			
-			for (int j = 1; j < nm - i + 1; ++j) 
+
+			for (int j = 1; j < nm - i ; ++j) 
 				rightC[i][j] = rC0[j - 1] * ((T)1. + (xi[i] * vh[i])) / (T)2. + rC0[j] * ((T)1. - (xi[i] * vh[i])) / (T)2.;
 
 			rightC[i][nm - i] = rC0[rC0.size() - 1] * ((T)1. + (xi[i] * vh[i])) / (T)2.;
@@ -1324,34 +1324,34 @@ namespace RFBP
 		for (int i = 0; i < nm; ++i)
 		{
 			assert(xi[i] * xi[i] == 1);
-			if (i > 0) 
-			{ 
-				lC.resize(0); 
-				for (int j = 0; j < i+1; ++j) 
-					lC.push_back(leftC[i - 1][j]); 
+			if (i > 0)
+			{
+				lC.resize(0);
+				for (int j = 0; j < i+1; ++j)
+					lC.push_back(leftC[i - 1][j]);
 			}
-			else 
-			{ 
-				lC.resize(0); 
-				lC.push_back((T)1.); 
+			else
+			{
+				lC.resize(0);
+				lC.push_back((T)1.);
 			}
 			if (i < nm - 1)
-			{ 
-				rC.resize(0); 
-				for (int j = 0; j < nm-i; ++j) 
-					rC.push_back(rightC[i + 1][j]); 
+			{
+				rC.resize(0);
+				for (int j = 0; j < nm-i; ++j)
+					rC.push_back(rightC[i + 1][j]);
 			}
-			else 
-			{ 
-				rC.resize(0); 
-				rC.push_back((T)1.); 
+			else
+			{
+				rC.resize(0);
+				rC.push_back((T)1.);
 			}
 			pm = (T)0.0; pz = (T)0.0; pp = (T)0.0;
 			for (int j = 0; j < nm; ++j)
 			{
 				p = (T)0.0;
-				for (int k = std::max(0, j + i - nm + 1); k < std::min(j, i) + 1; ++k) 
-					p += lC[k] * rC[j - k];  
+				for (int k = std::max(0, j + i - nm + 1); k < std::min(j, i) + 1; ++k)
+					p += lC[k] * rC[j - k];
 
 				if (j < z-1) pm += p;
 				else if (j == z-1) pz = p;
@@ -1390,9 +1390,9 @@ namespace RFBP
 			vh[i] = h[i].mag;
 			mu += vh[i] * xi[i];
 		}
-		sigma = std::sqrt(2 * std::inner_product(vh, vh + nxi, 
-											 	 xi, (T)0., 
-											 	 std::plus<T>(), 
+		sigma = std::sqrt(2 * std::inner_product(vh, vh + nxi,
+											 	 xi, (T)0.,
+											 	 std::plus<T>(),
 											 	 [](const T &v, const T &x)
 											 	 {
 											 	 	return ((T)1. - v * v) * (x * x);
@@ -1403,8 +1403,8 @@ namespace RFBP
 		assert(!std::isinf(f));
 
 		f = std::inner_product(h, h + nm,
-							   u, f, 
-							   std::plus<T>(), 
+							   u, f,
+							   std::plus<T>(),
 							   [](const Mag &h_, const Mag &u_)
 							   {
 							   	return Magnetization::log1pxy<T, Mag>(h_, u_);
@@ -1437,11 +1437,11 @@ namespace RFBP
 		for (int i = 1; i < nm; ++i)
 		{
 			lC0.resize(0);
-			for (int j = 0; j < i + 1; ++j) 
-				lC0.push_back(leftC[i - 1][j]); 
+			for (int j = 0; j < i + 1; ++j)
+				lC0.push_back(leftC[i - 1][j]);
 			leftC[i][0] = lC0[0] * (1 - (xi[i] * vh[i])) / 2;
-			for (int j = 1; j < i + 1; ++j) 
-				leftC[i][j] = lC0[j - 1] * (1 + (xi[i] * vh[i])) / 2 + lC0[j] * (1 - (xi[i] * vh[i])) / 2; 
+			for (int j = 1; j < i + 1; ++j)
+				leftC[i][j] = lC0[j - 1] * (1 + (xi[i] * vh[i])) / 2 + lC0[j] * (1 - (xi[i] * vh[i])) / 2;
 			leftC[i][i + 1] = lC0[lC0.size() - 1] * (1 + (xi[i] * vh[i])) / 2;
 		}
 
@@ -1452,7 +1452,7 @@ namespace RFBP
 			pm += (i < z) ? leftC[nm - 1][i] : 0.;
 			pp += (i >= z) ? leftC[nm - 1][i] : 0.;
 		}
-		
+
 		b = Magnetization::couple<T, Mag>(pp, pm);
 		f -= Magnetization::log1pxy<T, Mag>(old_m_on, b);
 		assert(!std::isinf(f));
@@ -1479,7 +1479,7 @@ namespace RFBP
 		new_m_j_star = old_m_j_star % new_m_star_j;
 		m_j_star = new_m_j_star;
 		m_star_j = new_m_star_j;
-		return diff; 
+		return diff;
 	}
 
 
@@ -1516,7 +1516,7 @@ namespace RFBP
 			}
 
 			else
-				if (!(params.r == 0 || params.tan_gamma.mag == 0)) 
+				if (!(params.r == 0 || params.tan_gamma.mag == 0))
 				{
 					j = int(randperm[a] - messages.M);
 					k = int((T)j / messages.N);
@@ -1531,7 +1531,7 @@ namespace RFBP
 	{
 		bool ok = false;
 		T diff;
-		
+
 		auto start_time = std::chrono::system_clock::now();
 		for (int it = 0; it < params.max_iters; ++it)
 		{
@@ -1547,13 +1547,13 @@ namespace RFBP
 		auto run_time = std::chrono::system_clock::now();
 		if(!params.quiet)
 		{
-			if (!ok)  std::cout << std::endl << "failed" << std::endl; 
-			std::cout << "elapsed time = " << std::chrono::duration_cast<std::chrono::milliseconds>(run_time - start_time).count() << " milliseconds" << std::endl;	
+			if (!ok)  std::cout << std::endl << "failed" << std::endl;
+			std::cout << "elapsed time = " << std::chrono::duration_cast<std::chrono::milliseconds>(run_time - start_time).count() << " milliseconds" << std::endl;
 		}
 		return ok;
 	}
 
-	template<typename T, class Mag> int nonbayes_test(const Cavity_Message<T, Mag> &messages, const Patterns<T> &patterns) 
+	template<typename T, class Mag> int nonbayes_test(const Cavity_Message<T, Mag> &messages, const Patterns<T> &patterns)
 	{
 		int **sign_m_j_star = new int*[messages.K], t = 0;
 		T s, s2, trsf0;
@@ -1591,7 +1591,7 @@ namespace RFBP
 		return t;
 	}
 
-	template<typename T, class Mag> T free_energy(const Cavity_Message<T, Mag> &messages, const Patterns<T> &patterns, const Params<T, Mag> &params) 
+	template<typename T, class Mag> T free_energy(const Cavity_Message<T, Mag> &messages, const Patterns<T> &patterns, const Params<T, Mag> &params)
 	{
 		T f = (T)0., *ones = new T[messages.K];
 		MagVec<Mag> v = new Mag[messages.M];
@@ -1602,15 +1602,15 @@ namespace RFBP
 		{
 			for (int k = 0; k < messages.K; ++k)
 				f += free_energy_theta(messages.m_j_star[k], messages.m_in[a][k], patterns.input[a], messages.weights[a][k], messages.m_no[a][k], patterns.Ncol, messages.N);
-			f += free_energy_theta_exact(messages.m_in[a], messages.m_on[a], ones, messages.m_ni[a], z, messages.K); 
+			f += free_energy_theta_exact(messages.m_in[a], messages.m_on[a], ones, messages.m_ni[a], z, messages.K);
 		}
 
 		for (int k = 0; k < messages.K; ++k)
 			for (int i = 0; i < messages.N; ++i)
 			{
 				for (int a = 0; a < messages.M; ++a)
-					v[a] = Mag(messages.weights[a][k][i].mag); 
-				
+					v[a] = Mag(messages.weights[a][k][i].mag);
+
 				f -= Magnetization::logZ<T, Mag>(messages.m_star_j[k][i], v, messages.M);
 
 				f -= log2_over_2;
@@ -1665,7 +1665,7 @@ namespace RFBP
 								   [](Mag &j, const Mag &k)
 								   {
 								   	return (j * k).mag;
-								   });		
+								   });
 		return q / (messages.N * messages.K);
 	}
 
@@ -1676,9 +1676,9 @@ namespace RFBP
 		std::transform(messages.m_j_star, messages.m_j_star + messages.K,
 					   qs, [&messages](Mag *m)
 					   {
-					   	return std::sqrt(std::inner_product(m, m + messages.N, 
-					   								   m, (T)0., 
-					   								   std::plus<T>(), 
+					   	return std::sqrt(std::inner_product(m, m + messages.N,
+					   								   m, (T)0.,
+					   								   std::plus<T>(),
 					   								   [](const Mag &a, const Mag &b)
 					   								   {
 					   								   	return a.mag * b.mag;
@@ -1755,8 +1755,8 @@ namespace RFBP
 		std::ofstream os(filename, std::ios::out | std::ios::binary);
 		os.write( (const char *) &K, sizeof( int ));
 		os.write( (const char *) &N, sizeof( int ));
-		
-		//TODO maybe a generate	
+
+		//TODO maybe a generate
 		for(int i = 0; i < K; ++i)
 			for(int j = 0; j < N; ++j)
 				os.write( (const char *) &W[i][j], sizeof( int ));
@@ -1788,7 +1788,7 @@ namespace RFBP
 	{
 		int **W = new int*[K];
 		std::generate(W, W + K, [&N](){return new int[N];});
-		
+
 		for(int i = 0; i < K; ++i)
 			std::transform(M[i], M[i] + N, W[i],
 							[](const Mag &Mij)
@@ -1840,19 +1840,19 @@ namespace RFBP
 										)
 	{
 		bool ok;
-		int 	it = 1, 
-				errs, 
-				M = patterns.Nrow, 
+		int 	it = 1,
+				errs,
+				M = patterns.Nrow,
 				N = patterns.Ncol;
-		T 	S, 
-			q, 
-			betaF, 
-			Sint, 
+		T 	S,
+			q,
+			betaF,
+			Sint,
 			*mags = new T[K * K];
 		std::ofstream os;
 		Cavity_Message<T, Mag> messages;
 		Params<T, Mag> params(damping, epsil, T(NAN), max_iters, accuracy1, accuracy2, (T)0., (T)0., quiet);
-		Mag pol   ((T)0.), 
+		Mag pol   ((T)0.),
 			q_bar ((T)0.);
 
 		if (N <= 0) { std::cerr << "N must be positive; given: " << N << std::endl; exit(1);}
@@ -1864,21 +1864,21 @@ namespace RFBP
 		if (randfact < 0 || randfact >= 1) { std::cerr << "randfact must be in [0,1); given: " << randfact << std::endl; exit(1);}
 		if (accuracy1 != "exact" && accuracy1 != "accurate" && accuracy1 != "none") { std::cerr << "accuracy1 must be one of 'exact', 'accurate' or 'none'; given: " << accuracy1 << std::endl; exit(1);}
 		if (accuracy2 != "exact" && accuracy2 != "accurate" && accuracy2 != "none") { std::cerr << "accuracy2 must be one of 'exact', 'accurate' or 'none'; given: " << accuracy2 << std::endl; exit(1);}
-		
+
 		if (accuracy1 == "exact" && !(N % 2)) { std::cerr << "when accuracy1 == 'exact', N must be odd; given: " << N << std::endl; exit(1); }
 		if (accuracy2 == "exact" && !(K % 2)) { std::cerr << "when accuracy2 == 'exact', K must be odd; given: " << K << std::endl; exit(1); }
-		
+
 		messages = (initmess == "nothing") ? Cavity_Message<T, Mag>(M, N, K, randfact, seed) : Cavity_Message<T, Mag>::read_messages(initmess);
 
 		if (messages.N != N) { std::cerr << "wrong messages size, expected N=" << N << "; given: " << messages.N << std::endl; exit(1); }
 		if (messages.K != K) { std::cerr << "wrong messages size, expected K=" << K << "; given: " << messages.K << std::endl; exit(1); }
 		if (messages.M != M) { std::cerr << "wrong messages size, expected M=" << M << "; given: " << messages.M << std::endl; exit(1); }
-		
+
 		if (outfile == "")  outfile = "results_BPCR_N" + std::to_string(N) + "_K" + std::to_string(K) + "_M" + std::to_string(M) + "_s" + std::to_string(seed) + ".txt";
 		if(outmessfiletmpl == "")  outmessfiletmpl = "messages_BPCR_N" + std::to_string(N) + "_K" + std::to_string(K) + "_M" + std::to_string(M) + "_gamma_s" + std::to_string(seed) + ".txt";
 		if (outfile != "nothing" && (writeoutfile == "always" || writeoutfile == "auto"))
 		{
-			if (!quiet) std::cout << "writing outfile '" << outfile << "'" << std::endl; 
+			if (!quiet) std::cout << "writing outfile '" << outfile << "'" << std::endl;
 			os.open(outfile);
 			os << "#1=pol 2=y 3=beta 4=S 5=q 6=q_bar 7=betaF 8=S_int 9=E" << std::endl;
 			os.close();
@@ -1889,17 +1889,17 @@ namespace RFBP
 			if (!quiet) std::cout << "initial errors = " << errs << std::endl;
 			if (outatzero && errs == 0) {delete[] mags; return M2W<T, Mag>(messages.m_j_star, K, N);}
 		}
-		if (!quiet && K > 1) 
-		{ 
+		if (!quiet && K > 1)
+		{
 			std::cout << "mags overlaps =" << std::endl;
 			mags_symmetry(messages, mags);
 			for (int i = 0; i < K; ++i)
 			{
-				for(int j = 0; j < K; ++j) 
+				for(int j = 0; j < K; ++j)
 					std::cout << std::setprecision(6) << std::fixed << mags[i * K + j] << " ";
 				std::cout << std::endl;
 			}
-			std::cout << std::endl; 
+			std::cout << std::endl;
 		}
 
 		for (int i = 0; i < fprotocol.Nrep; ++i)
@@ -1909,18 +1909,18 @@ namespace RFBP
 			params.tan_gamma = pol;
 			params.r = fprotocol.n_rep[i] - 1;
 			params.beta = fprotocol.beta[i];
-			
-			set_outfields(messages, patterns.output, fprotocol.beta[i]); 
-			
+
+			set_outfields(messages, patterns.output, fprotocol.beta[i]);
+
 			ok = converge(messages, patterns, params);
-			
+
 			if (!quiet && K > 1)
 			{
 				std::cout << "mags overlaps =" << std::endl;
 				mags_symmetry(messages, mags);
 				for (int i = 0; i < K; ++i)
 				{
-					for(int j = 0; j < K; ++j) 
+					for(int j = 0; j < K; ++j)
 						std::cout << std::setprecision(6) << std::fixed << mags[i * K + j] << " ";
 					std::cout << std::endl;
 				}
@@ -1942,7 +1942,7 @@ namespace RFBP
 					os << pol << " " << fprotocol.n_rep[i] << " " << fprotocol.beta[i] << " " << S << " " << q << " " << q_bar << " " << betaF << " " << Sint << " " << errs << std::endl;
 					os.close();
 				}
-				if (outmessfiletmpl != "nothing") 
+				if (outmessfiletmpl != "nothing")
 				{
 					os.open(outmessfiletmpl, std::ios_base::app);
 					os << "fmt: " << Mag::magformat() << ", seed: " << seed << ", max_iters: " << max_iters << ", randfact: " << randfact << ", damping: " << damping << ", accuracy1: " << accuracy1 << ", accuracy2: " << accuracy2 << "\nK,N:\t" << messages.K << "\t" << messages.N << std::endl;
@@ -1952,11 +1952,11 @@ namespace RFBP
 			else
 			{
 				if(!quiet) std::cout << "it=" << it << " pol=" << pol << " y=" << fprotocol.n_rep[i] << " beta=" << fprotocol.beta[i] << " (ok=" << ok << ") E=" << errs << std::endl;
-				if (errs == 0) 
+				if (errs == 0)
 				{
 					if(output != "") save_weights<T, Mag>(output, messages, seed, max_iters, randfact, damping, accuracy1, accuracy2);
 					delete[] mags;
-					return M2W<T, Mag>(messages.m_j_star, K, N); 
+					return M2W<T, Mag>(messages.m_j_star, K, N);
 				}
 			}
 			++it;
@@ -2037,7 +2037,7 @@ namespace RFBP
 
 	template<typename T> int* test(const Patterns<T> &patterns, int **weights, const int &K, const int &N)
 	{
-		int *results = new int[patterns.Nrow]; 
+		int *results = new int[patterns.Nrow];
 		T s, trsf0, s2;
 
 		for (int i = 0; i < patterns.Nrow; ++i)
@@ -2063,9 +2063,9 @@ namespace RFBP
 	template<typename T> int* test(const std::string &ifile, const std::string &wfile)
 	{
 		Patterns<T> patterns(ifile);
-		check_binary(patterns);		
+		check_binary(patterns);
 
-		int 	K, 
+		int 	K,
 				N,
 				**weights = read_weights(wfile, K, N);
 
@@ -2127,7 +2127,7 @@ template<typename T> void parse_training_args(int argc, char *argv[], std::strin
 	argparse.get<int>("iArg", max_iters);
 	argparse.get<T>("gArg", randfact);
 	argparse.get<T>("dArg", damping);
-	
+
 	std::vector<std::string> accuracy;
 	argparse.get<std::string>("aArg", accuracy);
 	if((int)accuracy.size() > 2) {std::cerr << "Too many accuracy variables given. Needed two." << std::endl; exit(1);}
@@ -2151,7 +2151,7 @@ void parse_test_args(int argc, char *argv[], std::string &test_file, std::string
 	argparse.add_argument<std::string>("fArg", "f", "test_file", "Test Filename (with extension)", true, "");
 	argparse.add_argument<std::string>("wArg", "w", "weights", "Weights Matrix Filename (with extension)", true, "");
 	argparse.add_argument<std::string>("oArg", "o", "output", "Output Filename (with extension)", false, "output.txt");
-	
+
 	argparse.parse_args(argc, argv);
 
 	argparse.get<std::string>("fArg", test_file);
@@ -2161,6 +2161,3 @@ void parse_test_args(int argc, char *argv[], std::string &test_file, std::string
 	argparse.get<std::string>("oArg", output_file);
 	return;
 }
-
-
-
