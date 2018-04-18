@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 			.1f, // percentage of population to conserve
 			.3f, // probability of mutation
 			123, // random seed
-			true); // output file ON
+			false); // output file ON
 
 	return 0;
 }
