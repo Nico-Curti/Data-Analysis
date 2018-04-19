@@ -3,37 +3,37 @@
 
 // factorial of a number 
 template< int i > struct FACTORIAL
-{	enum {RESULT = i * FACTORIAL<i-1>::RESULT};	};
+{   enum {RESULT = i * FACTORIAL<i-1>::RESULT}; };
 template<> struct FACTORIAL< 1 >
-{	enum {RESULT = 1}; };
+{   enum {RESULT = 1}; };
 
 // integer power of a number
 template< int P, typename T> struct POW
-{	static T result(const T &base){return base * POW<P-1, T>::result(base);	}};
+{   static T result(const T &base){return base * POW<P-1, T>::result(base); }};
 template< typename T> struct POW<1, T>
-{	static T result(const T &base){return base;	}};
+{   static T result(const T &base){return base; }};
 template< int P, typename T> inline T Pow(const T &base )
-{	return POW<P, T>::result(base);	}
+{   return POW<P, T>::result(base); }
 
 // sum of range (0, i)
 template< int i > struct SUM
-{	enum {RESULT = i + SUM<i-1>::RESULT};	};
+{   enum {RESULT = i + SUM<i-1>::RESULT};   };
 template<> struct SUM< 0 >
-{	enum {RESULT = 0};	};
+{   enum {RESULT = 0};  };
 
 // mean of array
 template< int DIM, typename T> struct MEAN
-{	static T result(T *elm){return *elm + MEAN<DIM-1, T>::result(elm+1);}};
+{   static T result(T *elm){return *elm + MEAN<DIM-1, T>::result(elm+1);}};
 template< typename T> struct MEAN<1, T>
-{	static T result(T *elm){return *elm;}};
+{   static T result(T *elm){return *elm;}};
 template< int DIM, typename T> inline T Mean(T *v)
-{	return MEAN<DIM, T>::result(v) / DIM;}
+{   return MEAN<DIM, T>::result(v) / DIM;}
 
 // greatest common divider
 template< int X, int Y> struct GCD 
-{	enum {RESULT = GCD<Y, X % Y>::RESULT};	};
+{   enum {RESULT = GCD<Y, X % Y>::RESULT};  };
 template< int X > struct GCD<X, 0>
-{	enum {RESULT = X};	};
+{   enum {RESULT = X};  };
 
 // greatest divider of a number
 template<int N, int i, bool res> struct GD
@@ -45,11 +45,11 @@ template<int N> inline int gd()
 
 // count element equal to val
 template< int DIM, typename T> struct COUNT
-{	static int result(T *elm, const T &val){return ((*elm == val) ? 1 : 0) + COUNT<DIM-1, T>::result(elm + 1, val);	}};
+{   static int result(T *elm, const T &val){return ((*elm == val) ? 1 : 0) + COUNT<DIM-1, T>::result(elm + 1, val); }};
 template< typename T> struct COUNT<0, T>
-{	static int result(T *elm, const T &val){return ((*elm == val) ? 1 : 0);}};
+{   static int result(T *elm, const T &val){return ((*elm == val) ? 1 : 0);}};
 template< int DIM, typename T> inline int count_obj(T *a, const T &val)
-{	return COUNT<DIM, T>::result(a, val);	}
+{   return COUNT<DIM, T>::result(a, val);   }
 
 // inner product
 template<int DIM, typename T> struct DOT
@@ -65,7 +65,7 @@ template<int DIM, typename T> struct PRINT
 template<typename T> struct PRINT<0, T>
 { static void result(T *v){std::cout << std::endl; return;}};
 template<int DIM, typename T> void print(T *v)
-{	return PRINT<DIM, T>::result(v);}
+{   return PRINT<DIM, T>::result(v);}
 
 // variance of array
 template<int DIM, typename T> struct VARIANCE
@@ -158,10 +158,10 @@ template<int N, int M, typename T> struct MAT_VEC<N, M, N, M, T>
 { static void result(T **a, T *x, T *b){ *(b + N) += *(*(a + N) + M) * *(x + M); return;}};
 template<int N, int M, typename T> inline T* mat_vec(T **a, T *x)
 {
-	T *b = new T[N];
-	zeros<N>(b);
-	MAT_VEC<N-1, M-1, 0, 0, T>::result(a, x, b);
-	return b; 
+    T *b = new T[N];
+    zeros<N>(b);
+    MAT_VEC<N-1, M-1, 0, 0, T>::result(a, x, b);
+    return b; 
 }
 
 // vector-matrix product
@@ -175,10 +175,10 @@ template<int N, int M, typename T> struct VEC_MAT<N, M, N, M, T>
 { static void result(T **a, T *x, T *b){ *(b + M) += *(*(a + N) + M) * *(x + N); return;}};
 template<int N, int M, typename T> inline T* vec_mat(T *x, T **a)
 {
-	T *b = new T[N];
-	zeros<N>(b);
-	VEC_MAT<N-1, M-1, 0, 0, T>::result(a, x, b);
-	return b; 
+    T *b = new T[N];
+    zeros<N>(b);
+    VEC_MAT<N-1, M-1, 0, 0, T>::result(a, x, b);
+    return b; 
 }
 
 // memset 0 to matrix
@@ -196,10 +196,10 @@ template<int M, int K, typename T> struct MAT_MAT<0, M, K, T>
 { static void result(T **A, T **B, T **C){return;}};
 template<int N, int M, int K, typename T> inline T** dot(T **A, T **B)
 {
-	T **C = init<N, K, T>();
-	for(int i = 0; i < N; ++i) zeros<K>(C[i]);
-	MAT_MAT<N, M, K, T>::result(A, B, C);
-	return C;
+    T **C = init<N, K, T>();
+    for(int i = 0; i < N; ++i) zeros<K>(C[i]);
+    MAT_MAT<N, M, K, T>::result(A, B, C);
+    return C;
 }
 
 // nested map

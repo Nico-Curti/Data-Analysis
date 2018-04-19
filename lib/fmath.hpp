@@ -34,13 +34,13 @@ inline int gd(const int &a); // greatest divisor
 
 
 //===============================================================================//
-//	        _    _  _        __                      _    _                      //
-//	       | |  (_)| |      / _|                    | |  (_)                     //
-//	 _   _ | |_  _ | |     | |_  _   _  _ __    ___ | |_  _   ___   _ __   ___   //
-//	| | | || __|| || |     |  _|| | | || '_ \  / __|| __|| | / _ \ | '_ \ / __|  //
-//	| |_| || |_ | || |     | |  | |_| || | | || (__ | |_ | || (_) || | | |\__ \  //
-//	 \__,_| \__||_||_|     |_|   \__,_||_| |_| \___| \__||_| \___/ |_| |_||___/  //
-//	                                                                             //
+//          _    _  _        __                      _    _                      //
+//         | |  (_)| |      / _|                    | |  (_)                     //
+//   _   _ | |_  _ | |     | |_  _   _  _ __    ___ | |_  _   ___   _ __   ___   //
+//  | | | || __|| || |     |  _|| | | || '_ \  / __|| __|| | / _ \ | '_ \ / __|  //
+//  | |_| || |_ | || |     | |  | |_| || | | || (__ | |_ | || (_) || | | |\__ \  //
+//   \__,_| \__||_||_|     |_|   \__,_||_| |_| \___| \__||_| \___/ |_| |_||___/  //
+//                                                                               //
 //===============================================================================//
 
 
@@ -62,135 +62,135 @@ template<typename T> inline T erf(const T &x)
 static inline float pow2 (const float &p)
 {
 #ifdef FAST_MATH
-	float offset = (p < 0) ? 1.0f : 0.0f;
-	float clipp = (p < -126) ? -126.0f : p;
-	int w = clipp;
-	float z = clipp - w + offset;
-	union { uint32_t i; float f; } v = { (1 << 23) * (clipp + 121.2740575f + 27.7280233f / (4.84252568f - z) - 1.49012907f * z) };
+    float offset = (p < 0) ? 1.0f : 0.0f;
+    float clipp = (p < -126) ? -126.0f : p;
+    int w = clipp;
+    float z = clipp - w + offset;
+    union { uint32_t i; float f; } v = { (1 << 23) * (clipp + 121.2740575f + 27.7280233f / (4.84252568f - z) - 1.49012907f * z) };
 
-	return v.f;
+    return v.f;
 #else
-	return 0.f;
+    return 0.f;
 #endif
 }
 
 template<typename T> inline T exp(const T &p)
 {  
 #ifdef FAST_MATH
-	return pow2(1.442695040f * p); 
+    return pow2(1.442695040f * p); 
 #else
-	return std::exp(p);
+    return std::exp(p);
 #endif
 }
 
 template<typename T> inline T log2 (const T &x)
 {
 #ifdef FAST_MATH
-	union { float f; uint32_t i; } vx = { (float)x };
-	union { uint32_t i; float f; } mx = { (vx.i & 0x007FFFFF) | 0x3f000000 };
-	float y = vx.i;
-	y *= 1.1920928955078125e-7f;
-	return y - 124.22551499f - 1.498030302f * mx.f - 1.72587999f / (0.3520887068f + mx.f);
+    union { float f; uint32_t i; } vx = { (float)x };
+    union { uint32_t i; float f; } mx = { (vx.i & 0x007FFFFF) | 0x3f000000 };
+    float y = vx.i;
+    y *= 1.1920928955078125e-7f;
+    return y - 124.22551499f - 1.498030302f * mx.f - 1.72587999f / (0.3520887068f + mx.f);
 #else
-	return std::log2(x);
+    return std::log2(x);
 #endif
 }
 
 template<typename T> inline T log(const T &x)
 {
 #ifdef FAST_MATH
-	int Ix = *(int *)&(x);
-	float y = (Ix - magic_number) / (int_e - magic_number);
+    int Ix = *(int *)&(x);
+    float y = (Ix - magic_number) / (int_e - magic_number);
 
-	y -= (exp(y) - x)/( exp(y));
-	y -= (exp(y) - x)/( exp(y));
-	return y;
+    y -= (exp(y) - x)/( exp(y));
+    y -= (exp(y) - x)/( exp(y));
+    return y;
 #else
-	return std::log(x);
+    return std::log(x);
 #endif
 }
 
 template<typename T> inline T pow(const T &a, const T &b)
 {  
 #ifdef FAST_MATH
-	return pow2(b * log2(a)); 
+    return pow2(b * log2(a)); 
 #else
-	return std::pow(a, b);
+    return std::pow(a, b);
 #endif
 }
 
 template<typename T> inline T log10(const T &x)
 {
 #ifdef FAST_MATH
-	int Ix = *(int *)&(x);
-	float y = (Ix - magic_number) / (int_10 - magic_number);
+    int Ix = *(int *)&(x);
+    float y = (Ix - magic_number) / (int_10 - magic_number);
 
-	y -= (pow(10, y) - x)/( ln10*pow(10, y));
-	y -= (pow(10, y) - x)/( ln10*pow(10, y));
-	return y;
+    y -= (pow(10, y) - x)/( ln10*pow(10, y));
+    y -= (pow(10, y) - x)/( ln10*pow(10, y));
+    return y;
 #else
-	return std::log10(x);
+    return std::log10(x);
 #endif
 }
 
 template<typename T> inline T atanh(const T &x)
 {
 #ifdef FAST_MATH
-	return (T)0.5 * log(((T)1. + x)/((T)1. - x));
+    return (T)0.5 * log(((T)1. + x)/((T)1. - x));
 #else
-	return std::atanh(x);
+    return std::atanh(x);
 #endif
 }
 
 template<typename T> inline T tanh(const T &x)
 {
 #ifdef FAST_MATH
-	T e = exp(-2*x);
-	return ((T)1. - e) / ((T)1. + e);
+    T e = exp(-2*x);
+    return ((T)1. - e) / ((T)1. + e);
 #else
-	return std::tanh(x);
+    return std::tanh(x);
 #endif
 }
 
 template<typename T> inline T hardtanh(const T &x)
 { 
-	return (-(T)1. <= x && x <= (T)1.) ? x : (x < -(T)1.) ? -(T)1. : (T)1.; 
+    return (-(T)1. <= x && x <= (T)1.) ? x : (x < -(T)1.) ? -(T)1. : (T)1.; 
 }
 
 template<typename T> inline T sqrt(const T &x)
 {
 #ifdef FAST_MATH
-	const float xhalf = 0.5f * x;
+    const float xhalf = 0.5f * x;
 
-	union // get bits for floating value
-	{
-		float x;
-		int i;
-	} u;
-	u.x = x;
-	u.i = 0x5f3759df - (u.i >> 1);  // gives initial guess y0
-	return x * u.x * (1.5f - xhalf * u.x * u.x);// Newton step, repeating increases accuracy 
+    union // get bits for floating value
+    {
+        float x;
+        int i;
+    } u;
+    u.x = x;
+    u.i = 0x5f3759df - (u.i >> 1);  // gives initial guess y0
+    return x * u.x * (1.5f - xhalf * u.x * u.x);// Newton step, repeating increases accuracy 
 #else
-	return std::sqrt(x);
+    return std::sqrt(x);
 #endif
 }
 
 template<typename T> inline int sign(const T &x)
 { 
-	return (x > 0) ? 1 : ((x < 0) ? -1 : 0); 
+    return (x > 0) ? 1 : ((x < 0) ? -1 : 0); 
 }
 
 inline int gcd(const int &a, const int &b) // greatest commond divisor
 {
-	return b == 0 ? a : gcd(b, a % b);
+    return b == 0 ? a : gcd(b, a % b);
 }
 
 inline int gd(const int &a) // greatest divisor
 {
-	if(!(a % 2))
-		return a/2;
-	for(int i = 3; i < a; i += 2)
-		if(!(a % i))
-	  		return a / i;
-	return a;     
+    if(!(a % 2))
+        return a/2;
+    for(int i = 3; i < a; i += 2)
+        if(!(a % i))
+            return a / i;
+    return a;     
 }

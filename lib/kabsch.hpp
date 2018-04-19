@@ -17,102 +17,102 @@
 
 class
 {
-	//========= only float variables ===========================
-	inline float rsqrt(float x);
-	inline float rsqrt1(float x);
-	inline float accurateSqrt(float x);
-	inline void condSwap(const bool &, float &, float &);
-	inline void condNegSwap(const bool &, float &, float &);
-	inline void multAB(const float&, const float&, const float&,
-					   const float&, const float&, const float&,
-					   const float&, const float&, const float&,
+    //========= only float variables ===========================
+    inline float rsqrt(float x);
+    inline float rsqrt1(float x);
+    inline float accurateSqrt(float x);
+    inline void condSwap(const bool &, float &, float &);
+    inline void condNegSwap(const bool &, float &, float &);
+    inline void multAB(const float&, const float&, const float&,
+                       const float&, const float&, const float&,
+                       const float&, const float&, const float&,
 
-					   const float&, const float&, const float&,
-					   const float&, const float&, const float&,
-					   const float&, const float&, const float&,
+                       const float&, const float&, const float&,
+                       const float&, const float&, const float&,
+                       const float&, const float&, const float&,
 
-					   float&,float&,float&,
-					   float&,float&,float&,
-					   float&,float&,float&);
-	inline void multAtB(const float&, const float&, const float&,
-					   const float&, const float&, const float&,
-					   const float&, const float&, const float&,
+                       float&,float&,float&,
+                       float&,float&,float&,
+                       float&,float&,float&);
+    inline void multAtB(const float&, const float&, const float&,
+                       const float&, const float&, const float&,
+                       const float&, const float&, const float&,
 
-					   const float&, const float&, const float&,
-					   const float&, const float&, const float&,
-					   const float&, const float&, const float&,
+                       const float&, const float&, const float&,
+                       const float&, const float&, const float&,
+                       const float&, const float&, const float&,
 
-					   float&,float&,float&,
-					   float&,float&,float&,
-					   float&,float&,float&);
-	inline void quatfloatoMat3(const float *,
-						   float&, float&, float&,
-						   float&, float&, float&,
-						   float&, float&, float&);
-	inline void approximateGivensQuaternion(const float&, const float&, const float&, float&, float &);
-	inline void jacobiConjugation( const int &, const int &, const int &,
-                        		   float &,
-                        		   float &, float &,
-                        		   float &, float &, float &,
-                        		   float *);
-	inline float dist2(const float&, const float&, const float&);
-	inline void jacobiEigenanalysis(float&,
-									float&, float&,
-									float&, float&, float&,
-									float *);
-	inline void sortSingularValues(float&, float&, float&,
-								   float&, float&, float&,
-								   float&, float&, float&,
+                       float&,float&,float&,
+                       float&,float&,float&,
+                       float&,float&,float&);
+    inline void quatfloatoMat3(const float *,
+                           float&, float&, float&,
+                           float&, float&, float&,
+                           float&, float&, float&);
+    inline void approximateGivensQuaternion(const float&, const float&, const float&, float&, float &);
+    inline void jacobiConjugation( const int &, const int &, const int &,
+                                   float &,
+                                   float &, float &,
+                                   float &, float &, float &,
+                                   float *);
+    inline float dist2(const float&, const float&, const float&);
+    inline void jacobiEigenanalysis(float&,
+                                    float&, float&,
+                                    float&, float&, float&,
+                                    float *);
+    inline void sortSingularValues(float&, float&, float&,
+                                   float&, float&, float&,
+                                   float&, float&, float&,
 
-								   float&, float&, float&,
-								   float&, float&, float&,
-								   float&, float&, float&);
-	inline void QRGivensQuaternion(const float&, const float&, float &, float&);
-	inline void QRDecomposition(float, float, float,
-								float, float, float,
-								float, float, float,
+                                   float&, float&, float&,
+                                   float&, float&, float&,
+                                   float&, float&, float&);
+    inline void QRGivensQuaternion(const float&, const float&, float &, float&);
+    inline void QRDecomposition(float, float, float,
+                                float, float, float,
+                                float, float, float,
 
-								float&, float&, float&,
-								float&, float&, float&,
-								float&, float&, float&,
+                                float&, float&, float&,
+                                float&, float&, float&,
+                                float&, float&, float&,
 
-								float&, float&, float&,
-								float&, float&, float&,
-								float&, float&, float&);
-	void svd3x3(const float&, const float&, const float&,
-				const float&, const float&, const float&,
-				const float&, const float&, const float&,
+                                float&, float&, float&,
+                                float&, float&, float&,
+                                float&, float&, float&);
+    void svd3x3(const float&, const float&, const float&,
+                const float&, const float&, const float&,
+                const float&, const float&, const float&,
 
-				float&, float&, float&,
-				float&, float&, float&,
-				float&, float&, float&,
+                float&, float&, float&,
+                float&, float&, float&,
+                float&, float&, float&,
 
-				float&, float&, float&,
-				float&, float&, float&,
-				float&, float&, float&,
+                float&, float&, float&,
+                float&, float&, float&,
+                float&, float&, float&,
 
-				float&, float&, float&,
-				float&, float&, float&,
-				float&, float&, float&);
+                float&, float&, float&,
+                float&, float&, float&,
+                float&, float&, float&);
 
-	//================= best for double variables ====================================================
-	inline void cross(float * restrict_macro , const float * restrict_macro , const float * restrict_macro );
-	inline void sort3(float * restrict_macro );
-	inline void unit3(float * restrict_macro );
-	inline void ldubsolve3(float * restrict_macro , const float * restrict_macro , const float * restrict_macro , const int * restrict_macro );
-	inline void matmul3(float * restrict_macro , const float * restrict_macro , const float * restrict_macro );
-	inline void matvec3(float * restrict_macro , const float * restrict_macro , const float * restrict_macro );
-	inline void ata3(float * restrict_macro , const float * restrict_macro );
-	inline void aat3(float * restrict_macro , const float * restrict_macro );
+    //================= best for double variables ====================================================
+    inline void cross(float * restrict_macro , const float * restrict_macro , const float * restrict_macro );
+    inline void sort3(float * restrict_macro );
+    inline void unit3(float * restrict_macro );
+    inline void ldubsolve3(float * restrict_macro , const float * restrict_macro , const float * restrict_macro , const int * restrict_macro );
+    inline void matmul3(float * restrict_macro , const float * restrict_macro , const float * restrict_macro );
+    inline void matvec3(float * restrict_macro , const float * restrict_macro , const float * restrict_macro );
+    inline void ata3(float * restrict_macro , const float * restrict_macro );
+    inline void aat3(float * restrict_macro , const float * restrict_macro );
     inline void trans3(float * restrict_macro );
-	void solvecubic(float * restrict_macro );
-	void ldu3(float * restrict_macro , int * restrict_macro );
-	void svd3(float * restrict_macro , float * restrict_macro , float * restrict_macro , const float * restrict_macro );
+    void solvecubic(float * restrict_macro );
+    void ldu3(float * restrict_macro , int * restrict_macro );
+    void svd3(float * restrict_macro , float * restrict_macro , float * restrict_macro , const float * restrict_macro );
 
-	//================ common function for rmsd computation ===========================================
-	inline float dist(const float &, const float &, const float &, const float &, const float &, const float &);
+    //================ common function for rmsd computation ===========================================
+    inline float dist(const float &, const float &, const float &, const float &, const float &, const float &);
 public:
-	inline float operator()(const Point &, const Point &);
+    inline float operator()(const Point &, const Point &);
 } kabsch;
 typedef decltype(kabsch) Kabsch;
 
@@ -275,7 +275,7 @@ void Kabsch::ldu3(float * restrict_macro A, int * restrict_macro P)
     P[1] = 1;
     P[2] = 2;
 
-    P[0] = 	 std::fabs(A[3*1+0]) > std::fabs(A[3*0+0]) ?
+    P[0] =   std::fabs(A[3*1+0]) > std::fabs(A[3*0+0]) ?
             (std::fabs(A[3*2+0]) > std::fabs(A[3*1+0]) ? 2 : 1) :
             (std::fabs(A[3*2+0]) > std::fabs(A[3*0+0]) ? 2 : 0);
     P[P[0]] = 0;
@@ -301,7 +301,7 @@ void Kabsch::ldu3(float * restrict_macro A, int * restrict_macro P)
     {
         A[3*P[2]+1] = (A[3*P[2]+1] - A[3*P[0]+1]*A[3*P[2]+0]*A[3*P[0]+0])/A[3*P[1]+1];
         A[3*P[1]+2] = (A[3*P[1]+2] - A[3*P[0]+2]*A[3*P[1]+0]*A[3*P[0]+0])/A[3*P[1]+1];
-	}
+    }
 
     A[3*P[2]+2] = A[3*P[2]+2] - A[3*P[0]+2]*A[3*P[2]+0]*A[3*P[0]+0] - A[3*P[1]+2]*A[3*P[2]+1]*A[3*P[1]+1];
 }
@@ -368,7 +368,7 @@ void Kabsch::svd3(float * restrict_macro U, float * restrict_macro S, float * re
 
     /* Pick the component of D nearest to 0 */
     y[0] = y[1] = y[2] = 0.f;
-    k = 	 std::fabs(LDU[P[1]][1]) < std::fabs(LDU[P[0]][0]) ?
+    k =      std::fabs(LDU[P[1]][1]) < std::fabs(LDU[P[0]][0]) ?
             (std::fabs(LDU[P[2]][2]) < std::fabs(LDU[P[1]][1]) ? 2 : 1) :
             (std::fabs(LDU[P[2]][2]) < std::fabs(LDU[P[0]][0]) ? 2 : 0);
     y[k] = 1.f;
@@ -392,7 +392,7 @@ void Kabsch::svd3(float * restrict_macro U, float * restrict_macro S, float * re
 
     /* Pick the component of D nearest to 0 */
     y[0] = y[1] = y[2] = 0.f;
-    k = 	 std::fabs(LDU[P[0]][0]) < std::fabs(LDU[P[2]][2]) ?
+    k =      std::fabs(LDU[P[0]][0]) < std::fabs(LDU[P[2]][2]) ?
             (std::fabs(LDU[P[0]][0]) < std::fabs(LDU[P[1]][1]) ? 0 : 1) :
             (std::fabs(LDU[P[1]][1]) < std::fabs(LDU[P[2]][2]) ? 1 : 2);
     y[k] = 1.f;
@@ -434,7 +434,7 @@ void Kabsch::svd3(float * restrict_macro U, float * restrict_macro S, float * re
              * obtain an orthogonal vector to U_1.
              */
             y[0] = y[1] = y[2] = 0.f;
-            k = 	 std::fabs(U[3*0+0]) < std::fabs(U[3*0+2]) ?
+            k =      std::fabs(U[3*0+0]) < std::fabs(U[3*0+2]) ?
                     (std::fabs(U[3*0+0]) < std::fabs(U[3*0+1]) ? 0 : 1) :
                     (std::fabs(U[3*0+1]) < std::fabs(U[3*0+2]) ? 1 : 2);
             y[k] = 1.f;
@@ -463,7 +463,7 @@ void Kabsch::svd3(float * restrict_macro U, float * restrict_macro S, float * re
              */
             matmul3(U, A, V);
             break;
-	}
+    }
 
     /* Normalize the columns of U and V */
     unit3(V+(3*0+0));
@@ -486,68 +486,68 @@ void Kabsch::svd3(float * restrict_macro U, float * restrict_macro S, float * re
 
 
 void Kabsch::svd3x3(// input A
-					const float &a11, const float &a12, const float &a13,
-					const float &a21, const float &a22, const float &a23,
-					const float &a31, const float &a32, const float &a33,
-					// output U
-					float &u11, float &u12, float &u13,
-					float &u21, float &u22, float &u23,
-					float &u31, float &u32, float &u33,
-					// output S
-					float &s11, float &s12, float &s13,
-					float &s21, float &s22, float &s23,
-					float &s31, float &s32, float &s33,
-					// output V
-					float &v11, float &v12, float &v13,
-					float &v21, float &v22, float &v23,
-					float &v31, float &v32, float &v33)
+                    const float &a11, const float &a12, const float &a13,
+                    const float &a21, const float &a22, const float &a23,
+                    const float &a31, const float &a32, const float &a33,
+                    // output U
+                    float &u11, float &u12, float &u13,
+                    float &u21, float &u22, float &u23,
+                    float &u31, float &u32, float &u33,
+                    // output S
+                    float &s11, float &s12, float &s13,
+                    float &s21, float &s22, float &s23,
+                    float &s31, float &s32, float &s33,
+                    // output V
+                    float &v11, float &v12, float &v13,
+                    float &v21, float &v22, float &v23,
+                    float &v31, float &v32, float &v33)
 {
-	// normal equations matrix
-	float AfloatA11, AfloatA12, AfloatA13;
-	float AfloatA21, AfloatA22, AfloatA23;
-	float AfloatA31, AfloatA32, AfloatA33;
+    // normal equations matrix
+    float AfloatA11, AfloatA12, AfloatA13;
+    float AfloatA21, AfloatA22, AfloatA23;
+    float AfloatA31, AfloatA32, AfloatA33;
 
-	multAtB(a11,a12,a13,a21,a22,a23,a31,a32,a33,
+    multAtB(a11,a12,a13,a21,a22,a23,a31,a32,a33,
           a11,a12,a13,a21,a22,a23,a31,a32,a33,
           AfloatA11,AfloatA12,AfloatA13,AfloatA21,AfloatA22,AfloatA23,AfloatA31,AfloatA32,AfloatA33);
 
-	// symmetric eigenalysis
-	float qV[4];
+    // symmetric eigenalysis
+    float qV[4];
     jacobiEigenanalysis( AfloatA11,AfloatA21,AfloatA22, AfloatA31,AfloatA32,AfloatA33,qV);
-	quatfloatoMat3(qV,v11,v12,v13,v21,v22,v23,v31,v32,v33);
+    quatfloatoMat3(qV,v11,v12,v13,v21,v22,v23,v31,v32,v33);
 
-	float b11, b12, b13;
-	float b21, b22, b23;
-	float b31, b32, b33;
-	multAB(a11,a12,a13,a21,a22,a23,a31,a32,a33,
-		v11,v12,v13,v21,v22,v23,v31,v32,v33,
-		b11, b12, b13, b21, b22, b23, b31, b32, b33);
+    float b11, b12, b13;
+    float b21, b22, b23;
+    float b31, b32, b33;
+    multAB(a11,a12,a13,a21,a22,a23,a31,a32,a33,
+        v11,v12,v13,v21,v22,v23,v31,v32,v33,
+        b11, b12, b13, b21, b22, b23, b31, b32, b33);
 
-	// sort singular values and find V
-	sortSingularValues(b11, b12, b13, b21, b22, b23, b31, b32, b33,
-						v11,v12,v13,v21,v22,v23,v31,v32,v33);
+    // sort singular values and find V
+    sortSingularValues(b11, b12, b13, b21, b22, b23, b31, b32, b33,
+                        v11,v12,v13,v21,v22,v23,v31,v32,v33);
 
-	// QR decomposition
-	QRDecomposition(b11, b12, b13, b21, b22, b23, b31, b32, b33,
-	u11, u12, u13, u21, u22, u23, u31, u32, u33,
-	s11, s12, s13, s21, s22, s23, s31, s32, s33
-	);
+    // QR decomposition
+    QRDecomposition(b11, b12, b13, b21, b22, b23, b31, b32, b33,
+    u11, u12, u13, u21, u22, u23, u31, u32, u33,
+    s11, s12, s13, s21, s22, s23, s31, s32, s33
+    );
 }
 
 inline void Kabsch::QRDecomposition(// matrix that we want to decompose
-									 float b11, float b12, float b13,
-									 float b21, float b22, float b23,
-									 float b31, float b32, float b33,
-									 // output Q
-									 float &q11, float &q12, float &q13,
-									 float &q21, float &q22, float &q23,
-									 float &q31, float &q32, float &q33,
-									 // output R
-									 float &r11, float &r12, float &r13,
-									 float &r21, float &r22, float &r23,
-									 float &r31, float &r32, float &r33)
+                                     float b11, float b12, float b13,
+                                     float b21, float b22, float b23,
+                                     float b31, float b32, float b33,
+                                     // output Q
+                                     float &q11, float &q12, float &q13,
+                                     float &q21, float &q22, float &q23,
+                                     float &q31, float &q32, float &q33,
+                                     // output R
+                                     float &r11, float &r12, float &r13,
+                                     float &r21, float &r22, float &r23,
+                                     float &r31, float &r32, float &r33)
 {
-	float ch1,sh1,ch2,sh2,ch3,sh3;
+    float ch1,sh1,ch2,sh2,ch3,sh3;
     float a,b;
 
     // first givens rotation (ch,0,0,sh)
@@ -564,9 +564,9 @@ inline void Kabsch::QRDecomposition(// matrix that we want to decompose
     a = 1-2*sh2*sh2;
     b = 2*ch2*sh2;
     // apply B = Q' * B;
-    b11 = a*r11+b*r31; 	b12 = a*r12+b*r32;  b13 = a*r13+b*r33;
-    b21 = r21;         	b22 = r22;          b23 = r23;
-    b31 = -b*r11+a*r31;	b32 = -b*r12+a*r32; b33 = -b*r13+a*r33;
+    b11 = a*r11+b*r31;  b12 = a*r12+b*r32;  b13 = a*r13+b*r33;
+    b21 = r21;          b22 = r22;          b23 = r23;
+    b31 = -b*r11+a*r31; b32 = -b*r12+a*r32; b33 = -b*r13+a*r33;
 
     // third givens rotation (ch,sh,0,0)
     QRGivensQuaternion(b22,b32,ch3,sh3);
@@ -600,7 +600,7 @@ inline void Kabsch::QRDecomposition(// matrix that we want to decompose
 
 inline void Kabsch::QRGivensQuaternion(const float &a1, const float &a2, float &ch, float &sh)
 {
-	float epsilon = (float)EPSILON;
+    float epsilon = (float)EPSILON;
     float rho = accurateSqrt(a1*a1 + a2*a2);
 
     sh = rho > epsilon ? a2 : (float)0.;
@@ -613,18 +613,18 @@ inline void Kabsch::QRGivensQuaternion(const float &a1, const float &a2, float &
 }
 
 inline void Kabsch::sortSingularValues(// matrix that we want to decompose
-										float &b11, float &b12, float &b13,
-										float &b21, float &b22, float &b23,
-										float &b31, float &b32, float &b33,
-  										//sort V simultaneously
-										float &v11, float &v12, float &v13,
-										float &v21, float &v22, float &v23,
-    									float &v31, float &v32, float &v33)
+                                        float &b11, float &b12, float &b13,
+                                        float &b21, float &b22, float &b23,
+                                        float &b31, float &b32, float &b33,
+                                        //sort V simultaneously
+                                        float &v11, float &v12, float &v13,
+                                        float &v21, float &v22, float &v23,
+                                        float &v31, float &v32, float &v33)
 {
-	float rho1 = dist2(b11,b21,b31);
+    float rho1 = dist2(b11,b21,b31);
     float rho2 = dist2(b12,b22,b32);
     float rho3 = dist2(b13,b23,b33);
-	bool c;
+    bool c;
     c = rho1 < rho2;
     condNegSwap(c,b11,b12); condNegSwap(c,v11,v12);
     condNegSwap(c,b21,b22); condNegSwap(c,v21,v22);
@@ -642,55 +642,55 @@ inline void Kabsch::sortSingularValues(// matrix that we want to decompose
 }
 
 inline void Kabsch::jacobiEigenanalysis(// symmetric matrix
-										float &s11,
-										float &s21, float &s22,
-										float &s31, float &s32, float &s33,
-										// quaternion representation of V
-        								float * qV)
+                                        float &s11,
+                                        float &s21, float &s22,
+                                        float &s31, float &s32, float &s33,
+                                        // quaternion representation of V
+                                        float * qV)
 {
-	qV[3] = (float)1.; qV[0] = (float)0.; qV[1] = (float)0.; qV[2] = (float)0.; // follow same indexing convention as GLM
+    qV[3] = (float)1.; qV[0] = (float)0.; qV[1] = (float)0.; qV[2] = (float)0.; // follow same indexing convention as GLM
     for (int i = 0; i < 4; ++i)
-	{
-		// we wish to eliminate the maximum off-diagonal element
+    {
+        // we wish to eliminate the maximum off-diagonal element
         // on every iteration, but cycling over all 3 possible rotations
         // in fixed order (p,q) = (1,2) , (2,3), (1,3) still retains
         //  asymptotic convergence
         jacobiConjugation(0,1,2,s11,s21,s22,s31,s32,s33,qV); // p,q = 0,1
         jacobiConjugation(1,2,0,s11,s21,s22,s31,s32,s33,qV); // p,q = 1,2
         jacobiConjugation(2,0,1,s11,s21,s22,s31,s32,s33,qV); // p,q = 0,2
-	}
+    }
 }
 
 inline float Kabsch::dist2(const float &x, const float &y, const float &z)
 {
-	return x*x + y*y + z*z;
+    return x*x + y*y + z*z;
 }
 
 inline void Kabsch::jacobiConjugation(const int &x, const int &y, const int &z,
-									  float &s11,
-									  float &s21, float &s22,
-									  float &s31, float &s32, float &s33,
-									  float *qV)
+                                      float &s11,
+                                      float &s21, float &s22,
+                                      float &s31, float &s32, float &s33,
+                                      float *qV)
 {
-	float ch,sh;
+    float ch,sh;
     approximateGivensQuaternion(s11,s21,s22,ch,sh);
 
-	float scale = ch*ch+sh*sh;
+    float scale = ch*ch+sh*sh;
     float a = (ch*ch-sh*sh)/scale;
     float b = (2*sh*ch)/scale;
 
     // make temp copy of S
     float _s11 = s11;
-	float _s21 = s21; float _s22 = s22;
-	float _s31 = s31; float _s32 = s32; float _s33 = s33;
+    float _s21 = s21; float _s22 = s22;
+    float _s31 = s31; float _s32 = s32; float _s33 = s33;
 
-	// perform conjugation S = Q'*S*Q
-	// Q already implicitly solved from a, b
+    // perform conjugation S = Q'*S*Q
+    // Q already implicitly solved from a, b
     s11 = a*(a*_s11 + b*_s21) + b*(a*_s21 + b*_s22);
-    s21 = a*(-b*_s11 + a*_s21) + b*(-b*_s21 + a*_s22);	s22 = -b*(-b*_s11 + a*_s21) + a*(-b*_s21 + a*_s22);
-    s31 = a*_s31 + b*_s32;								s32 = -b*_s31 + a*_s32;								s33=_s33;
+    s21 = a*(-b*_s11 + a*_s21) + b*(-b*_s21 + a*_s22);  s22 = -b*(-b*_s11 + a*_s21) + a*(-b*_s21 + a*_s22);
+    s31 = a*_s31 + b*_s32;                              s32 = -b*_s31 + a*_s32;                             s33=_s33;
 
-	// update cumulative rotation qV
+    // update cumulative rotation qV
     float tmp[3];
     tmp[0] = qV[0]*sh;
     tmp[1] = qV[1]*sh;
@@ -711,16 +711,16 @@ inline void Kabsch::jacobiConjugation(const int &x, const int &y, const int &z,
 
     // re-arrange matrix for next iteration
     _s11 = s22;
-	_s21 = s32; _s22 = s33;
-	_s31 = s21; _s32 = s31; _s33 = s11;
-	s11 = _s11;
-	s21 = _s21; s22 = _s22;
-	s31 = _s31; s32 = _s32; s33 = _s33;
+    _s21 = s32; _s22 = s33;
+    _s31 = s21; _s32 = s31; _s33 = s11;
+    s11 = _s11;
+    s21 = _s21; s22 = _s22;
+    s31 = _s31; s32 = _s32; s33 = _s33;
 }
 
 inline void Kabsch::approximateGivensQuaternion(const float &a11, const float &a12, const float &a22, float &ch, float &sh)
 {
-	/*
+    /*
      * Given givens angle computed by approximateGivensAngles,
      * compute the corresponding rotation quaternion.
      */
@@ -736,67 +736,67 @@ inline void Kabsch::approximateGivensQuaternion(const float &a11, const float &a
 }
 
 inline void Kabsch::quatfloatoMat3(const float *qV,
-							   float &m11, float &m12, float &m13,
-							   float &m21, float &m22, float &m23,
-							   float &m31, float &m32, float &m33)
+                               float &m11, float &m12, float &m13,
+                               float &m21, float &m22, float &m23,
+                               float &m31, float &m32, float &m33)
 {
     float w = qV[3];
     float x = qV[0];
     float y = qV[1];
     float z = qV[2];
 
-	float qxx = x*x;
-	float qyy = y*y;
-	float qzz = z*z;
-	float qxz = x*z;
-	float qxy = x*y;
-	float qyz = y*z;
-	float qwx = w*x;
-	float qwy = w*y;
-	float qwz = w*z;
+    float qxx = x*x;
+    float qyy = y*y;
+    float qzz = z*z;
+    float qxz = x*z;
+    float qxy = x*y;
+    float qyz = y*z;
+    float qwx = w*x;
+    float qwy = w*y;
+    float qwz = w*z;
 
-	m11 = 1 - 2*(qyy + qzz);	m12 = 2*(qxy - qwz);		m13 = 2*(qxz + qwy);
-    m21 = 2*(qxy + qwz); 		m22 = 1 - 2*(qxx + qzz); 	m23 = 2*(qyz - qwx);
-    m31 = 2*(qxz - qwy); 		m32 = 2*(qyz + qwx); 		m33 = 1 - 2*(qxx + qyy);
+    m11 = 1 - 2*(qyy + qzz);    m12 = 2*(qxy - qwz);        m13 = 2*(qxz + qwy);
+    m21 = 2*(qxy + qwz);        m22 = 1 - 2*(qxx + qzz);    m23 = 2*(qyz - qwx);
+    m31 = 2*(qxz - qwy);        m32 = 2*(qyz + qwx);        m33 = 1 - 2*(qxx + qyy);
 }
 
 inline void Kabsch::multAtB(const float& a11, const float& a12, const float& a13,
-							const float& a21, const float& a22, const float& a23,
-							const float& a31, const float& a32, const float& a33,
-							//
-							const float& b11, const float& b12, const float& b13,
-							const float& b21, const float& b22, const float& b23,
-							const float& b31, const float& b32, const float& b33,
-							//
-							float &m11, float &m12, float &m13,
-							float &m21, float &m22, float &m23,
-							float &m31, float &m32, float &m33)
+                            const float& a21, const float& a22, const float& a23,
+                            const float& a31, const float& a32, const float& a33,
+                            //
+                            const float& b11, const float& b12, const float& b13,
+                            const float& b21, const float& b22, const float& b23,
+                            const float& b31, const float& b32, const float& b33,
+                            //
+                            float &m11, float &m12, float &m13,
+                            float &m21, float &m22, float &m23,
+                            float &m31, float &m32, float &m33)
 {
-	m11 = a11*b11 + a21*b21 + a31*b31;	m12 = a11*b12 + a21*b22 + a31*b32;	m13 = a11*b13 + a21*b23 + a31*b33;
-	m21 = a12*b11 + a22*b21 + a32*b31;	m22 = a12*b12 + a22*b22 + a32*b32;	m23 = a12*b13 + a22*b23 + a32*b33;
-	m31 = a13*b11 + a23*b21 + a33*b31;	m32 = a13*b12 + a23*b22 + a33*b32;	m33 = a13*b13 + a23*b23 + a33*b33;
+    m11 = a11*b11 + a21*b21 + a31*b31;  m12 = a11*b12 + a21*b22 + a31*b32;  m13 = a11*b13 + a21*b23 + a31*b33;
+    m21 = a12*b11 + a22*b21 + a32*b31;  m22 = a12*b12 + a22*b22 + a32*b32;  m23 = a12*b13 + a22*b23 + a32*b33;
+    m31 = a13*b11 + a23*b21 + a33*b31;  m32 = a13*b12 + a23*b22 + a33*b32;  m33 = a13*b13 + a23*b23 + a33*b33;
 }
 
 inline void Kabsch::multAB( const float& a11, const float& a12, const float& a13,
-							const float& a21, const float& a22, const float& a23,
-							const float& a31, const float& a32, const float& a33,
-							//
-							const float& b11, const float& b12, const float& b13,
-							const float& b21, const float& b22, const float& b23,
-							const float& b31, const float& b32, const float& b33,
-							//
-							float &m11, float &m12, float &m13,
-							float &m21, float &m22, float &m23,
-							float &m31, float &m32, float &m33)
+                            const float& a21, const float& a22, const float& a23,
+                            const float& a31, const float& a32, const float& a33,
+                            //
+                            const float& b11, const float& b12, const float& b13,
+                            const float& b21, const float& b22, const float& b23,
+                            const float& b31, const float& b32, const float& b33,
+                            //
+                            float &m11, float &m12, float &m13,
+                            float &m21, float &m22, float &m23,
+                            float &m31, float &m32, float &m33)
 {
-	m11 = a11*b11 + a12*b21 + a13*b31;	m12 = a11*b12 + a12*b22 + a13*b32;	m13 = a11*b13 + a12*b23 + a13*b33;
-    m21 = a21*b11 + a22*b21 + a23*b31;	m22 = a21*b12 + a22*b22 + a23*b32;	m23 = a21*b13 + a22*b23 + a23*b33;
-    m31 = a31*b11 + a32*b21 + a33*b31;	m32 = a31*b12 + a32*b22 + a33*b32;	m33 = a31*b13 + a32*b23 + a33*b33;
+    m11 = a11*b11 + a12*b21 + a13*b31;  m12 = a11*b12 + a12*b22 + a13*b32;  m13 = a11*b13 + a12*b23 + a13*b33;
+    m21 = a21*b11 + a22*b21 + a23*b31;  m22 = a21*b12 + a22*b22 + a23*b32;  m23 = a21*b13 + a22*b23 + a23*b33;
+    m31 = a31*b11 + a32*b21 + a33*b31;  m32 = a31*b12 + a32*b22 + a33*b32;  m33 = a31*b13 + a32*b23 + a33*b33;
 }
 
 inline void Kabsch::condNegSwap(const bool &c, float &X, float &Y)
 {
-	// used in step 2 and 3
+    // used in step 2 and 3
     float Z = -X;
     X = c ? Y : X;
     Y = c ? Z : Y;
@@ -804,7 +804,7 @@ inline void Kabsch::condNegSwap(const bool &c, float &X, float &Y)
 
 inline void Kabsch::condSwap(const bool &c, float &X, float &Y)
 {
-	// used in step 2
+    // used in step 2
     float Z = X;
     X = c ? Y : X;
     Y = c ? Z : Y;
@@ -812,128 +812,128 @@ inline void Kabsch::condSwap(const bool &c, float &X, float &Y)
 
 inline float Kabsch::accurateSqrt(float x)
 {
-	return x * rsqrt1(x);
+    return x * rsqrt1(x);
 }
 
 inline float Kabsch::rsqrt1(float x)
 {
-	float xhalf = 0.5f*x;
-   	int i = *(int *)&x;          // View x as an int.
-   	i = 0x5f37599e - (i >> 1);   // Initial guess.
-   	x = *(float *)&i;            // View i as float.
-   	x = x*(1.5f - xhalf*x*x);    // Newton step.
-   	x = x*(1.5f - xhalf*x*x);    // Newton step again.
+    float xhalf = 0.5f*x;
+    int i = *(int *)&x;          // View x as an int.
+    i = 0x5f37599e - (i >> 1);   // Initial guess.
+    x = *(float *)&i;            // View i as float.
+    x = x*(1.5f - xhalf*x*x);    // Newton step.
+    x = x*(1.5f - xhalf*x*x);    // Newton step again.
    return x;
 }
 
 inline float Kabsch::rsqrt(float x)
 {
-	float xhalf = 0.5f*x;
-   	int i = *(int *)&x;          // View x as an int.
-// 	i = 0x5f3759df - (i >> 1);   // Initial guess (traditional).
-   	i = 0x5f375a82 - (i >> 1);   // Initial guess (slightly better).
-   	x = *(float *)&i;            // View i as float.
-   	x = x*(1.5f - xhalf*x*x);    // Newton step.
-// 	x = x*(1.5008908 - xhalf*x*x);  // Newton step for a balanced error.
+    float xhalf = 0.5f*x;
+    int i = *(int *)&x;          // View x as an int.
+//  i = 0x5f3759df - (i >> 1);   // Initial guess (traditional).
+    i = 0x5f375a82 - (i >> 1);   // Initial guess (slightly better).
+    x = *(float *)&i;            // View i as float.
+    x = x*(1.5f - xhalf*x*x);    // Newton step.
+//  x = x*(1.5008908 - xhalf*x*x);  // Newton step for a balanced error.
    return x;
 }
 
 inline float Kabsch::dist(const float &x1, const float &y1, const float &z1, const float &x2, const float &y2, const float &z2)
 {
-	return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2);
+    return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2);
 }
 
 inline float Kabsch::operator()(const Point &p, const Point &q)
 {
-	if(p.n != q.n){std::cerr << "Invalid number of points. In Kabsch algorithm points P and Q must have the same size." << std::endl; exit(1);}
-	float 	mpx = 0.f, mpy = 0.f, mpz = 0.f,
-		mqx = 0.f, mqy = 0.f, mqz = 0.f,
-		spx = 0.f, spy = 0.f, spz = 0.f,
-		sqx = 0.f, sqy = 0.f, sqz = 0.f,
-		delta_px, delta_py, delta_pz,
-		delta_qx, delta_qy, delta_qz,
+    if(p.n != q.n){std::cerr << "Invalid number of points. In Kabsch algorithm points P and Q must have the same size." << std::endl; exit(1);}
+    float   mpx = 0.f, mpy = 0.f, mpz = 0.f,
+        mqx = 0.f, mqy = 0.f, mqz = 0.f,
+        spx = 0.f, spy = 0.f, spz = 0.f,
+        sqx = 0.f, sqy = 0.f, sqz = 0.f,
+        delta_px, delta_py, delta_pz,
+        delta_qx, delta_qy, delta_qz,
 
-		C11 = 0.f, C12 = 0.f, C13 = 0.f, C21 = 0.f, C22 = 0.f, C23 = 0.f, C31 = 0.f, C32 = 0.f, C33 = 0.f,
-		U11, U12, U13, U21, U22, U23, U31, U32, U33,
-		S11, S12, S13, S21, S22, S23, S31, S32, S33,
-		V11, V12, V13, V21, V22, V23, V31, V32, V33,
-		R11, R12, R13,
-		R21, R22, R23,
-		R31, R32, R33,
-		//C[3][3], U[3][3], S[3], V[3][3], R[3][3],
+        C11 = 0.f, C12 = 0.f, C13 = 0.f, C21 = 0.f, C22 = 0.f, C23 = 0.f, C31 = 0.f, C32 = 0.f, C33 = 0.f,
+        U11, U12, U13, U21, U22, U23, U31, U32, U33,
+        S11, S12, S13, S21, S22, S23, S31, S32, S33,
+        V11, V12, V13, V21, V22, V23, V31, V32, V33,
+        R11, R12, R13,
+        R21, R22, R23,
+        R31, R32, R33,
+        //C[3][3], U[3][3], S[3], V[3][3], R[3][3],
 
-		tmpx, tmpy, tmpz,
-		scale;
-	bool d;
-	//C[0][0] = 0.f; C[0][1] = 0.f; C[0][2] = 0.f;
-	//C[1][0] = 0.f; C[1][1] = 0.f; C[1][2] = 0.f;
-	//C[2][0] = 0.f; C[2][1] = 0.f; C[2][2] = 0.f;
+        tmpx, tmpy, tmpz,
+        scale;
+    bool d;
+    //C[0][0] = 0.f; C[0][1] = 0.f; C[0][2] = 0.f;
+    //C[1][0] = 0.f; C[1][1] = 0.f; C[1][2] = 0.f;
+    //C[2][0] = 0.f; C[2][1] = 0.f; C[2][2] = 0.f;
 
 
-	for(int i = 0; i < p.n; ++i)
-	{
-		delta_px = p.x[i] - mpx; delta_py = p.y[i] - mpy, delta_pz = p.z[i] - mpz;
-		mpx += delta_px / (i+1);	mpy += delta_py / (i+1);	mpz += delta_pz / (i+1);
-		spx += delta_px * (p.x[i] - mpx); spy += delta_py * (p.y[i] - mpy); spz += delta_pz * (p.z[i] - mpz);
+    for(int i = 0; i < p.n; ++i)
+    {
+        delta_px = p.x[i] - mpx; delta_py = p.y[i] - mpy, delta_pz = p.z[i] - mpz;
+        mpx += delta_px / (i+1);    mpy += delta_py / (i+1);    mpz += delta_pz / (i+1);
+        spx += delta_px * (p.x[i] - mpx); spy += delta_py * (p.y[i] - mpy); spz += delta_pz * (p.z[i] - mpz);
 
-		delta_qx = q.x[i] - mqx; delta_qy = q.y[i] - mqy, delta_qz = q.z[i] - mqz;
-		mqx += delta_qx / (i+1); 	mqy += delta_qy / (i+1);	mqz += delta_qz / (i+1);
-		sqx += delta_qx * (q.x[i] - mqx); sqy += delta_qy * (q.y[i] - mqy); sqz += delta_qz * (q.z[i] - mqz);
-	}
+        delta_qx = q.x[i] - mqx; delta_qy = q.y[i] - mqy, delta_qz = q.z[i] - mqz;
+        mqx += delta_qx / (i+1);    mqy += delta_qy / (i+1);    mqz += delta_qz / (i+1);
+        sqx += delta_qx * (q.x[i] - mqx); sqy += delta_qy * (q.y[i] - mqy); sqz += delta_qz * (q.z[i] - mqz);
+    }
 
-	for (int i = 0; i < p.n; ++i)
-	{
-		C11 += (p.x[i] - mpx) * (q.x[i] - mqx); C12 += (p.x[i] - mpx) * (q.y[i] - mqx); C13 += (p.x[i] - mpx) * (q.z[i] - mqx);
-		C21 += (p.y[i] - mpy) * (q.x[i] - mqy); C22 += (p.y[i] - mpy) * (q.y[i] - mqy); C23 += (p.y[i] - mpy) * (q.z[i] - mqy);
-		C31 += (p.z[i] - mpz) * (q.x[i] - mqz); C32 += (p.z[i] - mpz) * (q.y[i] - mqz); C33 += (p.z[i] - mpz) * (q.z[i] - mqz);
-		//C[0][0] += (p.x[i] - mpx) * (q.x[i] - mqx); C[0][1] += (p.x[i] - mpx) * (q.y[i] - mqx); C[0][2] += (p.x[i] - mpx) * (q.z[i] - mqx);
-		//C[1][0] += (p.y[i] - mpy) * (q.x[i] - mqy); C[1][1] += (p.y[i] - mpy) * (q.y[i] - mqy); C[1][2] += (p.y[i] - mpy) * (q.z[i] - mqy);
-		//C[2][0] += (p.z[i] - mpz) * (q.x[i] - mqz); C[2][1] += (p.z[i] - mpz) * (q.y[i] - mqz); C[2][2] += (p.z[i] - mpz) * (q.z[i] - mqz);
-	}
-	//svd3((float *)U, S, (float *)V, (float *)C);
-	svd3x3(C11, C12, C13, C21, C22, C23, C31, C32, C33,
-		   U11, U12, U13, U21, U22, U23, U31, U32, U33,
-		   S11, S12, S13, S21, S22, S23, S31, S32, S33,
-		   V11, V12, V13, V21, V22, V23, V31, V32, V33);
+    for (int i = 0; i < p.n; ++i)
+    {
+        C11 += (p.x[i] - mpx) * (q.x[i] - mqx); C12 += (p.x[i] - mpx) * (q.y[i] - mqx); C13 += (p.x[i] - mpx) * (q.z[i] - mqx);
+        C21 += (p.y[i] - mpy) * (q.x[i] - mqy); C22 += (p.y[i] - mpy) * (q.y[i] - mqy); C23 += (p.y[i] - mpy) * (q.z[i] - mqy);
+        C31 += (p.z[i] - mpz) * (q.x[i] - mqz); C32 += (p.z[i] - mpz) * (q.y[i] - mqz); C33 += (p.z[i] - mpz) * (q.z[i] - mqz);
+        //C[0][0] += (p.x[i] - mpx) * (q.x[i] - mqx); C[0][1] += (p.x[i] - mpx) * (q.y[i] - mqx); C[0][2] += (p.x[i] - mpx) * (q.z[i] - mqx);
+        //C[1][0] += (p.y[i] - mpy) * (q.x[i] - mqy); C[1][1] += (p.y[i] - mpy) * (q.y[i] - mqy); C[1][2] += (p.y[i] - mpy) * (q.z[i] - mqy);
+        //C[2][0] += (p.z[i] - mpz) * (q.x[i] - mqz); C[2][1] += (p.z[i] - mpz) * (q.y[i] - mqz); C[2][2] += (p.z[i] - mpz) * (q.z[i] - mqz);
+    }
+    //svd3((float *)U, S, (float *)V, (float *)C);
+    svd3x3(C11, C12, C13, C21, C22, C23, C31, C32, C33,
+           U11, U12, U13, U21, U22, U23, U31, U32, U33,
+           S11, S12, S13, S21, S22, S23, S31, S32, S33,
+           V11, V12, V13, V21, V22, V23, V31, V32, V33);
 
-	//d = (	(V[0][0]*V[1][1]*V[2][2] + V[0][1]*V[1][2]*V[2][0] + V[0][2]*V[1][0]*V[2][1] - V[0][2]*V[1][1]*V[2][0] - V[0][0]*V[1][2]*V[2][1] - V[0][1]*V[1][0]*V[2][2]) *
-	// 		(U[0][0]*U[1][1]*U[2][2] + U[0][1]*U[1][2]*U[2][0] + U[0][2]*U[1][0]*U[2][1] - U[0][2]*U[1][1]*U[2][0] - U[0][0]*U[1][2]*U[2][1] - U[0][1]*U[1][0]*U[2][2])
-	//	< 0.f);
-	d = ( 	(V11*V22*V33 + V12*V23*V31 + V13*V21*V32 - V13*V22*V31 - V11*V23*V32 - V12*V21*V33) *
-	 		(U11*U22*U33 + U12*U23*U31 + U13*U21*U32 - U13*U22*U31 - U11*U23*U32 - U12*U21*U33)
-	 	 < 0.f);
+    //d = ( (V[0][0]*V[1][1]*V[2][2] + V[0][1]*V[1][2]*V[2][0] + V[0][2]*V[1][0]*V[2][1] - V[0][2]*V[1][1]*V[2][0] - V[0][0]*V[1][2]*V[2][1] - V[0][1]*V[1][0]*V[2][2]) *
+    //      (U[0][0]*U[1][1]*U[2][2] + U[0][1]*U[1][2]*U[2][0] + U[0][2]*U[1][0]*U[2][1] - U[0][2]*U[1][1]*U[2][0] - U[0][0]*U[1][2]*U[2][1] - U[0][1]*U[1][0]*U[2][2])
+    //  < 0.f);
+    d = (   (V11*V22*V33 + V12*V23*V31 + V13*V21*V32 - V13*V22*V31 - V11*V23*V32 - V12*V21*V33) *
+            (U11*U22*U33 + U12*U23*U31 + U13*U21*U32 - U13*U22*U31 - U11*U23*U32 - U12*U21*U33)
+         < 0.f);
 
-	if(d)
-	{
-		//S[2] = -S[2];
-		S33 = -S33;
-		//U[0][2] = -U[0][2];
-		//U[1][2] = -U[1][2];
-		//U[2][2] = -U[2][2];
-		U13 = -U13;
-		U23 = -U23;
-		U33 = -U33;
-	}
-	R11 = U11*V11 + U12*V12 + U13*V13; R12 = U11*V21 + U12*V22 + U13*V23; R13 = U11*V31 + U12*V32 + U13*V33;
-	R21 = U21*V11 + U22*V12 + U23*V13; R22 = U21*V21 + U22*V22 + U23*V23; R23 = U21*V31 + U22*V32 + U23*V33;
-	R31 = U31*V11 + U32*V12 + U33*V13; R32 = U31*V21 + U32*V22 + U33*V23; R33 = U31*V31 + U32*V32 + U33*V33;
-	//R[0][0] = U[0][0]*V[0][0] + U[0][1]*V[0][1] + U[0][2]*V[0][2]; R[0][1] = U[0][0]*V[1][0] + U[0][1]*V[1][1] + U[0][2]*V[1][2]; R[0][2] = U[0][0]*V[2][0] + U[0][1]*V[2][1] + U[0][2]*V[2][2];
-	//R[1][0] = U[1][0]*V[0][0] + U[1][1]*V[0][1] + U[1][2]*V[0][2]; R[1][1] = U[1][0]*V[1][0] + U[1][1]*V[1][1] + U[1][2]*V[1][2]; R[1][2] = U[1][0]*V[2][0] + U[1][1]*V[2][1] + U[1][2]*V[2][2];
-	//R[2][0] = U[2][0]*V[0][0] + U[2][1]*V[0][1] + U[2][2]*V[0][2]; R[2][1] = U[2][0]*V[1][0] + U[2][1]*V[1][1] + U[2][2]*V[1][2]; R[2][2] = U[2][0]*V[2][0] + U[2][1]*V[2][1] + U[2][2]*V[2][2];
+    if(d)
+    {
+        //S[2] = -S[2];
+        S33 = -S33;
+        //U[0][2] = -U[0][2];
+        //U[1][2] = -U[1][2];
+        //U[2][2] = -U[2][2];
+        U13 = -U13;
+        U23 = -U23;
+        U33 = -U33;
+    }
+    R11 = U11*V11 + U12*V12 + U13*V13; R12 = U11*V21 + U12*V22 + U13*V23; R13 = U11*V31 + U12*V32 + U13*V33;
+    R21 = U21*V11 + U22*V12 + U23*V13; R22 = U21*V21 + U22*V22 + U23*V23; R23 = U21*V31 + U22*V32 + U23*V33;
+    R31 = U31*V11 + U32*V12 + U33*V13; R32 = U31*V21 + U32*V22 + U33*V23; R33 = U31*V31 + U32*V32 + U33*V33;
+    //R[0][0] = U[0][0]*V[0][0] + U[0][1]*V[0][1] + U[0][2]*V[0][2]; R[0][1] = U[0][0]*V[1][0] + U[0][1]*V[1][1] + U[0][2]*V[1][2]; R[0][2] = U[0][0]*V[2][0] + U[0][1]*V[2][1] + U[0][2]*V[2][2];
+    //R[1][0] = U[1][0]*V[0][0] + U[1][1]*V[0][1] + U[1][2]*V[0][2]; R[1][1] = U[1][0]*V[1][0] + U[1][1]*V[1][1] + U[1][2]*V[1][2]; R[1][2] = U[1][0]*V[2][0] + U[1][1]*V[2][1] + U[1][2]*V[2][2];
+    //R[2][0] = U[2][0]*V[0][0] + U[2][1]*V[0][1] + U[2][2]*V[0][2]; R[2][1] = U[2][0]*V[1][0] + U[2][1]*V[1][1] + U[2][2]*V[1][2]; R[2][2] = U[2][0]*V[2][0] + U[2][1]*V[2][1] + U[2][2]*V[2][2];
 
-	scale = (S11 + S22 + S33) / (spx + spy + spz);
-	//scale = (S[0] + S[1] + S[2]) / (spx + spy + spz);
-	float rmsd = 0.f;
-	for (int i = 0; i < p.n; ++i)
-	{
-		tmpx = p.x[i]; tmpy = p.y[i]; tmpz = p.z[i];
-		p.x[i] = ( (tmpx - mpx) * R11 + (tmpy - mpy) * R21 + (tmpz - mpz) * R13 ) * scale;
-		p.y[i] = ( (tmpx - mpx) * R12 + (tmpy - mpy) * R22 + (tmpz - mpz) * R23 ) * scale;
-		p.z[i] = ( (tmpx - mpx) * R13 + (tmpy - mpy) * R23 + (tmpz - mpz) * R33 ) * scale;
-		//p.x[i] = ( (tmpx - mpx) * R[0][0] + (tmpy - mpy) * R[1][0] + (tmpz - mpz) * R[0][2] ) * scale;
-		//p.y[i] = ( (tmpx - mpx) * R[0][1] + (tmpy - mpy) * R[1][1] + (tmpz - mpz) * R[1][2] ) * scale;
-		//p.z[i] = ( (tmpx - mpx) * R[0][2] + (tmpy - mpy) * R[1][2] + (tmpz - mpz) * R[2][2] ) * scale;
-		rmsd += dist(p.x[i], p.y[i], p.z[i], q.x[i] - mqx, q.y[i] - mqy, q.z[i] - mqz);
-	}
-	return std::sqrt(rmsd / p.n);
+    scale = (S11 + S22 + S33) / (spx + spy + spz);
+    //scale = (S[0] + S[1] + S[2]) / (spx + spy + spz);
+    float rmsd = 0.f;
+    for (int i = 0; i < p.n; ++i)
+    {
+        tmpx = p.x[i]; tmpy = p.y[i]; tmpz = p.z[i];
+        p.x[i] = ( (tmpx - mpx) * R11 + (tmpy - mpy) * R21 + (tmpz - mpz) * R13 ) * scale;
+        p.y[i] = ( (tmpx - mpx) * R12 + (tmpy - mpy) * R22 + (tmpz - mpz) * R23 ) * scale;
+        p.z[i] = ( (tmpx - mpx) * R13 + (tmpy - mpy) * R23 + (tmpz - mpz) * R33 ) * scale;
+        //p.x[i] = ( (tmpx - mpx) * R[0][0] + (tmpy - mpy) * R[1][0] + (tmpz - mpz) * R[0][2] ) * scale;
+        //p.y[i] = ( (tmpx - mpx) * R[0][1] + (tmpy - mpy) * R[1][1] + (tmpz - mpz) * R[1][2] ) * scale;
+        //p.z[i] = ( (tmpx - mpx) * R[0][2] + (tmpy - mpy) * R[1][2] + (tmpz - mpz) * R[2][2] ) * scale;
+        rmsd += dist(p.x[i], p.y[i], p.z[i], q.x[i] - mqx, q.y[i] - mqy, q.z[i] - mqz);
+    }
+    return std::sqrt(rmsd / p.n);
 }
